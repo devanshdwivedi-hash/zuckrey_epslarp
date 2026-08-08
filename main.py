@@ -1,9 +1,12 @@
 import uvicorn
 import logging
-from fastapi import FastAPI, Response
+from fastapi import Response
 from fastapi.responses import HTMLResponse
+
 from config.settings import settings
 from config.persona_config import PERSONA_NAME, PERSONA_SYSTEM_PROMPT
+from src.api.main import app
+from src.api.routes import router as api_router
 
 # Configure standard logging
 logging.basicConfig(
@@ -12,21 +15,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger("autonomous_agent")
 
-app = FastAPI(
-    title=f"Autonomous Content Agent: {PERSONA_NAME}",
-    description="Baseline API for scraping, filtering, and publishing technical security insights.",
-    version="1.0.0",
-    debug=settings.DEBUG
-)
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return Response(status_code=204)
 
+
 @app.get("/", response_class=HTMLResponse)
 async def root_dashboard():
     """
-    Renders a stunning dashboard outlining the state of the monorepo and its active persona configuration.
+    Renders a stunning dashboard outlining the state of the system and active persona configuration.
     """
     html_content = f"""
     <!DOCTYPE html>
@@ -254,7 +252,7 @@ async def root_dashboard():
                 <div class="avatar-glow"></div>
                 <div>
                     <h1>Zuckrey EpsLarp Bunker API</h1>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Phase 1: Baseline Autonomous Pipeline</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Autonomous Pipeline & Feed API</p>
                 </div>
             </div>
             <div class="status-badge">
@@ -276,16 +274,20 @@ async def root_dashboard():
                 <div class="code-block" style="font-size: 0.8rem; line-height: 1.4;">{PERSONA_SYSTEM_PROMPT}</div>
             </div>
 
-            <!-- Configuration & Monorepo Modules -->
+            <!-- Configuration & API Endpoints -->
             <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
                     <div class="card-title">
-                        <span style="color: var(--accent-secondary);">⚙️</span> Engine Settings
+                        <span style="color: var(--accent-secondary);">📡</span> Active Endpoints & Settings
                     </div>
                     <ul class="metadata-list">
                         <li class="metadata-item">
-                            <span class="metadata-label">OpenAI Model:</span>
-                            <span class="metadata-value">{settings.OPENAI_MODEL}</span>
+                            <span class="metadata-label">Feed API:</span>
+                            <span class="metadata-value"><a href="/feed" style="color: var(--accent-primary);">GET /feed</a></span>
+                        </li>
+                        <li class="metadata-item">
+                            <span class="metadata-label">OpenAPI Specs:</span>
+                            <span class="metadata-value"><a href="/docs" style="color: var(--accent-secondary);">GET /docs</a></span>
                         </li>
                         <li class="metadata-item">
                             <span class="metadata-label">Embedding Model:</span>
@@ -295,10 +297,6 @@ async def root_dashboard():
                             <span class="metadata-label">Database Connection:</span>
                             <span class="metadata-value">{settings.DATABASE_URL.split('///')[0]}///...</span>
                         </li>
-                        <li class="metadata-item">
-                            <span class="metadata-label">Scrape Interval:</span>
-                            <span class="metadata-value">{settings.SCRAPING_INTERVAL_MINUTES} min</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -306,9 +304,6 @@ async def root_dashboard():
                     <div class="card-title" style="font-size: 1.1rem; margin-bottom: 0.5rem;">
                         Monorepo Component Map
                     </div>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
-                        Separate modules established for Phase 1 codebases:
-                    </p>
                     <div class="module-list">
                         <div class="module-tag">config/</div>
                         <div class="module-tag">scrapers/</div>
@@ -329,6 +324,7 @@ async def root_dashboard():
     </html>
     """
     return html_content
+
 
 if __name__ == "__main__":
     logger.info(f"Starting server on {settings.HOST}:{settings.PORT}")
