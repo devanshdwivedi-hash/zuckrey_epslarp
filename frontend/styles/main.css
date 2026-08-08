@@ -1,6 +1,6 @@
 /* ==========================================================================
    ZuckNet Retro Dark-Web Aesthetic Engine
-   3D Molded Plastic Bezel | Deep Screen Recess | High Contrast Cards
+   3D Molded Plastic Bezel | 320px Scaled Sidebars | #zuckrey-3d-avatar
    ========================================================================== */
 
 * {
@@ -258,40 +258,44 @@ html, body {
   display: block;
 }
 
-/* Asymmetrical OS Layout Grid */
+/* Step 1: OS Layout Grid & Sidebar Width Overhaul (320px Width) */
 .os-layout {
   flex-grow: 1;
   display: flex;
-  gap: 1.25rem;
+  gap: 1rem;
   padding: 1rem 1.25rem;
   overflow: hidden;
   height: calc(100% - 86px);
 }
 
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
+.sidebar, #left-sidebar, #right-sidebar, .sidebar-left, .sidebar-right {
+  width: 320px;
+  flex: 0 0 320px;
+  max-width: 25vw;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1.1rem;
 }
 
+/* Step 2: Scaled Up Sidebar Panels & Content */
 .sidebar-box, .box, #left-sidebar, #right-sidebar {
   background: #101411;
   border: 1px solid #455945;
-  padding: 0.85rem;
+  padding: 16px; /* Increased padding */
   border-radius: 1px;
+  font-size: 1.1rem; /* Increased font-size */
+  line-height: 1.8; /* Taller line-height */
 }
 
 .sidebar-header {
   font-family: 'Arial Narrow', 'Impact', sans-serif;
-  font-size: 0.9rem;
+  font-size: 1.1rem; /* Scaled up header font-size */
   font-weight: bold;
   background: #1a241b;
   border-bottom: 1px solid #455945;
-  padding: 0.35rem 0.6rem;
-  margin: -0.85rem -0.85rem 0.65rem -0.85rem;
-  letter-spacing: 1px;
+  padding: 0.5rem 0.8rem;
+  margin: -16px -16px 0.85rem -16px;
+  letter-spacing: 1.5px;
   color: #a4bea4;
   text-transform: uppercase;
 }
@@ -318,10 +322,11 @@ html, body {
   background: #0a0d0a;
   color: #8ca68c;
   border: 1px solid #364736;
-  padding: 0.45rem;
+  padding: 0.6rem 0.85rem;
   text-align: left;
   font-family: 'Courier New', monospace;
-  font-size: 0.78rem;
+  font-size: 0.95rem; /* Scaled up terminal buttons */
+  line-height: 1.8;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -334,7 +339,8 @@ html, body {
 
 .system-stats {
   font-family: 'Courier New', monospace;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
+  line-height: 1.8;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -345,6 +351,11 @@ html, body {
   font-weight: bold;
 }
 
+.sidebar-icon, .badge-icon {
+  width: 40px;
+  height: 40px;
+}
+
 .banner-ad-container {
   overflow: visible;
   padding: 0.5rem;
@@ -353,17 +364,18 @@ html, body {
 .banner-ad {
   display: block;
   text-decoration: none;
-  padding: 0.75rem;
+  padding: 0.85rem;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: bold;
   cursor: pointer;
   position: relative;
+  line-height: 1.6;
 }
 
 .ad-neon-magenta {
   border: 1px solid #73223f !important;
-  background: #1f0b14;
+  background: #1f1d0b;
   color: #c4567e;
 }
 
@@ -384,13 +396,13 @@ html, body {
 
 .ad-title {
   font-family: 'Arial Narrow', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   margin-bottom: 0.3rem;
   letter-spacing: 1px;
 }
 
 .ad-sub {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
   color: #a395a0;
 }
@@ -398,27 +410,28 @@ html, body {
 .ad-btn {
   background: #541b30;
   color: #e0d0d8;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
   display: inline-block;
 }
 
 .web-badges-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.75rem;
 }
 
 .badge-item {
   border-radius: 1px;
+  line-height: 1.8;
 }
 
 .blink-hazard {
   background: repeating-linear-gradient(45deg, #1c1705, #1c1705 10px, #524410 10px, #524410 20px);
   color: #b8a663;
   font-weight: bold;
-  padding: 0.4rem;
-  font-size: 0.75rem;
+  padding: 0.5rem;
+  font-size: 0.85rem;
   border: 1px solid #524410;
   text-align: center;
 }
@@ -427,46 +440,47 @@ html, body {
   background: #09131a;
   border: 1px solid #254457;
   color: #6398b8;
-  font-size: 0.72rem;
-  padding: 0.4rem;
+  font-size: 0.82rem;
+  padding: 0.5rem;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.5;
 }
 
 .hit-counter-box {
   background: #080c09;
   border: 1px solid #364736;
-  padding: 0.4rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
 .hit-counter-label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: bold;
   color: #8ca68c;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
   letter-spacing: 1px;
 }
 
 .hit-counter-odometer {
   display: flex;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .hit-counter-odometer span {
   background: #000;
   color: #8ca68c;
   border: 1px solid #2d3b2d;
-  padding: 0.15rem 0.3rem;
+  padding: 0.2rem 0.4rem;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-family: 'Courier New', monospace;
 }
 
-/* Center Feed Container */
+/* Step 1: Center Feed Container - Flex 1 */
 .center-feed {
-  flex-grow: 1.6;
+  flex: 1;
+  margin: 0 20px;
   background: rgba(10, 10, 10, 0.6);
   border: 1px solid #455945;
   display: flex;
@@ -500,10 +514,10 @@ html, body {
   background: transparent;
 }
 
-/* Step 3: Deep Red "Decision Protocol" Cards with High Text Contrast */
+/* Deep Red "Decision Protocol" Cards */
 .post-card, .retro-feed-card, .card {
   background-color: #2b1111 !important;
-  border: 1px solid #802020 !important; /* Brighter red border */
+  border: 1px solid #802020 !important;
   margin: 20px 0;
   padding: 14px;
   display: flex;
@@ -518,7 +532,7 @@ html, body {
   height: auto !important;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #e6d5d5 !important; /* Brighter pinkish-grey body text */
+  color: #e6d5d5 !important;
   text-shadow: 0 0 2px rgba(0,0,0,1) !important;
   margin-bottom: 1rem;
   white-space: pre-wrap;
@@ -590,7 +604,8 @@ html, body {
 
 /* Right Sidebar & Profile */
 .ai-status-card {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
 .status-pulse-container {
@@ -601,8 +616,8 @@ html, body {
 }
 
 .status-pulse-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background-color: #8ca68c;
   border-radius: 50%;
   animation: pulse-dot 1.5s infinite;
@@ -616,41 +631,38 @@ html, body {
 .status-text {
   font-family: 'Arial Narrow', sans-serif;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #a4bea4;
 }
 
 .status-desc {
   color: #8ca68c;
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  line-height: 1.6;
 }
 
 .profile-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
+  text-align: center;
+  gap: 0.5rem;
 }
 
-.zuckrey-avatar-box {
-  position: relative;
-  width: 70px;
-  height: 70px;
-  border: 1px solid #455945;
-  border-radius: 1px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.zuckrey-svg-avatar {
-  width: 100%;
-  height: 100%;
+/* Step 3: #zuckrey-3d-avatar CSS */
+#zuckrey-3d-avatar {
+  width: 100px;
+  height: auto;
   display: block;
-  filter: contrast(1.2) brightness(0.9) sepia(0.5) hue-rotate(80deg);
+  margin: 0 auto 15px auto;
+  border: 2px solid #33ff00;
+  border-radius: 4px;
+  background-color: #050505;
 }
 
 .profile-info {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .profile-name {
@@ -658,17 +670,18 @@ html, body {
   font-weight: bold;
   color: #d4c2e6;
   letter-spacing: 1px;
+  font-size: 1.05rem;
 }
 
 .profile-role {
   color: #8ca68c;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   margin-top: 0.2rem;
 }
 
 .badge-flashing {
   color: #8ca68c;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: bold;
   margin-top: 0.35rem;
   display: inline-block;
