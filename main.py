@@ -290,12 +290,16 @@ async def root_dashboard():
                             <span class="metadata-value"><a href="/docs" style="color: var(--accent-secondary);">GET /docs</a></span>
                         </li>
                         <li class="metadata-item">
+                            <span class="metadata-label">LLM Model:</span>
+                            <span class="metadata-value">{settings.effective_model}</span>
+                        </li>
+                        <li class="metadata-item">
                             <span class="metadata-label">Embedding Model:</span>
                             <span class="metadata-value">{settings.EMBEDDING_MODEL}</span>
                         </li>
                         <li class="metadata-item">
                             <span class="metadata-label">Database Connection:</span>
-                            <span class="metadata-value">{settings.DATABASE_URL.split('///')[0]}///...</span>
+                            <span class="metadata-value">{"PostgreSQL (Supabase)" if settings.DATABASE_URL.startswith("postgresql") else "SQLite (Local)"}</span>
                         </li>
                     </ul>
                 </div>

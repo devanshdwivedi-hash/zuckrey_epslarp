@@ -41,10 +41,11 @@ def get_embedding(text: str) -> List[float]:
             logger.warning(f"SentenceTransformer encoding failed: {e}. Trying fallback.")
 
     # 2. Try OpenAI API if key is present
-    if settings.OPENAI_API_KEY and "your_openai" not in settings.OPENAI_API_KEY.lower() and settings.OPENAI_API_KEY != "OPENAI_API_KEY":
+    api_key = settings.effective_api_key or settings.OPENAI_API_KEY
+    if api_key and not any(x in api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]):
         try:
             import openai
-            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+            client = openai.OpenAI(api_key=api_key)
             response = client.embeddings.create(
                 model="text-embedding-3-small",
                 input=text

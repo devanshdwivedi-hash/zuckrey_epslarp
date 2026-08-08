@@ -1,11 +1,13 @@
 import logging
-from typing import List
-from fastapi import APIRouter, Depends, Query
+from typing import List, Optional
+from fastapi import APIRouter, Depends, Query, Header, HTTPException, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from config.settings import settings
 from src.db.database import get_db
 from src.db.models import PublishedPost
+from src.scheduler.cron import run_autonomous_loop
 
 logger = logging.getLogger("autonomous_agent.api.routes")
 
@@ -53,3 +55,35 @@ def get_feed(
             )
         )
     return response_list
+
+
+@router.get("/api/cron", summary="Trigger Autonomous Scraping & Evaluation Cycle")
+async def trigger_cron(
+    authorization: Optional[str] = Header(None),
+    x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret")
+):
+    """
+    Secured cron trigger endpoint for Vercel Cron or external schedulers.
+    Validates Authorization header (Bearer <CRON_SECRET>) or x-cron-secret header.
+    Runs discovery, vector deduplication, LLM evaluation, post generation, and database persist.
+    """
+    expected_secret = settings.CRON_SECRET
+
+    # Validate secret header if configured
+    if expected_secret and expected_secret != "default_cron_secret":
+        provided_token = None
+        if authorization and authorization.startswith("Bearer "):
+            provided_token = authorization.split("Bearer ")[1].strip()
+        elif x_cron_secret:
+            provided_token = x_cron_secret.strip()
+
+        if provided_token != expected_secret:
+            logger.warning("Unauthorized cron invocation attempt.")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized: Invalid CRON_SECRET token."
+            )
+
+    logger.info("Cron trigger request authorized. Executing autonomous pipeline loop...")
+    await run_autonomous_loop()
+    return {"status": "success", "message": "Autonomous scraping & evaluation cycle completed successfully."}
