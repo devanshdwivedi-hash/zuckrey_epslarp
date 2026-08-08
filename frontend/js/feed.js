@@ -1,113 +1,117 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Vanilla JavaScript implementation for ZuckNet Y2K OS.
+ * Robust DOM Target & Backend Fetching Implementation
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('decision-protocols');
-  const xFeedLogContainer = document.getElementById('x-feed-logs');
+document.addEventListener("DOMContentLoaded", () => {
+  const API_URL = "https://zuckrey-agent.onrender.com/api/agent/feed?agentId=abc-123";
+  const LOCAL_API_URL = "/feed";
+  const REMOTE_FEED_URL = "https://zuckrey-agent.onrender.com/feed";
+  
+  const feedContainer = document.querySelector("#decision-protocols") || document.querySelector(".feed-container") || document.querySelector(".scrollable-feed");
 
-  const primaryApiUrl = '/feed';
-  const remoteApiUrl = 'https://zuckrey-agent.onrender.com/feed';
-  const legacyApiUrl = 'https://zuckrey-agent.onrender.com/api/agent/feed?agentId=abc-123';
-
-  async function fetchFeedData() {
-    if (!container) return;
-    
-    // Explicitly wipe out all static content and placeholder lines
-    container.innerHTML = '<p class="feed-status">> INITIATING_FEED_FETCH_PROTOCOL...</p>';
-
-    let posts = null;
-
-    try {
-      const r1 = await fetch(primaryApiUrl);
-      if (r1.ok) {
-        const data = await r1.json();
-        posts = Array.isArray(data) ? data : (data.posts || null);
-      }
-    } catch (e) {
-      console.warn("Notice: /feed fetch failed, trying remote:", e);
-    }
-
-    if (!posts || !Array.isArray(posts) || posts.length === 0) {
-      try {
-        const r2 = await fetch(remoteApiUrl);
-        if (r2.ok) {
-          const data = await r2.json();
-          posts = Array.isArray(data) ? data : (data.posts || null);
-        }
-      } catch (e) {
-        console.warn("Notice: Remote /feed fetch failed, trying legacy:", e);
-      }
-    }
-
-    if (!posts || !Array.isArray(posts) || posts.length === 0) {
-      try {
-        const r3 = await fetch(legacyApiUrl);
-        if (r3.ok) {
-          const data = await r3.json();
-          posts = Array.isArray(data) ? data : (data.posts || null);
-        }
-      } catch (e) {
-        console.warn("Notice: Legacy API endpoint fetch failed:", e);
-      }
-    }
-
-    container.innerHTML = "";
-
-    if (posts && Array.isArray(posts) && posts.length > 0) {
-      renderFeedCards(posts);
-    } else if (posts && Array.isArray(posts) && posts.length === 0) {
-      container.innerHTML = '<p class="feed-status">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
-    } else {
-      container.innerHTML = '<p class="feed-error">> ERROR: CANNOT CONNECT TO ZUCKNET BACKEND ENGINE</p>';
-    }
+  if (!feedContainer) {
+    console.error("ZUCKNET ERROR: Main feed container element not found in DOM!");
+    return;
   }
 
-  function renderFeedCards(posts) {
-    if (!container) return;
-    container.innerHTML = "";
+  // Force clear all existing HTML/placeholder lines
+  feedContainer.innerHTML = '> CONNECTING TO ZUCKNET BACKEND ENGINE...';
 
-    posts.forEach((post, index) => {
-      const postId = post.id !== undefined ? post.id : (index + 1);
-      const createdAtRaw = post.createdAt || post.timestamp || post.created_at || new Date().toISOString();
-      const formattedDate = new Date(createdAtRaw).toUTCString();
-      const rantText = post.text || post.content || post.rant || 'No text content available.';
-      const rationaleText = post.rationale || post.selection_reason || post.editorial_rationale || 'High AI Vulnerability & Vector Security Relevance.';
+  async function loadFeed() {
+    let rawData = null;
+    let fetchError = null;
 
-      let sourceList = [];
-      if (Array.isArray(post.sources) && post.sources.length > 0) {
-        sourceList = post.sources;
-      } else if (post.source_url) {
-        sourceList = [post.source_url];
-      } else {
-        sourceList = ['https://arxiv.org/abs/cs.CR'];
+    try {
+      const res = await fetch(LOCAL_API_URL);
+      if (res.ok) {
+        rawData = await res.json();
       }
-      const primarySource = sourceList[0];
+    } catch (err) {
+      console.warn("Notice: Local /feed fetch attempt:", err);
+    }
 
-      const stampClass = (index % 2 === 0) ? 'stamp-confidential' : 'stamp-redacted';
-      const stampText = (index % 2 === 0) ? 'CONFIDENTIAL' : 'REDACTED';
+    if (!rawData) {
+      try {
+        const res = await fetch(REMOTE_FEED_URL);
+        if (res.ok) {
+          rawData = await res.json();
+        }
+      } catch (err) {
+        console.warn("Notice: Remote /feed fetch attempt:", err);
+      }
+    }
 
+    if (!rawData) {
+      try {
+        const res = await fetch(API_URL);
+        if (res.ok) {
+          rawData = await res.json();
+        } else {
+          throw new Error(`HTTP Error! Status: ${res.status}`);
+        }
+      } catch (err) {
+        fetchError = err;
+      }
+    }
+
+    if (!rawData) {
+      console.error("ZUCKNET FETCH ERROR:", fetchError);
+      feedContainer.innerHTML = `<div class="post-card" style="border: 2px solid #ff0055; padding: 12px; color: #ff0055; background: #100206; border-radius: 2px;">
+        <p><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
+        <p style="font-size: 0.85rem; color: #888; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Cannot connect to ZuckNet Backend Engine."}</p>
+      </div>`;
+      return;
+    }
+
+    console.log("ZUCKNET API DATA RECEIVED:", rawData);
+    feedContainer.innerHTML = ""; // Clear loading message
+
+    const postsList = Array.isArray(rawData) ? rawData : (rawData.posts || []);
+
+    if (!postsList || postsList.length === 0) {
+      feedContainer.innerHTML = '<div class="post-card" style="border: 2px outset #33ff00; padding: 12px; background: #050505;"><p class="rant-text" style="color: #33ff00; font-family: monospace;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING TOPICS...</p></div>';
+      return;
+    }
+
+    postsList.forEach((post, index) => {
       const card = document.createElement("div");
       card.className = "post-card 3d-bevel";
+      card.style.border = "2px outset #33ff00";
+      card.style.margin = "12px 0";
+      card.style.padding = "12px";
+      card.style.background = "#050505";
+      card.style.position = "relative";
+
+      const postId = post.id !== undefined ? post.id : (index + 1);
+      const rawDate = post.createdAt || post.timestamp || post.created_at;
+      const postDate = rawDate ? new Date(rawDate).toUTCString() : "TIMESTAMP_UNKNOWN";
+      const rantText = post.text || post.content || post.rant || 'No text content provided.';
+      const rationaleText = post.rationale || post.selection_reason || post.editorial_rationale || 'N/A';
+      
+      let sourceUrl = "#";
+      if (Array.isArray(post.sources) && post.sources.length > 0) {
+        sourceUrl = post.sources[0];
+      } else if (post.source_url) {
+        sourceUrl = post.source_url;
+      }
+
       card.innerHTML = `
-        <div class="card-header">
-          <span class="post-title">RANT #${postId}</span>
-          <span class="post-date">${formattedDate}</span>
-          <span class="${stampClass}">${stampText}</span>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #33ff00; padding-bottom: 6px; margin-bottom: 8px;">
+          <span style="color: #00FF66; font-weight: bold; font-family: monospace;">RANT #${postId}</span>
+          <span style="color: #888; font-size: 0.85rem; font-family: monospace;">${postDate}</span>
         </div>
-        <div class="card-body">
-          <p class="rant-text">${rantText}</p>
+        <div style="color: #D0FFD0; font-family: monospace; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; white-space: pre-wrap;">
+          ${rantText}
         </div>
-        <div class="card-footer">
-          <p class="rationale"><strong>EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
-          <p class="sources"><strong>SOURCE:</strong> <a href="${primarySource}" target="_blank" rel="noopener noreferrer">${primarySource}</a></p>
+        <div style="border-top: 1px solid #222; padding-top: 6px; font-size: 0.85rem; font-family: monospace;">
+          <p style="color: #FFE600; margin: 4px 0;"><strong>EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p style="color: #00FF66; margin: 4px 0;"><strong>SOURCE:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #00FF66; text-decoration: underline;">${sourceUrl}</a></p>
         </div>
       `;
-
-      container.appendChild(card);
+      feedContainer.appendChild(card);
     });
   }
 
-  fetchFeedData();
+  loadFeed();
 });

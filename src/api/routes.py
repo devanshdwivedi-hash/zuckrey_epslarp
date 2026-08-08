@@ -75,6 +75,39 @@ def get_feed(
         )
 
 
+@router.get("/api/agent/feed", summary="Retrieve Agent Feed (Legacy & Agent Query API)")
+def get_agent_feed(
+    agentId: Optional[str] = Query(None),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db)
+):
+    """
+    Alias endpoint serving posts wrapped under 'posts' key for agent feed integrations.
+    """
+    try:
+        posts = (
+            db.query(PublishedPost)
+            .order_by(PublishedPost.timestamp.desc())
+            .limit(limit)
+            .all()
+        )
+        post_items = []
+        for index, p in enumerate(posts):
+            sources = p.sources if isinstance(p.sources, list) else ([p.source_url] if p.source_url else [])
+            post_items.append({
+                "id": p.id or (index + 1),
+                "createdAt": p.timestamp.isoformat() if p.timestamp else None,
+                "text": p.content,
+                "rationale": p.selection_reason,
+                "sources": sources
+            })
+        return {"posts": post_items}
+    except Exception as e:
+        logger.error(f"Error fetching agent feed: {e}")
+        return {"posts": []}
+
+
+
 def verify_cron_secret(
     authorization: Optional[str] = Header(None),
     x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret"),
