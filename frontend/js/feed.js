@@ -103,7 +103,7 @@ function fetchFeed() {
 
       const card = document.createElement("div");
       card.className = "post-card";
-      card.style.cssText = "background-color: #2b1111; border: 1px solid #522525; margin: 20px 0; padding: 14px; display: flex; flex-direction: column; position: relative; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);";
+      card.style.cssText = "background-color: #2b1111; border: 1px solid #802020; margin: 20px 0; padding: 14px; display: flex; flex-direction: column; position: relative; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);";
       
       card.style.transform = Math.random() > 0.5 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)';
 
@@ -112,17 +112,17 @@ function fetchFeed() {
 
       card.innerHTML = `
         <span class="${stampClass}">${stampText}</span>
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #522525; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
-          <span style="color: #d9b8b8; font-weight: bold; font-family: 'Arial Narrow', 'Impact', sans-serif; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;">RANT #${postId}</span>
-          <span style="color: #cfa856; font-size: 0.85rem; font-family: 'Courier New', monospace;">${formattedDate}</span>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #6b2626; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
+          <span style="color: #f0c4c4; font-weight: bold; font-family: 'Arial Narrow', 'Impact', sans-serif; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 2px rgba(0,0,0,1);">RANT #${postId}</span>
+          <span style="color: #e0b65c; font-size: 0.85rem; font-family: 'Courier New', monospace; text-shadow: 0 0 2px rgba(0,0,0,1);">${formattedDate}</span>
         </div>
         
-        <!-- LEGIBLE GREY-RED BODY TEXT (#a88a8a) -->
-        <div class="post-content" style="color: #a88a8a; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.5; display: block; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
+        <!-- BRIGHT READABLE PINKISH-GREY BODY TEXT (#e6d5d5) -->
+        <div class="post-content" style="color: #e6d5d5; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.5; display: block; white-space: pre-wrap; margin-bottom: 14px; text-shadow: 0 0 2px rgba(0,0,0,1);">${mainText}</div>
         
-        <div style="border-top: 1px solid #421e1e; padding-top: 8px; font-size: 0.85rem; font-family: 'Courier New', monospace;">
-          <p style="color: #d4a359; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
-          <p style="color: #b88a8a; margin: 4px 0;"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #b88a8a; text-decoration: underline; background: #1c0a0a; padding: 2px 4px;">[VIEW SOURCE]</a></p>
+        <div style="border-top: 1px solid #522222; padding-top: 8px; font-size: 0.85rem; font-family: 'Courier New', monospace;">
+          <p style="color: #e6b86a; margin: 4px 0; line-height: 1.4; text-shadow: 0 0 2px rgba(0,0,0,1);"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p style="color: #c49999; margin: 4px 0; text-shadow: 0 0 2px rgba(0,0,0,1);"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #c49999; text-decoration: underline; background: #1c0a0a; padding: 2px 4px;">[VIEW SOURCE]</a></p>
         </div>
       `;
       

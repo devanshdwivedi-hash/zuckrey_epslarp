@@ -1,6 +1,6 @@
 /* ==========================================================================
    ZuckNet Retro Dark-Web Aesthetic Engine
-   CRT Monitor Bezel Casing | Embossed "BONY" Logo | Deep Red Cards
+   3D Molded Plastic Bezel | Deep Screen Recess | High Contrast Cards
    ========================================================================== */
 
 * {
@@ -24,27 +24,28 @@ html, body {
   position: relative;
 }
 
-/* Physical CRT Monitor Casing Bezel */
+/* Step 1: Molded Plastic CRT Monitor Bezel (#monitor-bezel) */
 #monitor-bezel {
   width: 95vw;
   max-width: 1600px;
   height: 95vh;
-  background-color: #1a1a1a; /* Dark charcoal grey plastic */
+  background: linear-gradient(135deg, #2a2a2a 0%, #111111 100%); /* Molded Plastic Lighting */
   border-radius: 40px; /* Rounded monitor corners */
   padding: 30px 40px 60px 40px; /* Thicker padding at bottom for BONY logo */
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.8), inset 2px 2px 5px rgba(255,255,255,0.05);
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.2), inset -2px -2px 10px rgba(0,0,0,0.8), 0 25px 50px rgba(0,0,0,0.9), 0 0 100px rgba(51, 255, 0, 0.1);
+  border: 1px solid #000; /* Plastic seam border */
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
-/* Recessed Monitor Screen */
+/* Step 2: Deep Screen Recess (#monitor-screen) */
 #monitor-screen {
   flex-grow: 1;
   position: relative;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 40px rgba(0,0,0,1), inset 0 0 15px rgba(0,0,0,0.8), 0 0 0 8px #050505;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -499,15 +500,16 @@ html, body {
   background: transparent;
 }
 
-/* Deep Red "Decision Protocol" Cards */
+/* Step 3: Deep Red "Decision Protocol" Cards with High Text Contrast */
 .post-card, .retro-feed-card, .card {
   background-color: #2b1111 !important;
-  border: 1px solid #522525 !important;
+  border: 1px solid #802020 !important; /* Brighter red border */
   margin: 20px 0;
-  padding: 12px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   position: relative;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .card-rant-body, .rant-text, .post-content {
@@ -516,7 +518,8 @@ html, body {
   height: auto !important;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #a88a8a !important;
+  color: #e6d5d5 !important; /* Brighter pinkish-grey body text */
+  text-shadow: 0 0 2px rgba(0,0,0,1) !important;
   margin-bottom: 1rem;
   white-space: pre-wrap;
   font-family: 'Courier New', monospace;
@@ -536,6 +539,7 @@ html, body {
   padding: 0.15rem 0.5rem;
   letter-spacing: 1.5px;
   transform: rotate(-4deg);
+  text-shadow: 0 0 2px rgba(0,0,0,1);
 }
 
 .stamp-redacted {
@@ -551,6 +555,7 @@ html, body {
   padding: 0.15rem 0.5rem;
   letter-spacing: 1.5px;
   transform: rotate(4deg);
+  text-shadow: 0 0 2px rgba(0,0,0,1);
 }
 
 /* X Feed Terminal */
@@ -641,6 +646,7 @@ html, body {
   width: 100%;
   height: 100%;
   display: block;
+  filter: contrast(1.2) brightness(0.9) sepia(0.5) hue-rotate(80deg);
 }
 
 .profile-info {
