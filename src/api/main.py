@@ -75,10 +75,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount frontend static directory if present
+# Mount frontend & assets static directory if present
 frontend_dir = root_dir / "frontend"
 if frontend_dir.exists():
     app.mount("/frontend", StaticFiles(directory=str(frontend_dir)), name="frontend")
+
+assets_dir = root_dir / "assets"
+if assets_dir.exists():
+    app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
 
 
 @app.get("/favicon.ico", include_in_schema=False)
