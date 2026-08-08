@@ -1,7 +1,6 @@
 /* ==========================================================================
    ZuckNet Retro Dark-Web Aesthetic Engine
-   Smoky Radial Background | Desaturated Sage Green (#8ca68c) Text
-   Muted Dark Purple (#2a1636) Top Bar | Asymmetrical Layout Offsets
+   CRT Monitor Bezel Casing | Embossed "BONY" Logo | Deep Red Cards
    ========================================================================== */
 
 * {
@@ -10,14 +9,62 @@
   padding: 0;
 }
 
-body {
-  background: radial-gradient(circle at center, #1e2420 0%, #0a0c0a 100%);
-  color: #8ca68c;
-  font-family: 'Arial Narrow', 'Impact', 'Courier New', sans-serif;
+html, body {
+  margin: 0;
+  padding: 0;
   height: 100vh;
   width: 100vw;
+  background-color: #020202;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #8ca68c;
+  font-family: 'Arial Narrow', 'Impact', 'Courier New', sans-serif;
   position: relative;
+}
+
+/* Physical CRT Monitor Casing Bezel */
+#monitor-bezel {
+  width: 95vw;
+  max-width: 1600px;
+  height: 95vh;
+  background-color: #1a1a1a; /* Dark charcoal grey plastic */
+  border-radius: 40px; /* Rounded monitor corners */
+  padding: 30px 40px 60px 40px; /* Thicker padding at bottom for BONY logo */
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.8), inset 2px 2px 5px rgba(255,255,255,0.05);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Recessed Monitor Screen */
+#monitor-screen {
+  flex-grow: 1;
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #1e2420 0%, #0a0c0a 100%);
+}
+
+/* Embossed 3D Plastic BONY Logo */
+#bony-logo {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Arial Black', Impact, sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 5px;
+  color: #111;
+  text-shadow: -1px -1px 1px rgba(255,255,255,0.1), 1px 1px 1px rgba(0,0,0,0.8);
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Custom Retro Scrollbars */
@@ -41,14 +88,14 @@ body {
   background: #455945;
 }
 
-/* CRT Screen Overlay - Subtle Dark Vignette & Lines */
-body::before {
+/* CRT Screen Overlay inside #monitor-screen */
+#monitor-screen::before {
   content: '';
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 99999;
   pointer-events: none;
   background: linear-gradient(
@@ -58,13 +105,13 @@ body::before {
   background-size: 100% 4px;
 }
 
-body::after {
+#monitor-screen::after {
   content: '';
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 99998;
   pointer-events: none;
   background: radial-gradient(circle, transparent 65%, rgba(0, 0, 0, 0.85) 100%);
@@ -72,11 +119,11 @@ body::after {
 
 /* Boot Sequence Overlay */
 .boot-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #0a0c0a;
   z-index: 80000;
   display: flex;
@@ -141,8 +188,8 @@ body::after {
 .desktop-shell {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -217,7 +264,7 @@ body::after {
   gap: 1.25rem;
   padding: 1rem 1.25rem;
   overflow: hidden;
-  height: calc(100vh - 110px);
+  height: calc(100% - 86px);
 }
 
 .sidebar {
@@ -228,7 +275,6 @@ body::after {
   gap: 0.85rem;
 }
 
-/* Sidebar Boxes - Dark Flat Borders (#455945) */
 .sidebar-box, .box, #left-sidebar, #right-sidebar {
   background: #101411;
   border: 1px solid #455945;
@@ -249,14 +295,12 @@ body::after {
   text-transform: uppercase;
 }
 
-/* Asymmetry Step 2: Command Initiatives hanging out of alignment */
 .command-initiatives-box {
   position: relative;
   left: -10px;
   top: 15px;
 }
 
-/* Asymmetry Step 2: Verified Infiltrator rotated 1deg */
 .infiltrator-box {
   transform: rotate(1deg);
   margin-top: 10px;
@@ -300,7 +344,6 @@ body::after {
   font-weight: bold;
 }
 
-/* Neon Banner Ads - Darkened */
 .banner-ad-container {
   overflow: visible;
   padding: 0.5rem;
@@ -359,7 +402,6 @@ body::after {
   display: inline-block;
 }
 
-/* Web Badges */
 .web-badges-panel {
   display: flex;
   flex-direction: column;
@@ -421,7 +463,7 @@ body::after {
   font-family: 'Courier New', monospace;
 }
 
-/* Center Feed Container - Wider & Dark Semi-Transparent (background: rgba(10, 10, 10, 0.6);) */
+/* Center Feed Container */
 .center-feed {
   flex-grow: 1.6;
   background: rgba(10, 10, 10, 0.6);
