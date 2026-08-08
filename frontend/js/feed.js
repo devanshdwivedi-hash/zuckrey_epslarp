@@ -1,6 +1,6 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Robust DOM Target & Backend Fetching Implementation
+ * Flexible Key Mapping & High-Contrast Card Rendering Implementation
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -65,9 +65,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     console.log("ZUCKNET API DATA RECEIVED:", rawData);
-    feedContainer.innerHTML = ""; // Clear loading message
-
+    
     const postsList = Array.isArray(rawData) ? rawData : (rawData.posts || []);
+    if (postsList && postsList.length > 0) {
+      console.log("RAW POST OBJECT SAMPLE:", postsList[0]);
+    }
+
+    feedContainer.innerHTML = ""; // Clear loading message
 
     if (!postsList || postsList.length === 0) {
       feedContainer.innerHTML = '<div class="post-card" style="border: 2px outset #33ff00; padding: 12px; background: #050505;"><p class="rant-text" style="color: #33ff00; font-family: monospace;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING TOPICS...</p></div>';
@@ -75,36 +79,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     postsList.forEach((post, index) => {
-      const card = document.createElement("div");
-      card.className = "post-card 3d-bevel";
-      card.style.border = "2px outset #33ff00";
-      card.style.margin = "12px 0";
-      card.style.padding = "12px";
-      card.style.background = "#050505";
-      card.style.position = "relative";
-
-      const postId = post.id !== undefined ? post.id : (index + 1);
-      const rawDate = post.createdAt || post.timestamp || post.created_at;
-      const postDate = rawDate ? new Date(rawDate).toUTCString() : "TIMESTAMP_UNKNOWN";
-      const rantText = post.text || post.content || post.rant || 'No text content provided.';
-      const rationaleText = post.rationale || post.selection_reason || post.editorial_rationale || 'N/A';
+      // Flexible field extraction
+      const postId = post.id || post.post_id || (index + 1);
+      const rawDate = post.createdAt || post.created_at || post.timestamp || post.date;
+      const formattedDate = rawDate ? new Date(rawDate).toUTCString() : "AUG 2026";
       
+      const rantText = post.text || post.content || post.body || post.rant || "No text available.";
+      const rationaleText = post.rationale || post.editorial_rationale || post.selection_reason || post.reason || "High security relevance.";
+      
+      // Handle sources array or single string
       let sourceUrl = "#";
       if (Array.isArray(post.sources) && post.sources.length > 0) {
         sourceUrl = post.sources[0];
-      } else if (post.source_url) {
-        sourceUrl = post.source_url;
+      } else if (typeof post.sources === "string") {
+        sourceUrl = post.sources;
+      } else if (post.source || post.source_url) {
+        sourceUrl = post.source || post.source_url;
       }
 
+      const card = document.createElement("div");
+      card.className = "post-card 3d-bevel";
+      card.style.cssText = "border: 2px outset #33ff00; margin: 14px 0; padding: 12px; background: #050505; color: #33ff00; position: relative;";
+
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #33ff00; padding-bottom: 6px; margin-bottom: 8px;">
-          <span style="color: #00FF66; font-weight: bold; font-family: monospace;">RANT #${postId}</span>
-          <span style="color: #888; font-size: 0.85rem; font-family: monospace;">${postDate}</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #33ff00; padding-bottom: 6px; margin-bottom: 8px;">
+          <span style="color: #00FF66; font-weight: bold; font-family: monospace; font-size: 1rem;">RANT #${postId}</span>
+          <span style="color: #FFCC00; font-size: 0.85rem; font-family: monospace;">${formattedDate}</span>
         </div>
-        <div style="color: #D0FFD0; font-family: monospace; font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px; white-space: pre-wrap;">
+        <div style="color: #D0FFD0; font-family: monospace; font-size: 0.95rem; line-height: 1.5; margin: 10px 0; white-space: pre-wrap;">
           ${rantText}
         </div>
-        <div style="border-top: 1px solid #222; padding-top: 6px; font-size: 0.85rem; font-family: monospace;">
+        <div style="border-top: 1px solid #222; padding-top: 8px; font-size: 0.85rem; font-family: monospace;">
           <p style="color: #FFE600; margin: 4px 0;"><strong>EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
           <p style="color: #00FF66; margin: 4px 0;"><strong>SOURCE:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #00FF66; text-decoration: underline;">${sourceUrl}</a></p>
         </div>
