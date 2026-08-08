@@ -5,8 +5,8 @@ from config.settings import settings
 
 logger = logging.getLogger("autonomous_agent.db.database")
 
-# Detect engine configuration based on DATABASE_URL
-database_url = settings.DATABASE_URL
+# Detect engine configuration based on formatted_database_url
+database_url = settings.formatted_database_url
 
 connect_args = {}
 if database_url.startswith("sqlite"):
@@ -29,7 +29,7 @@ Base = declarative_base()
 
 def init_db():
     """
-    Initializes database schema tables.
+    Initializes database schema tables automatically on app initialization.
     Importing models ensures Base metadata registers all mapped tables.
     """
     import src.db.models  # noqa: F401
