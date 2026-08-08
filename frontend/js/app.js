@@ -1,5 +1,5 @@
 /**
- * ZuckNet Y2K Terminal Boot Controller & Desktop OS Manager
+ * ZuckNet Y2K Terminal Boot Controller & Real-Time OS Taskbar Clock Manager
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainContent = document.getElementById('main-content');
   const loadingEl = document.getElementById('loading-percentage');
   const logsEl = document.getElementById('terminal-logs');
-  const clockEl = document.getElementById('taskbar-clock');
 
   const duration = 3000;
   const intervalTime = 30;
@@ -63,16 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const navTabs = document.querySelectorAll('.nav-tab');
   navTabs.forEach(tab => {
-    tab.addEventListener('click', (e) => {
+    tab.addEventListener('click', () => {
       navTabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
     });
   });
 
-  if (clockEl) {
+  // Activate Real-Time OS Taskbar System Clock
+  const clockElement = document.getElementById("taskbar-clock") || document.getElementById("os-clock") || document.querySelector(".taskbar-clock") || document.querySelector(".clock");
+  if (clockElement) {
     const updateClock = () => {
       const now = new Date();
-      clockEl.textContent = now.toLocaleTimeString();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      clockElement.innerText = `${hh}:${mm}:${ss} SYS`;
     };
     updateClock();
     setInterval(updateClock, 1000);

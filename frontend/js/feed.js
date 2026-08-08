@@ -1,6 +1,6 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Markdown Sanitization & 30-Second Polling Implementation
+ * Aggressive Y2K Terminal Timestamp Extraction & 30-Second Polling Loop
  */
 
 function fetchFeed() {
@@ -64,8 +64,27 @@ function fetchFeed() {
 
     postsList.forEach((post, index) => {
       const postId = post.id || post.post_id || (index + 1);
-      const rawDate = post.createdAt || post.created_at || post.timestamp || post.date;
-      const formattedDate = rawDate ? new Date(rawDate).toUTCString() : "TIMESTAMP UNKNOWN";
+
+      let rawDate = post.createdAt || post.created_at || post.timestamp || post.published_at || post.date;
+
+      if (!rawDate) {
+        const dateKey = Object.keys(post).find(key => key.toLowerCase().includes('date') || key.toLowerCase().includes('time') || key.toLowerCase().includes('created'));
+        if (dateKey) rawDate = post[dateKey];
+      }
+
+      let formattedDate = "[TIMESTAMP NULL]";
+      if (rawDate) {
+        const d = new Date(rawDate);
+        if (!isNaN(d.getTime())) {
+          const yyyy = d.getUTCFullYear();
+          const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+          const dd = String(d.getUTCDate()).padStart(2, '0');
+          const hh = String(d.getUTCHours()).padStart(2, '0');
+          const min = String(d.getUTCMinutes()).padStart(2, '0');
+          const sec = String(d.getUTCSeconds()).padStart(2, '0');
+          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
+        }
+      }
       
       let mainText = post.text || post.content || post.body || post.rant || "No rant text provided by backend.";
       mainText = mainText.replace(/[#*`_]/g, "").trim();
@@ -89,7 +108,7 @@ function fetchFeed() {
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; border-bottom: 2px dashed #115511; padding-bottom: 8px; margin-bottom: 12px;">
           <span style="color: #00FF66; font-weight: bold; font-family: 'Courier New', monospace; font-size: 1.1rem; text-transform: uppercase;">RANT #${postId}</span>
-          <span style="color: #FFCC00; font-size: 0.9rem; font-family: 'Courier New', monospace;">${formattedDate}</span>
+          <span style="color: #FFCC00; font-size: 0.95rem; font-family: 'Courier New', monospace; letter-spacing: 1px; text-shadow: 0 0 5px #FFCC00;">${formattedDate}</span>
         </div>
         
         <!-- FORCED VISIBILITY ON TEXT CONTAINER -->
