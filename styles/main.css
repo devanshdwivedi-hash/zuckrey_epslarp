@@ -575,10 +575,13 @@ body::after {
   padding: 1.25rem;
 }
 
-.card-rant-body, .rant-text {
+.card-rant-body, .rant-text, .post-content {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #D0FFD0;
+  color: #D0FFD0 !important;
   margin-bottom: 1rem;
   white-space: pre-wrap;
   text-shadow: 0 0 2px rgba(208, 255, 208, 0.2);

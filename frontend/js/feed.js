@@ -1,45 +1,34 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Flexible Key Mapping & High-Contrast Card Rendering Implementation
+ * Markdown Sanitization & 30-Second Polling Implementation
  */
 
-document.addEventListener("DOMContentLoaded", () => {
+function fetchFeed() {
   const API_URL = "https://zuckrey-agent.onrender.com/api/agent/feed?agentId=abc-123";
   const LOCAL_API_URL = "/feed";
   const REMOTE_FEED_URL = "https://zuckrey-agent.onrender.com/feed";
-  
-  const feedContainer = document.querySelector("#decision-protocols") || document.querySelector(".feed-container") || document.querySelector(".scrollable-feed");
 
-  if (!feedContainer) {
-    console.error("ZUCKNET ERROR: Main feed container element not found in DOM!");
+  const container = document.querySelector("#decision-protocols") || document.querySelector(".feed-container") || document.querySelector(".scrollable-feed");
+
+  if (!container) {
+    console.error("ZUCKNET ERROR: Feed container not found!");
     return;
   }
 
-  // Force clear all existing HTML/placeholder lines
-  feedContainer.innerHTML = '> CONNECTING TO ZUCKNET BACKEND ENGINE...';
-
-  async function loadFeed() {
+  async function getFeedData() {
     let rawData = null;
     let fetchError = null;
 
     try {
       const res = await fetch(LOCAL_API_URL);
-      if (res.ok) {
-        rawData = await res.json();
-      }
-    } catch (err) {
-      console.warn("Notice: Local /feed fetch attempt:", err);
-    }
+      if (res.ok) rawData = await res.json();
+    } catch (err) {}
 
     if (!rawData) {
       try {
         const res = await fetch(REMOTE_FEED_URL);
-        if (res.ok) {
-          rawData = await res.json();
-        }
-      } catch (err) {
-        console.warn("Notice: Remote /feed fetch attempt:", err);
-      }
+        if (res.ok) rawData = await res.json();
+      } catch (err) {}
     }
 
     if (!rawData) {
@@ -48,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (res.ok) {
           rawData = await res.json();
         } else {
-          throw new Error(`HTTP Error! Status: ${res.status}`);
+          throw new Error("Backend connection failed.");
         }
       } catch (err) {
         fetchError = err;
@@ -57,37 +46,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!rawData) {
       console.error("ZUCKNET FETCH ERROR:", fetchError);
-      feedContainer.innerHTML = `<div class="post-card" style="border: 2px solid #ff0055; padding: 12px; color: #ff0055; background: #100206; border-radius: 2px;">
-        <p><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
-        <p style="font-size: 0.85rem; color: #888; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Cannot connect to ZuckNet Backend Engine."}</p>
+      container.innerHTML = `<div class="post-card" style="border: 2px solid #ff0055; padding: 16px; background-color: #100206; display: block; visibility: visible;">
+        <p style="color: #ff0055; font-family: monospace; font-size: 1rem;"><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
+        <p style="color: #888; font-family: monospace; font-size: 0.85rem; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Backend connection failed."}</p>
       </div>`;
       return;
     }
 
-    console.log("ZUCKNET API DATA RECEIVED:", rawData);
-    
     const postsList = Array.isArray(rawData) ? rawData : (rawData.posts || []);
-    if (postsList && postsList.length > 0) {
-      console.log("RAW POST OBJECT SAMPLE:", postsList[0]);
-    }
-
-    feedContainer.innerHTML = ""; // Clear loading message
 
     if (!postsList || postsList.length === 0) {
-      feedContainer.innerHTML = '<div class="post-card" style="border: 2px outset #33ff00; padding: 12px; background: #050505;"><p class="rant-text" style="color: #33ff00; font-family: monospace;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING TOPICS...</p></div>';
+      container.innerHTML = '<p style="color:#33ff00; padding:15px; font-family:monospace; font-size:1rem;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
       return;
     }
 
+    container.innerHTML = "";
+
     postsList.forEach((post, index) => {
-      // Flexible field extraction
       const postId = post.id || post.post_id || (index + 1);
       const rawDate = post.createdAt || post.created_at || post.timestamp || post.date;
-      const formattedDate = rawDate ? new Date(rawDate).toUTCString() : "AUG 2026";
+      const formattedDate = rawDate ? new Date(rawDate).toUTCString() : "TIMESTAMP UNKNOWN";
       
-      const rantText = post.text || post.content || post.body || post.rant || "No text available.";
-      const rationaleText = post.rationale || post.editorial_rationale || post.selection_reason || post.reason || "High security relevance.";
-      
-      // Handle sources array or single string
+      let mainText = post.text || post.content || post.body || post.rant || "No rant text provided by backend.";
+      mainText = mainText.replace(/[#*`_]/g, "").trim();
+
+      let rationaleText = post.rationale || post.editorial_rationale || post.selection_reason || "No rationale provided.";
+      rationaleText = rationaleText.replace(/[#*`_]/g, "").trim();
+
       let sourceUrl = "#";
       if (Array.isArray(post.sources) && post.sources.length > 0) {
         sourceUrl = post.sources[0];
@@ -99,24 +84,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const card = document.createElement("div");
       card.className = "post-card 3d-bevel";
-      card.style.cssText = "border: 2px outset #33ff00; margin: 14px 0; padding: 12px; background: #050505; color: #33ff00; position: relative;";
+      card.style.cssText = "border: 2px outset #33ff00; margin: 16px 0; padding: 16px; background-color: #050505; display: block; visibility: visible; height: auto; overflow: visible; position: relative;";
 
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #33ff00; padding-bottom: 6px; margin-bottom: 8px;">
-          <span style="color: #00FF66; font-weight: bold; font-family: monospace; font-size: 1rem;">RANT #${postId}</span>
-          <span style="color: #FFCC00; font-size: 0.85rem; font-family: monospace;">${formattedDate}</span>
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px dashed #115511; padding-bottom: 8px; margin-bottom: 12px;">
+          <span style="color: #00FF66; font-weight: bold; font-family: 'Courier New', monospace; font-size: 1.1rem; text-transform: uppercase;">RANT #${postId}</span>
+          <span style="color: #FFCC00; font-size: 0.9rem; font-family: 'Courier New', monospace;">${formattedDate}</span>
         </div>
-        <div style="color: #D0FFD0; font-family: monospace; font-size: 0.95rem; line-height: 1.5; margin: 10px 0; white-space: pre-wrap;">
-          ${rantText}
-        </div>
-        <div style="border-top: 1px solid #222; padding-top: 8px; font-size: 0.85rem; font-family: monospace;">
-          <p style="color: #FFE600; margin: 4px 0;"><strong>EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
-          <p style="color: #00FF66; margin: 4px 0;"><strong>SOURCE:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #00FF66; text-decoration: underline;">${sourceUrl}</a></p>
+        
+        <!-- FORCED VISIBILITY ON TEXT CONTAINER -->
+        <div class="post-content" style="color: #D0FFD0; font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.6; display: block; white-space: pre-wrap; margin-bottom: 16px;">${mainText}</div>
+        
+        <div style="border-top: 1px solid #115511; padding-top: 10px; font-size: 0.9rem; font-family: 'Courier New', monospace;">
+          <p style="color: #FFE600; margin: 6px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p style="color: #00FF66; margin: 6px 0;"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #00AA44; text-decoration: underline; background: #001100; padding: 2px 4px;">[VIEW SOURCE]</a></p>
         </div>
       `;
-      feedContainer.appendChild(card);
+      
+      container.appendChild(card);
     });
   }
 
-  loadFeed();
+  getFeedData();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchFeed();
+  setInterval(fetchFeed, 30000);
 });
