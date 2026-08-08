@@ -1,0 +1,27 @@
+name: 30-Minute Autonomous Pipeline Cron
+
+on:
+  schedule:
+    # Triggers every 30 minutes to bypass Vercel Hobby daily cron limits
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  trigger-pipeline-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel /api/cron Endpoint
+        run: |
+          echo "Triggering Vercel serverless autonomous content agent pipeline..."
+          RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://${{ secrets.VERCEL_APP_URL }}/api/cron")
+          
+          echo "HTTP Response Code: $RESPONSE_CODE"
+          echo "Response Body:"
+          cat response.json
+          
+          if [ "$RESPONSE_CODE" -ne 200 ]; then
+            echo "Cron invocation failed with status code $RESPONSE_CODE"
+            exit 1
+          fi
