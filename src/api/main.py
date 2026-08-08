@@ -1,6 +1,14 @@
 import os
+import sys
 import logging
+from pathlib import Path
 from contextlib import asynccontextmanager
+
+# Fix Vercel Serverless Function module resolution
+root_dir = Path(__file__).resolve().parent.parent.parent
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
 from fastapi import FastAPI, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware

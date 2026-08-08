@@ -6,8 +6,14 @@ from config.settings import settings
 
 logger = logging.getLogger("autonomous_agent.db.database")
 
+is_vercel = "VERCEL" in os.environ
+
 # Detect engine configuration based on formatted_database_url
 database_url = settings.formatted_database_url
+
+# On Vercel serverless runtime, SQLite must write to /tmp directory because root filesystem is read-only
+if is_vercel and database_url.startswith("sqlite:///./"):
+    database_url = "sqlite:////tmp/autonomous_agent.db"
 
 connect_args = {}
 engine_kwargs = {
@@ -15,8 +21,6 @@ engine_kwargs = {
     "pool_recycle": 300,
     "echo": settings.DEBUG,
 }
-
-is_vercel = "VERCEL" in os.environ
 
 if database_url.startswith("sqlite"):
     # SQLite: disable same-thread restriction for async compatibility
@@ -39,8 +43,8 @@ try:
     )
 except Exception as engine_err:
     logger.error(f"Failed to create SQLAlchemy engine with URL '{database_url}': {engine_err}")
-    # Fallback to local SQLite engine to avoid crash during function initialization
-    engine = create_engine("sqlite:///./fallback_autonomous.db", connect_args={"check_same_thread": False})
+    fallback_path = "/tmp/fallback_autonomous.db" if is_vercel else "./fallback_autonomous.db"
+    engine = create_engine(f"sqlite:///{fallback_path}", connect_args={"check_same_thread": False})
 
 # Session factory for DB transactions
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
