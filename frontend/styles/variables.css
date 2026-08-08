@@ -1,0 +1,28 @@
+:root {
+  /* Color Palette - Y2K Cyberpunk CRT Phosphor */
+  --bg-dark: #05070a;
+  --bg-panel: #0d1117;
+  --bg-header: #161b22;
+  --win-border: #30363d;
+  --win-header-bg: linear-gradient(90deg, #0055ff, #00aaee);
+  --win-header-text: #ffffff;
+  
+  --phosphor-green: #00ff66;
+  --phosphor-amber: #ffb700;
+  --cyber-blue: #00e1ff;
+  --cyber-magenta: #ff0055;
+  --text-primary: #e6edf3;
+  --text-muted: #8b949e;
+  
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-sans: 'Outfit', -apple-system, sans-serif;
+  
+  /* Z-Index Layers */
+  --z-desktop: 1;
+  --z-window: 100;
+  --z-active-window: 200;
+  --z-taskbar: 500;
+  --z-popup: 1000;
+  --z-crt-overlay: 9999;
+}

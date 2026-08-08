@@ -10,7 +10,8 @@ if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
 from fastapi import FastAPI, Response
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from config.settings import settings
@@ -74,6 +75,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount frontend static directory if present
+frontend_dir = root_dir / "frontend"
+if frontend_dir.exists():
+    app.mount("/frontend", StaticFiles(directory=str(frontend_dir)), name="frontend")
+
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
@@ -88,9 +94,13 @@ async def favicon_png():
 @app.get("/", response_class=HTMLResponse)
 async def root_dashboard():
     """
-    Renders the root HTML bunker dashboard for Vercel and local runs.
-    Wrapped in try/except to prevent Vercel 500 crashes.
+    Renders the Y2K Retro OS Bunker Dashboard if frontend/index.html exists,
+    or falls back to the embedded status dashboard template.
     """
+    index_path = frontend_dir / "index.html"
+    if index_path.exists():
+        return FileResponse(str(index_path))
+
     try:
         html_content = f"""
         <!DOCTYPE html>
@@ -101,7 +111,7 @@ async def root_dashboard():
             <title>Autonomous AI Agent Bunker</title>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
             <style>
                 :root {{
                     --bg-primary: #0a0c10;
@@ -112,7 +122,6 @@ async def root_dashboard():
                     --text-muted: #8b9bb4;
                     --border-color: #242c3d;
                 }}
-
                 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
                 body {{
                     background-color: var(--bg-primary);
