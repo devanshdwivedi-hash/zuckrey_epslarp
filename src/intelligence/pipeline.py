@@ -5,9 +5,6 @@ from typing import List, Tuple, Callable, Optional
 from src.intelligence.schemas import RawTopic, EditorialDecision, GeneratedPost
 from src.intelligence.evaluator import LLMEvaluator
 from src.intelligence.generator import generate_post
-from src.scrapers.arxiv_scraper import ArxivScraper
-from src.scrapers.hn_scraper import HNScraper
-from src.scrapers.rss_scraper import RSSScraper
 from src.memory.embeddings import get_embedding
 
 logger = logging.getLogger("autonomous_agent.intelligence.pipeline")
@@ -24,6 +21,11 @@ async def run_discovery_and_evaluation(
     4. Generation: Invokes generate_post for each approved topic to construct complete GeneratedPost objects.
     5. Returns a tuple: (accepted_posts, rejected_items)
     """
+    # Import scrapers dynamically inside function to prevent circular package imports
+    from src.scrapers.arxiv_scraper import ArxivScraper
+    from src.scrapers.hn_scraper import HNScraper
+    from src.scrapers.rss_scraper import RSSScraper
+
     logger.info("=== STARTING DISCOVERY & EVALUATION PIPELINE ===")
     raw_topics: List[RawTopic] = []
 
