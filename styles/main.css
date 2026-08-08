@@ -1,7 +1,7 @@
 /* ==========================================================================
-   ZuckNet Y2K Retro Aesthetic Engine
-   Theme: Dark #111111 with Toxic Green #33ff00 Monospace Font
-   3D Outset/Inset Bevel Borders & High Contrast Text Hierarchy
+   ZuckNet Retro Dark-Web Aesthetic Engine
+   Smoky Radial Background | Desaturated Sage Green (#8ca68c) Text
+   Muted Dark Purple (#2a1636) Top Bar | Asymmetrical Layout Offsets
    ========================================================================== */
 
 * {
@@ -11,9 +11,9 @@
 }
 
 body {
-  background-color: #111111;
-  color: #33ff00;
-  font-family: 'Courier New', Courier, Consolas, 'JetBrains Mono', monospace;
+  background: radial-gradient(circle at center, #1e2420 0%, #0a0c0a 100%);
+  color: #8ca68c;
+  font-family: 'Arial Narrow', 'Impact', 'Courier New', sans-serif;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -22,27 +22,26 @@ body {
 
 /* Custom Retro Scrollbars */
 ::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050a05;
-  border: 1px inset #113311;
+  background: #080c09;
+  border: 1px solid #233023;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #004411;
-  border: 2px outset #33ff00;
+  background: #273827;
+  border: 1px solid #455945;
   border-radius: 0px;
-  box-shadow: inset 1px 1px 0 #00ff66, inset -1px -1px 0 #002200;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff66;
+  background: #455945;
 }
 
-/* CRT Screen Overlay */
+/* CRT Screen Overlay - Subtle Dark Vignette & Lines */
 body::before {
   content: '';
   position: fixed;
@@ -53,8 +52,8 @@ body::before {
   z-index: 99999;
   pointer-events: none;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.35) 50%
+    rgba(10, 15, 10, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
   );
   background-size: 100% 4px;
 }
@@ -68,21 +67,17 @@ body::after {
   height: 100vh;
   z-index: 99998;
   pointer-events: none;
-  background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.85) 100%);
-  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.95);
+  background: radial-gradient(circle, transparent 65%, rgba(0, 0, 0, 0.85) 100%);
 }
 
-/* ==========================================================================
-   Full-Screen Boot Sequence Overlay
-   ========================================================================== */
-
+/* Boot Sequence Overlay */
 .boot-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #111111;
+  background: #0a0c0a;
   z-index: 80000;
   display: flex;
   justify-content: center;
@@ -103,64 +98,46 @@ body::after {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.85rem;
   line-height: 1.15;
-  color: #33ff00;
-  text-shadow: 0 0 10px #33ff00, 0 0 20px #33ff00;
-  background: rgba(0, 30, 0, 0.2);
+  color: #8ca68c;
+  background: rgba(15, 25, 15, 0.3);
   padding: 1.5rem;
-  border: 2px outset #33ff00;
-  box-shadow: inset 1px 1px 0px #66ff66, inset -1px -1px 0px #006600, 0 0 20px rgba(51, 255, 0, 0.4);
+  border: 1px solid #455945;
   margin-bottom: 2rem;
   white-space: pre;
-  animation: face-glow 2s infinite alternate;
-}
-
-@keyframes face-glow {
-  0% { text-shadow: 0 0 8px #33ff00, 0 0 15px #33ff00; }
-  100% { text-shadow: 0 0 14px #33ff00, 0 0 30px #33ff00; }
 }
 
 .boot-terminal {
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
 }
 
 .flicker-text {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   letter-spacing: 2px;
-  color: #33ff00;
-  text-shadow: 0 0 8px #33ff00;
+  color: #8ca68c;
   margin-bottom: 1rem;
-  animation: text-flicker 0.15s infinite;
-}
-
-@keyframes text-flicker {
-  0% { opacity: 0.92; }
-  50% { opacity: 1; }
-  100% { opacity: 0.95; }
 }
 
 .log-output {
-  background: #080808;
-  border: 2px inset #33ff00;
+  background: #060806;
+  border: 1px solid #455945;
   padding: 1rem;
-  border-radius: 2px;
   text-align: left;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
   max-height: 120px;
   overflow: hidden;
 }
 
 .log-line {
   margin-bottom: 0.4rem;
-  color: #33ff00;
-  text-shadow: 0 0 5px #33ff00;
+  color: #8ca68c;
+  font-family: 'Courier New', monospace;
 }
 
-/* ==========================================================================
-   Desktop OS Shell Layout
-   ========================================================================== */
-
+/* Desktop OS Shell Layout */
 .desktop-shell {
   display: flex;
   flex-direction: column;
@@ -169,11 +146,11 @@ body::after {
   overflow: hidden;
 }
 
-/* Top Navigation Bar */
-.top-nav {
+/* Muted Dark Purple Top Bar (#2a1636) */
+.top-nav, #os-topbar {
   height: 44px;
-  background-color: #0c0c0c;
-  border-bottom: 2px outset #33ff00;
+  background-color: #2a1636;
+  border-bottom: 1px solid #48275c;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -182,10 +159,12 @@ body::after {
 }
 
 .nav-brand {
-  font-size: 1.1rem;
+  font-family: 'Arial Narrow', 'Impact', sans-serif;
+  font-size: 1.15rem;
   font-weight: bold;
   letter-spacing: 2px;
-  text-shadow: 0 0 8px #33ff00;
+  color: #d4c2e6;
+  text-transform: uppercase;
 }
 
 .nav-tabs {
@@ -194,42 +173,35 @@ body::after {
 }
 
 .nav-tab {
-  background: #181818;
-  color: #33ff00;
-  border: 2px outset #33ff00;
+  background: #1d0f26;
+  color: #c8b4dc;
+  border: 1px solid #48275c;
   padding: 0.35rem 0.85rem;
-  font-family: inherit;
+  font-family: 'Arial Narrow', sans-serif;
   font-size: 0.85rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: inset 1px 1px 0 #66ff66, inset -1px -1px 0 #004400;
 }
 
 .nav-tab:hover {
-  background: #33ff00;
-  color: #111111;
-  box-shadow: 0 0 10px #33ff00;
-  animation: hover-text-flicker 0.12s infinite;
+  background: #48275c;
+  color: #ffffff;
 }
 
 .nav-tab.active {
-  background: #33ff00;
-  color: #111111;
-  border-style: inset;
-  box-shadow: inset 1px 1px 0 #004400, inset -1px -1px 0 #66ff66;
+  background: #48275c;
+  color: #ffffff;
+  border: 1px solid #723e91;
 }
 
-/* Top Marquee Bar */
 .marquee-bar {
-  background: #002200;
-  border-bottom: 2px outset #33ff00;
-  color: #33ff00;
-  font-family: inherit;
+  background: #141c14;
+  border-bottom: 1px solid #364736;
+  color: #8ca68c;
+  font-family: 'Courier New', monospace;
   font-size: 0.82rem;
-  font-weight: bold;
   padding: 0.2rem 0;
-  text-shadow: 0 0 6px #33ff00;
   letter-spacing: 1.5px;
   z-index: 99;
 }
@@ -238,7 +210,7 @@ body::after {
   display: block;
 }
 
-/* OS Layout Grid (Left Sidebar | Center Feed | Right Sidebar) */
+/* Asymmetrical OS Layout Grid */
 .os-layout {
   flex-grow: 1;
   display: flex;
@@ -249,32 +221,46 @@ body::after {
 }
 
 .sidebar {
-  width: 250px;
+  width: 240px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
 }
 
-/* 3D Bevel Outset Window Panel Containers */
+/* Sidebar Boxes - Dark Flat Borders (#455945) */
 .sidebar-box, .box, #left-sidebar, #right-sidebar {
-  background: #121612;
-  border: 2px outset #33ff00;
-  box-shadow: inset 1px 1px 0px #66ff66, inset -1px -1px 0px #004400, 4px 4px 12px rgba(0, 0, 0, 0.8);
+  background: #101411;
+  border: 1px solid #455945;
   padding: 0.85rem;
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 .sidebar-header {
-  font-size: 0.88rem;
+  font-family: 'Arial Narrow', 'Impact', sans-serif;
+  font-size: 0.9rem;
   font-weight: bold;
-  background: linear-gradient(90deg, #092c10, #041407);
-  border-bottom: 2px solid #33ff00;
+  background: #1a241b;
+  border-bottom: 1px solid #455945;
   padding: 0.35rem 0.6rem;
   margin: -0.85rem -0.85rem 0.65rem -0.85rem;
   letter-spacing: 1px;
-  text-shadow: 0 0 5px #33ff00;
-  color: #00FF66;
+  color: #a4bea4;
+  text-transform: uppercase;
+}
+
+/* Asymmetry Step 2: Command Initiatives hanging out of alignment */
+.command-initiatives-box {
+  position: relative;
+  left: -10px;
+  top: 15px;
+}
+
+/* Asymmetry Step 2: Verified Infiltrator rotated 1deg */
+.infiltrator-box {
+  transform: rotate(1deg);
+  margin-top: 10px;
+  margin-left: 5px;
 }
 
 .terminal-btn-group {
@@ -284,26 +270,25 @@ body::after {
 }
 
 .terminal-btn {
-  background: #0d0d0d;
-  color: #33ff00;
-  border: 2px outset #22aa00;
+  background: #0a0d0a;
+  color: #8ca68c;
+  border: 1px solid #364736;
   padding: 0.45rem;
   text-align: left;
-  font-family: inherit;
+  font-family: 'Courier New', monospace;
   font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .terminal-btn:hover {
-  background: rgba(51, 255, 0, 0.2);
-  border-color: #33ff00;
-  color: #00ffff;
-  text-shadow: 0 0 8px #00ffff;
-  animation: hover-text-flicker 0.12s infinite;
+  background: #182218;
+  border-color: #5d755d;
+  color: #b8d4b8;
 }
 
 .system-stats {
+  font-family: 'Courier New', monospace;
   font-size: 0.78rem;
   display: flex;
   flex-direction: column;
@@ -311,15 +296,11 @@ body::after {
 }
 
 .stat-val {
-  color: #FFE600;
+  color: #cfa856;
   font-weight: bold;
-  text-shadow: 0 0 5px rgba(255, 230, 0, 0.4);
 }
 
-/* ==========================================================================
-   Hyper-Pixelated Neon Scam Banner Ads & Blinking Text
-   ========================================================================== */
-
+/* Neon Banner Ads - Darkened */
 .banner-ad-container {
   overflow: visible;
   padding: 0.5rem;
@@ -337,41 +318,28 @@ body::after {
 }
 
 .ad-neon-magenta {
-  border: 2px solid #ff0055 !important;
-  background: #24000e;
-  color: #ff0055;
-  box-shadow: 0 0 12px #ff0055, inset 0 0 8px rgba(255, 0, 85, 0.4);
-  animation: neonGlowMagenta 1s infinite alternate;
-}
-
-@keyframes neonGlowMagenta {
-  0% { border-color: #ff0055; box-shadow: 0 0 8px #ff0055; }
-  100% { border-color: #ff3388; box-shadow: 0 0 18px #ff0055, 0 0 25px #ff0055; }
+  border: 1px solid #73223f !important;
+  background: #1f0b14;
+  color: #c4567e;
 }
 
 .ad-neon-yellow {
-  border: 2px solid #ffff00 !important;
-  background: #241900;
-  color: #ffff00;
-  box-shadow: 0 0 12px #ffff00, inset 0 0 8px rgba(255, 255, 0, 0.4);
-  animation: neonGlowYellow 1s infinite alternate;
-}
-
-@keyframes neonGlowYellow {
-  0% { border-color: #ffff00; box-shadow: 0 0 8px #ffff00; }
-  100% { border-color: #ffffff; box-shadow: 0 0 18px #ffff00, 0 0 25px #ffff00; }
+  border: 1px solid #736b22 !important;
+  background: #1f1d0b;
+  color: #c4b856;
 }
 
 .blink-text {
-  animation: blinkText 0.8s infinite alternate;
+  animation: blinkText 1.2s infinite alternate;
 }
 
 @keyframes blinkText {
-  0% { opacity: 0.4; }
-  100% { opacity: 1; filter: brightness(1.3); }
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .ad-title {
+  font-family: 'Arial Narrow', sans-serif;
   font-size: 0.85rem;
   margin-bottom: 0.3rem;
   letter-spacing: 1px;
@@ -380,22 +348,18 @@ body::after {
 .ad-sub {
   font-size: 0.7rem;
   margin-bottom: 0.5rem;
-  color: #ffffff;
+  color: #a395a0;
 }
 
 .ad-btn {
-  background: #ff0055;
-  color: #ffffff;
+  background: #541b30;
+  color: #e0d0d8;
   padding: 0.2rem 0.4rem;
   font-size: 0.7rem;
   display: inline-block;
-  border-radius: 2px;
 }
 
-/* ==========================================================================
-   Y2K Retro Certification Web Badges
-   ========================================================================== */
-
+/* Web Badges */
 .web-badges-panel {
   display: flex;
   flex-direction: column;
@@ -403,40 +367,32 @@ body::after {
 }
 
 .badge-item {
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 .blink-hazard {
-  background: repeating-linear-gradient(45deg, #2a2000, #2a2000 10px, #ffbb00 10px, #ffbb00 20px);
-  color: #000000;
+  background: repeating-linear-gradient(45deg, #1c1705, #1c1705 10px, #524410 10px, #524410 20px);
+  color: #b8a663;
   font-weight: bold;
   padding: 0.4rem;
   font-size: 0.75rem;
-  border: 1px solid #ffbb00;
-  text-shadow: 0 0 2px #fff;
-  animation: hazardBlink 1.2s infinite alternate;
+  border: 1px solid #524410;
   text-align: center;
-}
-
-@keyframes hazardBlink {
-  0% { opacity: 0.8; }
-  100% { opacity: 1; filter: brightness(1.25); }
 }
 
 .netscape-badge {
-  background: #001e2b;
-  border: 2px outset #00e1ff;
-  color: #00e1ff;
+  background: #09131a;
+  border: 1px solid #254457;
+  color: #6398b8;
   font-size: 0.72rem;
   padding: 0.4rem;
   text-align: center;
-  box-shadow: inset 1px 1px 0 #00ffff;
   line-height: 1.3;
 }
 
 .hit-counter-box {
-  background: #050a05;
-  border: 2px inset #33ff00;
+  background: #080c09;
+  border: 1px solid #364736;
   padding: 0.4rem;
   text-align: center;
 }
@@ -444,7 +400,7 @@ body::after {
 .hit-counter-label {
   font-size: 0.7rem;
   font-weight: bold;
-  color: #33ff00;
+  color: #8ca68c;
   margin-bottom: 0.2rem;
   letter-spacing: 1px;
 }
@@ -457,38 +413,38 @@ body::after {
 
 .hit-counter-odometer span {
   background: #000;
-  color: #33ff00;
-  border: 1px solid #22aa00;
+  color: #8ca68c;
+  border: 1px solid #2d3b2d;
   padding: 0.15rem 0.3rem;
   font-weight: bold;
   font-size: 0.9rem;
-  box-shadow: inset 0 0 4px #00ff66;
+  font-family: 'Courier New', monospace;
 }
 
-/* Center Feed Container */
+/* Center Feed Container - Wider & Dark Semi-Transparent (background: rgba(10, 10, 10, 0.6);) */
 .center-feed {
-  flex-grow: 1;
-  background: #0c100c;
-  border: 2px outset #33ff00;
-  box-shadow: inset 1px 1px 0px #66ff66, inset -1px -1px 0px #004400, 4px 4px 20px rgba(0, 0, 0, 0.8);
+  flex-grow: 1.6;
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid #455945;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 .feed-header-bar {
-  background: linear-gradient(90deg, #092c10, #041407);
-  border-bottom: 2px solid #33ff00;
+  background: #141c14;
+  border-bottom: 1px solid #455945;
   padding: 0.65rem 1.25rem;
 }
 
 .feed-header-bar h2 {
-  font-size: 1.05rem;
-  color: #00FF66;
+  font-family: 'Arial Narrow', 'Impact', sans-serif;
+  font-size: 1.1rem;
+  color: #a4bea4;
   letter-spacing: 1.5px;
-  text-shadow: 0 0 8px #00FF66;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 #decision-protocols {
@@ -498,81 +454,18 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  background: transparent;
 }
 
-/* Retro 3D Bevel UI Cards */
-.retro-feed-card, .card, .post-card {
-  position: relative;
-  background: #0a0f0a;
-  border: 2px outset #33ff00;
-  box-shadow: inset 1px 1px 0px #55ff55, inset -1px -1px 0px #003300, 4px 4px 10px rgba(0, 0, 0, 0.8);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 1.25rem;
-}
-
-.card-header-bar, .card-header {
-  background: linear-gradient(90deg, #0a3311, #041708);
-  border-bottom: 2px solid #33ff00;
-  padding: 0.5rem 0.85rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-title-group {
+/* Deep Red "Decision Protocol" Cards */
+.post-card, .retro-feed-card, .card {
+  background-color: #2b1111 !important;
+  border: 1px solid #522525 !important;
+  margin: 20px 0;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-}
-
-.card-title-text, .post-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #00FF66;
-  letter-spacing: 1px;
-  text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
-}
-
-.card-timestamp, .post-date {
-  font-size: 0.75rem;
-  color: #FFE600;
-}
-
-.card-window-controls {
-  display: flex;
-  gap: 0.3rem;
-}
-
-.win-ctrl-btn {
-  background: #081408;
-  color: #33ff00;
-  border: 1px outset #33ff00;
-  width: 22px;
-  height: 22px;
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: bold;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1px;
-}
-
-.win-ctrl-btn:hover {
-  background: #33ff00;
-  color: #000000;
-}
-
-.win-ctrl-btn.btn-close-x:hover {
-  background: #ff0055;
-  color: #ffffff;
-  border-color: #ff0055;
-}
-
-.card-body-content, .card-body {
-  padding: 1.25rem;
+  position: relative;
 }
 
 .card-rant-body, .rant-text, .post-content {
@@ -581,120 +474,74 @@ body::after {
   height: auto !important;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #D0FFD0 !important;
+  color: #a88a8a !important;
   margin-bottom: 1rem;
   white-space: pre-wrap;
-  text-shadow: 0 0 2px rgba(208, 255, 208, 0.2);
+  font-family: 'Courier New', monospace;
 }
 
-.card-footer {
-  padding: 0 1.25rem 1.25rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.card-rationale-box, .rationale {
-  background: #141202;
-  border-left: 4px solid #FFE600;
-  border-top: 1px solid #332d00;
-  border-right: 1px solid #332d00;
-  border-bottom: 1px solid #332d00;
-  padding: 0.75rem 1rem;
-  font-size: 0.88rem;
-  color: #FFE600;
-  text-shadow: 0 0 5px rgba(255, 230, 0, 0.4);
-}
-
-.card-sources-bar, .sources {
-  font-size: 0.82rem;
-  color: #FFE600;
-  word-break: break-all;
-}
-
-.card-sources-bar a, .sources a {
-  color: #FFE600;
-  font-weight: bold;
-  text-decoration: underline;
-  text-shadow: 0 0 5px rgba(255, 230, 0, 0.5);
-}
-
-.card-sources-bar a:hover, .sources a:hover {
-  color: #ffffff;
-  text-shadow: 0 0 10px #FFE600;
-}
-
-.feed-status {
-  font-size: 0.95rem;
-  color: #33ff00;
-  padding: 1.5rem;
-  text-shadow: 0 0 8px #33ff00;
-}
-
-.feed-error {
-  font-size: 0.95rem;
-  color: #ff0055;
-  border: 2px outset #ff0055;
-  background: #1a0008;
-  padding: 1.5rem;
-  box-shadow: 0 0 12px rgba(255, 0, 85, 0.5);
-  text-shadow: 0 0 8px #ff0055;
-}
-
-/* Red Angled CSS Text Stamps */
-.retro-stamp, .stamp-confidential, .stamp-redacted {
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: bold;
-  padding: 0.2rem 0.6rem;
-  letter-spacing: 1.5px;
-  pointer-events: none;
-  opacity: 0.88;
-}
-
+/* Faded Maroon Stamp */
 .stamp-confidential {
-  color: #ff0055;
-  border: 2px double #ff0055;
-  box-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
-  transform: rotate(-6deg);
+  color: #a84444 !important;
+  border: 2px solid #7a2626 !important;
+  background: rgba(122, 38, 38, 0.15);
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: 'Arial Narrow', sans-serif;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.15rem 0.5rem;
+  letter-spacing: 1.5px;
+  transform: rotate(-4deg);
 }
 
 .stamp-redacted {
-  color: #ff3300;
-  border: 2px solid #ff3300;
-  background: rgba(255, 51, 0, 0.1);
-  box-shadow: 0 0 8px rgba(255, 51, 0, 0.4);
-  transform: rotate(6deg);
+  color: #8b3838 !important;
+  border: 2px solid #6e2424 !important;
+  background: rgba(110, 36, 36, 0.15);
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: 'Arial Narrow', sans-serif;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.15rem 0.5rem;
+  letter-spacing: 1.5px;
+  transform: rotate(4deg);
 }
 
 /* X Feed Terminal */
 .x-feed-terminal {
-  height: 140px;
-  background: #06090e;
-  border-top: 2px outset #33ff00;
+  height: 130px;
+  background: #070a08;
+  border-top: 1px solid #455945;
   display: flex;
   flex-direction: column;
 }
 
 .x-feed-header {
-  background: linear-gradient(90deg, #092c10, #041407);
-  color: #00FF66;
+  background: #121a13;
+  color: #8ca68c;
   padding: 0.4rem 1rem;
+  font-family: 'Arial Narrow', sans-serif;
   font-weight: bold;
   font-size: 0.82rem;
   letter-spacing: 1px;
-  border-bottom: 1px solid #1f2f47;
+  border-bottom: 1px solid #233023;
+  text-transform: uppercase;
 }
 
 .x-feed-output {
   flex-grow: 1;
   padding: 0.75rem 1rem;
   font-size: 0.8rem;
-  color: #D0FFD0;
+  color: #8ca68c;
+  font-family: 'Courier New', monospace;
   overflow-y: auto;
 }
 
-/* Right Sidebar & Low-Poly Zuckrey Avatar Components */
+/* Right Sidebar & Profile */
 .ai-status-card {
   font-size: 0.85rem;
 }
@@ -707,27 +554,27 @@ body::after {
 }
 
 .status-pulse-dot {
-  width: 10px;
-  height: 10px;
-  background-color: #33ff00;
+  width: 8px;
+  height: 8px;
+  background-color: #8ca68c;
   border-radius: 50%;
-  box-shadow: 0 0 8px #33ff00;
-  animation: pulse-dot 1.2s infinite;
+  animation: pulse-dot 1.5s infinite;
 }
 
 @keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.2); opacity: 1; }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }
 
 .status-text {
+  font-family: 'Arial Narrow', sans-serif;
   font-weight: bold;
   font-size: 0.8rem;
-  color: #00FF66;
+  color: #a4bea4;
 }
 
 .status-desc {
-  color: #D0FFD0;
+  color: #8ca68c;
   font-size: 0.78rem;
   line-height: 1.4;
 }
@@ -738,17 +585,14 @@ body::after {
   gap: 0.85rem;
 }
 
-/* Zuckrey Low-Poly Avatar Container with CSS Glitch Flickering */
 .zuckrey-avatar-box {
   position: relative;
-  width: 75px;
-  height: 75px;
-  border: 2px outset #33ff00;
-  box-shadow: inset 1px 1px 0 #55ff55, 0 0 12px rgba(0, 255, 102, 0.4);
-  border-radius: 2px;
+  width: 70px;
+  height: 70px;
+  border: 1px solid #455945;
+  border-radius: 1px;
   overflow: hidden;
   flex-shrink: 0;
-  animation: avatarFlicker 3s infinite alternate;
 }
 
 .zuckrey-svg-avatar {
@@ -757,49 +601,36 @@ body::after {
   display: block;
 }
 
-@keyframes avatarFlicker {
-  0% { opacity: 0.95; filter: brightness(1) contrast(1); }
-  25% { opacity: 1; filter: brightness(1.15) contrast(1.05); }
-  50% { opacity: 0.92; filter: brightness(0.95) contrast(1); }
-  75% { opacity: 1; filter: brightness(1.2) contrast(1.1); }
-  100% { opacity: 0.97; filter: brightness(1) contrast(1); }
-}
-
 .profile-info {
   font-size: 0.8rem;
 }
 
 .profile-name {
+  font-family: 'Arial Narrow', sans-serif;
   font-weight: bold;
-  color: #ffffff;
+  color: #d4c2e6;
   letter-spacing: 1px;
 }
 
 .profile-role {
-  color: #D0FFD0;
+  color: #8ca68c;
   font-size: 0.75rem;
   margin-top: 0.2rem;
 }
 
 .badge-flashing {
-  color: #00FF66;
+  color: #8ca68c;
   font-size: 0.75rem;
   font-weight: bold;
   margin-top: 0.35rem;
   display: inline-block;
-  animation: badgePulse 1.5s infinite alternate;
 }
 
-@keyframes badgePulse {
-  0% { opacity: 0.6; text-shadow: 0 0 4px #00FF66; }
-  100% { opacity: 1; text-shadow: 0 0 12px #00FF66, 0 0 20px #00FF66; }
-}
-
-/* Windows 95 Style Bottom Taskbar */
+/* Taskbar */
 .taskbar {
   height: 42px;
-  background-color: #1a1a1a;
-  border-top: 2px outset #33ff00;
+  background-color: #16121c;
+  border-top: 1px solid #362245;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -814,24 +645,21 @@ body::after {
 }
 
 .start-btn {
-  background: #33ff00;
-  color: #111111;
-  border: 2px outset #ffffff;
+  background: #48275c;
+  color: #ffffff;
+  border: 1px solid #653782;
   padding: 0.25rem 0.75rem;
-  font-family: inherit;
+  font-family: 'Arial Narrow', sans-serif;
   font-weight: bold;
   font-size: 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #00aa00;
 }
 
 .start-btn:hover {
-  background: #00ff66;
-  box-shadow: 0 0 12px #33ff00;
-  animation: hover-text-flicker 0.12s infinite;
+  background: #653782;
 }
 
 .start-flag {
@@ -844,34 +672,18 @@ body::after {
 }
 
 .win-task-btn {
-  background: #111111;
-  color: #33ff00;
-  border: 2px outset #33ff00;
+  background: #0f0b14;
+  color: #c8b4dc;
+  border: 1px solid #362245;
   padding: 0.25rem 0.6rem;
-  font-family: inherit;
+  font-family: 'Arial Narrow', sans-serif;
   font-size: 0.78rem;
   cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-}
-
-.win-task-btn:hover {
-  color: #ffffff;
-  box-shadow: 0 0 8px #33ff00;
-  animation: hover-text-flicker 0.12s infinite;
 }
 
 .win-task-btn.active {
-  background: rgba(51, 255, 0, 0.2);
-  border-style: inset;
-  text-shadow: 0 0 5px #33ff00;
-}
-
-.win-task-btn.playing {
-  background: rgba(255, 230, 0, 0.25);
-  border-color: #FFE600;
-  color: #FFE600;
-  text-shadow: 0 0 8px #FFE600;
+  background: #2a1636;
+  border-color: #48275c;
 }
 
 .taskbar-right {
@@ -881,17 +693,12 @@ body::after {
 
 .clock {
   font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
   font-weight: bold;
-  color: #33ff00;
-  background: #0c0c0c;
-  border: 2px inset #33ff00;
+  color: #8ca68c;
+  background: #080c09;
+  border: 1px solid #364736;
   padding: 0.2rem 0.6rem;
-}
-
-@keyframes hover-text-flicker {
-  0% { opacity: 0.8; }
-  50% { opacity: 1; filter: brightness(1.4); }
-  100% { opacity: 0.9; }
 }
 
 .mt-1 {

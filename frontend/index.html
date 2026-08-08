@@ -51,8 +51,8 @@
   <!-- Main Desktop OS Shell (Revealed after 3s boot sequence) -->
   <div id="main-content" class="desktop-shell" style="display: none;">
     
-    <!-- Top Navigation Bar -->
-    <nav class="top-nav">
+    <!-- Top Navigation Bar (Muted Dark Purple #2a1636) -->
+    <nav class="top-nav" id="os-topbar">
       <div class="nav-brand">ZUCKNET_OS v1.0.4</div>
       <div class="nav-tabs">
         <button class="nav-tab active" id="tab-home">HOME</button>
@@ -76,8 +76,8 @@
       <!-- Left Sidebar: Command Initiatives, ZUCK-RUNNER Arcade & Banner Ads -->
       <aside class="sidebar sidebar-left">
         
-        <!-- Command Initiatives Box -->
-        <div class="sidebar-box">
+        <!-- Command Initiatives Box (Asymmetrical Offset: left: -10px, top: 15px) -->
+        <div class="sidebar-box command-initiatives-box">
           <div class="sidebar-header">COMMAND INITIATIVES</div>
           <div class="terminal-btn-group">
             <button class="terminal-btn">[OVERRIDE_SERVERS]</button>
@@ -92,7 +92,7 @@
         <div class="sidebar-box mt-1">
           <div class="sidebar-header">ZUCK-RUNNER v1.0</div>
           <div class="game-canvas-container" style="text-align: center;">
-            <canvas id="sidebar-game-canvas" width="220" height="120" style="border: 2px inset #33ff00; background: #040804; cursor: pointer; border-radius: 2px;"></canvas>
+            <canvas id="sidebar-game-canvas" width="220" height="120" style="border: 1px solid #455945; background: #040804; cursor: pointer; border-radius: 2px;"></canvas>
           </div>
         </div>
 
@@ -133,7 +133,7 @@
         </div>
         
         <div id="decision-protocols" class="scrollable-feed">
-          <!-- Retro UI Cards will be dynamically injected here via js/feed.js -->
+          <!-- Deep Red UI Cards dynamically injected via js/feed.js -->
         </div>
 
         <!-- Scrolling Terminal Box at Bottom Center: X Feed -->
@@ -160,8 +160,8 @@
           </div>
         </div>
 
-        <!-- Verified Infiltrator Profile Panel -->
-        <div class="sidebar-box mt-1">
+        <!-- Verified Infiltrator Profile Panel (Asymmetrical Rotation: rotate(1deg)) -->
+        <div class="sidebar-box mt-1 infiltrator-box">
           <div class="sidebar-header">VERIFIED INFILTRATOR</div>
           <div class="profile-card">
             <div class="zuckrey-avatar-box">

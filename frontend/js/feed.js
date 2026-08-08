@@ -1,6 +1,6 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Aggressive Y2K Terminal Timestamp Extraction & 30-Second Polling Loop
+ * Deep Red Dark-Web Decision Protocol Cards & Asymmetrical Rotations
  */
 
 function fetchFeed() {
@@ -46,9 +46,9 @@ function fetchFeed() {
 
     if (!rawData) {
       console.error("ZUCKNET FETCH ERROR:", fetchError);
-      container.innerHTML = `<div class="post-card" style="border: 2px solid #ff0055; padding: 16px; background-color: #100206; display: block; visibility: visible;">
-        <p style="color: #ff0055; font-family: monospace; font-size: 1rem;"><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
-        <p style="color: #888; font-family: monospace; font-size: 0.85rem; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Backend connection failed."}</p>
+      container.innerHTML = `<div class="post-card" style="background-color: #2b1111; border: 1px solid #732222; padding: 16px; display: flex; flex-direction: column; position: relative;">
+        <p style="color: #c45656; font-family: 'Arial Narrow', sans-serif; font-size: 1rem; font-weight: bold;"><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
+        <p style="color: #997373; font-family: 'Courier New', monospace; font-size: 0.85rem; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Backend connection failed."}</p>
       </div>`;
       return;
     }
@@ -56,7 +56,7 @@ function fetchFeed() {
     const postsList = Array.isArray(rawData) ? rawData : (rawData.posts || []);
 
     if (!postsList || postsList.length === 0) {
-      container.innerHTML = '<p style="color:#33ff00; padding:15px; font-family:monospace; font-size:1rem;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
+      container.innerHTML = '<p style="color:#a88a8a; padding:15px; font-family:\'Courier New\', monospace; font-size:0.95rem;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
       return;
     }
 
@@ -102,21 +102,27 @@ function fetchFeed() {
       }
 
       const card = document.createElement("div");
-      card.className = "post-card 3d-bevel";
-      card.style.cssText = "border: 2px outset #33ff00; margin: 16px 0; padding: 16px; background-color: #050505; display: block; visibility: visible; height: auto; overflow: visible; position: relative;";
+      card.className = "post-card";
+      card.style.cssText = "background-color: #2b1111; border: 1px solid #522525; margin: 20px 0; padding: 14px; display: flex; flex-direction: column; position: relative; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);";
+      
+      card.style.transform = Math.random() > 0.5 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)';
+
+      const stampClass = (index % 2 === 0) ? 'stamp-confidential' : 'stamp-redacted';
+      const stampText = (index % 2 === 0) ? 'CONFIDENTIAL' : 'REDACTED';
 
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; border-bottom: 2px dashed #115511; padding-bottom: 8px; margin-bottom: 12px;">
-          <span style="color: #00FF66; font-weight: bold; font-family: 'Courier New', monospace; font-size: 1.1rem; text-transform: uppercase;">RANT #${postId}</span>
-          <span style="color: #FFCC00; font-size: 0.95rem; font-family: 'Courier New', monospace; letter-spacing: 1px; text-shadow: 0 0 5px #FFCC00;">${formattedDate}</span>
+        <span class="${stampClass}">${stampText}</span>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #522525; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
+          <span style="color: #d9b8b8; font-weight: bold; font-family: 'Arial Narrow', 'Impact', sans-serif; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;">RANT #${postId}</span>
+          <span style="color: #cfa856; font-size: 0.85rem; font-family: 'Courier New', monospace;">${formattedDate}</span>
         </div>
         
-        <!-- FORCED VISIBILITY ON TEXT CONTAINER -->
-        <div class="post-content" style="color: #D0FFD0; font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.6; display: block; white-space: pre-wrap; margin-bottom: 16px;">${mainText}</div>
+        <!-- LEGIBLE GREY-RED BODY TEXT (#a88a8a) -->
+        <div class="post-content" style="color: #a88a8a; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.5; display: block; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
         
-        <div style="border-top: 1px solid #115511; padding-top: 10px; font-size: 0.9rem; font-family: 'Courier New', monospace;">
-          <p style="color: #FFE600; margin: 6px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
-          <p style="color: #00FF66; margin: 6px 0;"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #00AA44; text-decoration: underline; background: #001100; padding: 2px 4px;">[VIEW SOURCE]</a></p>
+        <div style="border-top: 1px solid #421e1e; padding-top: 8px; font-size: 0.85rem; font-family: 'Courier New', monospace;">
+          <p style="color: #d4a359; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p style="color: #b88a8a; margin: 4px 0;"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #b88a8a; text-decoration: underline; background: #1c0a0a; padding: 2px 4px;">[VIEW SOURCE]</a></p>
         </div>
       `;
       
