@@ -481,16 +481,18 @@ body::after {
   gap: 1.25rem;
 }
 
-.retro-feed-card, .card {
+/* Retro 3D Bevel UI Cards */
+.retro-feed-card, .card, .post-card {
   position: relative;
   background: #0a0f0a;
   border: 2px outset #33ff00;
   box-shadow: inset 1px 1px 0px #55ff55, inset -1px -1px 0px #003300, 4px 4px 10px rgba(0, 0, 0, 0.8);
   border-radius: 2px;
   overflow: hidden;
+  margin-bottom: 1.25rem;
 }
 
-.card-header-bar {
+.card-header-bar, .card-header {
   background: linear-gradient(90deg, #0a3311, #041708);
   border-bottom: 2px solid #33ff00;
   padding: 0.5rem 0.85rem;
@@ -505,7 +507,7 @@ body::after {
   gap: 0.2rem;
 }
 
-.card-title-text {
+.card-title-text, .post-title {
   font-size: 1.1rem;
   font-weight: bold;
   color: #00FF66;
@@ -513,7 +515,7 @@ body::after {
   text-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
 }
 
-.card-timestamp {
+.card-timestamp, .post-date {
   font-size: 0.75rem;
   color: #FFE600;
 }
@@ -550,20 +552,27 @@ body::after {
   border-color: #ff0055;
 }
 
-.card-body-content {
+.card-body-content, .card-body {
   padding: 1.25rem;
 }
 
-.card-rant-body {
+.card-rant-body, .rant-text {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #D0FFD0;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   white-space: pre-wrap;
   text-shadow: 0 0 2px rgba(208, 255, 208, 0.2);
 }
 
-.card-rationale-box {
+.card-footer {
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-rationale-box, .rationale {
   background: #141202;
   border-left: 4px solid #FFE600;
   border-top: 1px solid #332d00;
@@ -572,57 +581,71 @@ body::after {
   padding: 0.75rem 1rem;
   font-size: 0.88rem;
   color: #FFE600;
-  margin-bottom: 0.85rem;
   text-shadow: 0 0 5px rgba(255, 230, 0, 0.4);
 }
 
-.card-sources-bar {
+.card-sources-bar, .sources {
   font-size: 0.82rem;
   color: #FFE600;
   word-break: break-all;
 }
 
-.card-sources-bar a {
+.card-sources-bar a, .sources a {
   color: #FFE600;
   font-weight: bold;
   text-decoration: underline;
   text-shadow: 0 0 5px rgba(255, 230, 0, 0.5);
 }
 
-.card-sources-bar a:hover {
+.card-sources-bar a:hover, .sources a:hover {
   color: #ffffff;
   text-shadow: 0 0 10px #FFE600;
 }
 
-.retro-stamp {
-  position: absolute;
-  top: 15px;
-  right: 25px;
+.feed-status {
+  font-size: 0.95rem;
+  color: #33ff00;
+  padding: 1.5rem;
+  text-shadow: 0 0 8px #33ff00;
+}
+
+.feed-error {
+  font-size: 0.95rem;
+  color: #ff0055;
+  border: 2px outset #ff0055;
+  background: #1a0008;
+  padding: 1.5rem;
+  box-shadow: 0 0 12px rgba(255, 0, 85, 0.5);
+  text-shadow: 0 0 8px #ff0055;
+}
+
+/* Red Angled CSS Text Stamps */
+.retro-stamp, .stamp-confidential, .stamp-redacted {
   font-family: inherit;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: bold;
-  padding: 0.25rem 0.75rem;
-  letter-spacing: 2px;
+  padding: 0.2rem 0.6rem;
+  letter-spacing: 1.5px;
   pointer-events: none;
   opacity: 0.88;
-  z-index: 10;
 }
 
 .stamp-confidential {
   color: #ff0055;
-  border: 3px double #ff0055;
+  border: 2px double #ff0055;
   box-shadow: 0 0 8px rgba(255, 0, 85, 0.4);
-  transform: rotate(-14deg);
+  transform: rotate(-6deg);
 }
 
 .stamp-redacted {
   color: #ff3300;
-  border: 3px solid #ff3300;
+  border: 2px solid #ff3300;
   background: rgba(255, 51, 0, 0.1);
   box-shadow: 0 0 8px rgba(255, 51, 0, 0.4);
-  transform: rotate(12deg);
+  transform: rotate(6deg);
 }
 
+/* X Feed Terminal */
 .x-feed-terminal {
   height: 140px;
   background: #06090e;

@@ -4,7 +4,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const feedContainer = document.getElementById('decision-protocols');
+  const container = document.getElementById('decision-protocols');
   const xFeedLogContainer = document.getElementById('x-feed-logs');
 
   const primaryApiUrl = '/feed';
@@ -12,105 +12,101 @@ document.addEventListener('DOMContentLoaded', () => {
   const legacyApiUrl = 'https://zuckrey-agent.onrender.com/api/agent/feed?agentId=abc-123';
 
   async function fetchFeedData() {
-    if (!feedContainer) return;
-    feedContainer.innerHTML = '<div class="log-line">> INITIATING_FEED_FETCH_PROTOCOL...</div>';
+    if (!container) return;
+    
+    // Explicitly wipe out all static content and placeholder lines
+    container.innerHTML = '<p class="feed-status">> INITIATING_FEED_FETCH_PROTOCOL...</p>';
 
     let posts = null;
 
     try {
       const r1 = await fetch(primaryApiUrl);
-      if (r1.ok) posts = await r1.json();
-    } catch (e) {}
+      if (r1.ok) {
+        const data = await r1.json();
+        posts = Array.isArray(data) ? data : (data.posts || null);
+      }
+    } catch (e) {
+      console.warn("Notice: /feed fetch failed, trying remote:", e);
+    }
 
     if (!posts || !Array.isArray(posts) || posts.length === 0) {
       try {
         const r2 = await fetch(remoteApiUrl);
-        if (r2.ok) posts = await r2.json();
-      } catch (e) {}
+        if (r2.ok) {
+          const data = await r2.json();
+          posts = Array.isArray(data) ? data : (data.posts || null);
+        }
+      } catch (e) {
+        console.warn("Notice: Remote /feed fetch failed, trying legacy:", e);
+      }
     }
 
     if (!posts || !Array.isArray(posts) || posts.length === 0) {
       try {
         const r3 = await fetch(legacyApiUrl);
-        if (r3.ok) posts = await r3.json();
-      } catch (e) {}
+        if (r3.ok) {
+          const data = await r3.json();
+          posts = Array.isArray(data) ? data : (data.posts || null);
+        }
+      } catch (e) {
+        console.warn("Notice: Legacy API endpoint fetch failed:", e);
+      }
     }
+
+    container.innerHTML = "";
 
     if (posts && Array.isArray(posts) && posts.length > 0) {
       renderFeedCards(posts);
+    } else if (posts && Array.isArray(posts) && posts.length === 0) {
+      container.innerHTML = '<p class="feed-status">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
     } else {
-      renderFeedCards(getFallbackPosts());
+      container.innerHTML = '<p class="feed-error">> ERROR: CANNOT CONNECT TO ZUCKNET BACKEND ENGINE</p>';
     }
   }
 
   function renderFeedCards(posts) {
-    if (!feedContainer) return;
-    feedContainer.innerHTML = '';
+    if (!container) return;
+    container.innerHTML = "";
 
     posts.forEach((post, index) => {
-      const card = document.createElement('div');
-      card.className = 'retro-feed-card 3d-bevel';
+      const postId = post.id !== undefined ? post.id : (index + 1);
+      const createdAtRaw = post.createdAt || post.timestamp || post.created_at || new Date().toISOString();
+      const formattedDate = new Date(createdAtRaw).toUTCString();
+      const rantText = post.text || post.content || post.rant || 'No text content available.';
+      const rationaleText = post.rationale || post.selection_reason || post.editorial_rationale || 'High AI Vulnerability & Vector Security Relevance.';
 
-      const title = post.title || (post.content ? post.content.split('\n')[0].replace(/^#+\s*/, '') : 'UNTITLED BRIEFING');
-      const timestamp = post.timestamp ? new Date(post.timestamp).toUTCString() : (post.created_at ? new Date(post.created_at).toUTCString() : new Date().toUTCString());
-      const rantText = post.content || post.rant || post.summary || 'No rant content provided.';
-      const rationale = post.selection_reason || post.editorial_rationale || 'High AI Security & Vulnerability Relevance.';
-      
-      let sources = [];
-      if (Array.isArray(post.sources)) {
-        sources = post.sources;
+      let sourceList = [];
+      if (Array.isArray(post.sources) && post.sources.length > 0) {
+        sourceList = post.sources;
       } else if (post.source_url) {
-        sources = [post.source_url];
+        sourceList = [post.source_url];
       } else {
-        sources = ['https://arxiv.org/abs/cs.CR'];
+        sourceList = ['https://arxiv.org/abs/cs.CR'];
       }
+      const primarySource = sourceList[0];
 
-      let stampHtml = '';
-      if (index % 3 === 0) {
-        stampHtml = '<div class="retro-stamp stamp-confidential">CONFIDENTIAL</div>';
-      } else if (index % 3 === 1) {
-        stampHtml = '<div class="retro-stamp stamp-redacted">REDACTED</div>';
-      }
+      const stampClass = (index % 2 === 0) ? 'stamp-confidential' : 'stamp-redacted';
+      const stampText = (index % 2 === 0) ? 'CONFIDENTIAL' : 'REDACTED';
 
+      const card = document.createElement("div");
+      card.className = "post-card 3d-bevel";
       card.innerHTML = `
-        ${stampHtml}
-        <div class="card-header-bar">
-          <div class="card-title-group">
-            <span class="card-title-text">${title}</span>
-            <span class="card-timestamp">${timestamp}</span>
-          </div>
-          <div class="card-window-controls">
-            <button class="win-ctrl-btn" title="Minimize">_</button>
-            <button class="win-ctrl-btn" title="Maximize">□</button>
-            <button class="win-ctrl-btn btn-close-x" title="Close">X</button>
-          </div>
+        <div class="card-header">
+          <span class="post-title">RANT #${postId}</span>
+          <span class="post-date">${formattedDate}</span>
+          <span class="${stampClass}">${stampText}</span>
         </div>
-        <div class="card-body-content">
-          <div class="card-rant-body">${rantText}</div>
-          <div class="card-rationale-box">
-            <strong>EDITORIAL RATIONALE:</strong> ${rationale}
-          </div>
-          <div class="card-sources-bar">
-            <strong>SOURCE URL:</strong> 
-            ${sources.map(url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`).join(', ')}
-          </div>
+        <div class="card-body">
+          <p class="rant-text">${rantText}</p>
+        </div>
+        <div class="card-footer">
+          <p class="rationale"><strong>EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p class="sources"><strong>SOURCE:</strong> <a href="${primarySource}" target="_blank" rel="noopener noreferrer">${primarySource}</a></p>
         </div>
       `;
 
-      feedContainer.appendChild(card);
+      container.appendChild(card);
     });
-  }
-
-  function getFallbackPosts() {
-    return [
-      {
-        title: "CRITICAL: Prompt Injection Exploits Discovered in Foundation Models",
-        timestamp: new Date().toISOString(),
-        content: "### Technical Deep Dive: Direct Prompt Injection in Multi-Agent LLMs\n\nAdversarial evaluation reveals that uncurated system prompts allow attackers to override alignment boundaries using nested Markdown instruction blocks.",
-        selection_reason: "Demonstrates empirical vulnerability research in LLM agent safety.",
-        sources: ["https://arxiv.org/abs/2401.00001"]
-      }
-    ];
   }
 
   fetchFeedData();
