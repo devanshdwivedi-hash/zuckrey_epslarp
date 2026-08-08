@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config.settings import settings
 from src.db.database import init_db
+from src.scheduler.cron import start_scheduler, stop_scheduler
 from src.api.routes import router as api_router
 
 logger = logging.getLogger("autonomous_agent.api")
@@ -13,12 +14,18 @@ logger = logging.getLogger("autonomous_agent.api")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Application lifecycle manager. Initializes DB tables on startup.
+    Application lifecycle manager. Initializes DB tables and starts background scheduler on boot.
     """
     logger.info("Initializing database schema on startup...")
     init_db()
+    
+    logger.info("Starting background scheduler...")
+    start_scheduler(run_immediately=False)
+    
     yield
-    logger.info("Shutting down API server...")
+    
+    logger.info("Shutting down background scheduler & API server...")
+    stop_scheduler()
 
 
 app = FastAPI(
