@@ -16,19 +16,25 @@ class PostGenerator:
     Transforms raw approved topics into persona-consistent, publication-ready technical posts
     with explicit selection rationales and timeliness metadata.
     """
-    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
-        self.api_key = api_key or settings.OPENAI_API_KEY
-        self.model = model or settings.OPENAI_MODEL
+    def __init__(
+        self, 
+        api_key: Optional[str] = None, 
+        model: Optional[str] = None, 
+        base_url: Optional[str] = None
+    ):
+        self.api_key = api_key or settings.effective_api_key
+        self.model = model or settings.effective_model
+        self.base_url = base_url or settings.LLM_BASE_URL
         self._is_mock_key = (
             not self.api_key or 
-            "your_openai" in self.api_key.lower() or 
-            self.api_key == "OPENAI_API_KEY"
+            any(x in self.api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]) or 
+            self.api_key in ("OPENAI_API_KEY", "LLM_API_KEY")
         )
         if not self._is_mock_key:
-            self.client = openai.AsyncOpenAI(api_key=self.api_key)
+            self.client = openai.AsyncOpenAI(api_key=self.api_key, base_url=self.base_url)
         else:
             self.client = None
-            logger.warning("OpenAI API key is unset or a placeholder. Running in fallback generator mode.")
+            logger.warning("LLM API key is unset or a placeholder. Running in fallback generator mode.")
 
     def _fallback_generate(self, topic: RawTopic) -> GeneratedPost:
         """

@@ -7,6 +7,6 @@ pydantic-settings
 httpx
 feedparser
 openai
-sentence-transformers
 python-dotenv
 psycopg2-binary
+numpy

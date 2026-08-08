@@ -1,20 +1,35 @@
 {
+<<<<<<< HEAD
   "builds": [
     {
       "src": "src/api/main.py",
+=======
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.py",
+>>>>>>> 1d580dbc951a7bb6ae46f1873d15ea9b1e18eddd
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
+<<<<<<< HEAD
       "dest": "src/api/main.py"
+=======
+      "dest": "main.py"
+>>>>>>> 1d580dbc951a7bb6ae46f1873d15ea9b1e18eddd
     }
   ],
   "crons": [
     {
       "path": "/api/cron",
+<<<<<<< HEAD
       "schedule": "*/30 * * * *"
+=======
+      "schedule": "0 0 * * *"
+>>>>>>> 1d580dbc951a7bb6ae46f1873d15ea9b1e18eddd
     }
   ]
 }

@@ -2,6 +2,7 @@ import logging
 import os
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, Header, HTTPException, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -39,33 +40,44 @@ def get_feed(
     """
     Fetches published technical posts from published_posts table,
     sorted by timestamp descending (newest first).
+    Wrapped in try/except to handle database or query exceptions gracefully without crashing Vercel functions.
     """
-    posts = (
-        db.query(PublishedPost)
-        .order_by(PublishedPost.timestamp.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
-    
-    response_list = []
-    for p in posts:
-        # Ensure sources list is properly formatted
-        sources = p.sources if isinstance(p.sources, list) else ([p.source_url] if p.source_url else [])
-        response_list.append(
-            FeedPostResponse(
-                content=p.content,
-                selection_reason=p.selection_reason,
-                why_relevant_now=p.why_relevant_now,
-                sources=sources
-            )
+    try:
+        posts = (
+            db.query(PublishedPost)
+            .order_by(PublishedPost.timestamp.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
         )
-    return response_list
+        
+        response_list = []
+        for p in posts:
+            sources = p.sources if isinstance(p.sources, list) else ([p.source_url] if p.source_url else [])
+            response_list.append(
+                FeedPostResponse(
+                    content=p.content,
+                    selection_reason=p.selection_reason,
+                    why_relevant_now=p.why_relevant_now,
+                    sources=sources
+                )
+            )
+        return response_list
+    except Exception as e:
+        logger.error(f"Error fetching feed from database: {e}", exc_info=True)
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "status": "error",
+                "message": f"Database feed error: {str(e)}",
+                "error_type": type(e).__name__
+            }
+        )
 
 
 def verify_cron_secret(
     authorization: Optional[str] = Header(None),
-    x_cron_secret: Optional[str] = Header(None),
+    x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret"),
     secret: Optional[str] = Query(None)
 ):
     """
@@ -74,7 +86,7 @@ def verify_cron_secret(
     expected_secret = os.getenv("CRON_SECRET", settings.CRON_SECRET)
     
     # If CRON_SECRET is configured, enforce verification
-    if expected_secret and expected_secret != "default_cron_secret_key":
+    if expected_secret and expected_secret not in ["default_cron_secret_key", "default_cron_secret"]:
         provided_secret = None
         if authorization and authorization.startswith("Bearer "):
             provided_secret = authorization.split("Bearer ", 1)[1].strip()
@@ -91,8 +103,8 @@ def verify_cron_secret(
             )
 
 
-@router.get("/api/cron", response_model=CronExecutionResponse, summary="Serverless Vercel Cron Trigger")
-@router.get("/cron", response_model=CronExecutionResponse, include_in_schema=False)
+@router.get("/api/cron", summary="Serverless Vercel Cron Trigger")
+@router.get("/cron", include_in_schema=False)
 async def trigger_cron(
     _: None = Depends(verify_cron_secret)
 ):
@@ -103,17 +115,25 @@ async def trigger_cron(
     - Runs vector memory deduplication against database history.
     - Evaluates topics via LLM Editor-in-Chief.
     - Generates technical posts and saves them directly to PostgreSQL/SQLite DB.
+    Wrapped in robust try/except to log and return structured 500 JSON errors on failure.
     """
     logger.info("Serverless cron trigger received on /api/cron. Executing pipeline loop...")
     try:
         await run_autonomous_loop()
-        return CronExecutionResponse(
-            status="success",
-            message="Serverless autonomous pipeline cycle executed successfully."
+        return JSONResponse(
+            status_code=status.HTTP_200_OK,
+            content={
+                "status": "success",
+                "message": "Serverless autonomous pipeline cycle executed successfully."
+            }
         )
     except Exception as e:
         logger.error(f"Error executing serverless cron pipeline: {e}", exc_info=True)
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Pipeline execution error: {str(e)}"
+            content={
+                "status": "error",
+                "message": f"Pipeline execution error: {str(e)}",
+                "error_type": type(e).__name__
+            }
         )

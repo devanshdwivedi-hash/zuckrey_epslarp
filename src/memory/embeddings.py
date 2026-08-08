@@ -1,3 +1,4 @@
+import os
 import logging
 from typing import List, Optional
 from config.settings import settings
@@ -9,15 +10,19 @@ _sentence_transformer_model = None
 def _get_sentence_transformer():
     """
     Lazy loader for SentenceTransformer model to avoid overhead at import time.
+    Suppressed on Vercel serverless environment to prevent cold-start PyTorch memory limit crashes.
     """
     global _sentence_transformer_model
+    if "VERCEL" in os.environ:
+        return None
+
     if _sentence_transformer_model is None:
         try:
             from sentence_transformers import SentenceTransformer
             logger.info(f"Loading local SentenceTransformer model: {settings.EMBEDDING_MODEL}")
             _sentence_transformer_model = SentenceTransformer(settings.EMBEDDING_MODEL)
         except Exception as e:
-            logger.error(f"Failed to load SentenceTransformer model: {e}")
+            logger.warning(f"SentenceTransformer not available or failed to load: {e}")
             _sentence_transformer_model = False
     return _sentence_transformer_model if _sentence_transformer_model is not False else None
 
@@ -25,13 +30,27 @@ def _get_sentence_transformer():
 def get_embedding(text: str) -> List[float]:
     """
     Generates a vector embedding for the given text input.
-    Tries SentenceTransformers first (local fast inference), then OpenAI API if available,
-    and falls back to a deterministic hash-based vector for offline / testing environments.
+    Uses lightweight OpenAI API (text-embedding-3-small) first when key is available,
+    lazy-loads SentenceTransformers locally, and falls back to normalized random vector for offline environments.
     """
     if not text or not text.strip():
-        return [0.0] * 384  # Standard MiniLM dimension
+        return [0.0] * 384  # Standard vector dimension
 
-    # 1. Try local SentenceTransformers
+    # 1. Prefer lightweight OpenAI API embedding if key is configured
+    api_key = settings.effective_api_key or settings.OPENAI_API_KEY
+    if api_key and not any(x in api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]):
+        try:
+            import openai
+            client = openai.OpenAI(api_key=api_key)
+            response = client.embeddings.create(
+                model="text-embedding-3-small",
+                input=text
+            )
+            return [float(val) for val in response.data[0].embedding]
+        except Exception as e:
+            logger.warning(f"OpenAI API embedding generation failed: {e}. Trying local fallback.")
+
+    # 2. Try local SentenceTransformers (if available and not on Vercel serverless)
     model = _get_sentence_transformer()
     if model is not None:
         try:
@@ -40,20 +59,7 @@ def get_embedding(text: str) -> List[float]:
         except Exception as e:
             logger.warning(f"SentenceTransformer encoding failed: {e}. Trying fallback.")
 
-    # 2. Try OpenAI API if key is present
-    if settings.OPENAI_API_KEY and "your_openai" not in settings.OPENAI_API_KEY.lower() and settings.OPENAI_API_KEY != "OPENAI_API_KEY":
-        try:
-            import openai
-            client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
-            response = client.embeddings.create(
-                model="text-embedding-3-small",
-                input=text
-            )
-            return [float(val) for val in response.data[0].embedding]
-        except Exception as e:
-            logger.warning(f"OpenAI embedding generation failed: {e}")
-
-    # 3. Deterministic fallback embedding for testing without models
+    # 3. Deterministic fallback embedding for testing / offline environments without models
     import numpy as np
     seed = sum(ord(c) for c in text) % (2**32)
     rng = np.random.default_rng(seed)
