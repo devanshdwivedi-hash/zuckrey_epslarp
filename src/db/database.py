@@ -52,6 +52,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Declarative base for ORM models
 Base = declarative_base()
 
+_db_initialized = False
+
 
 def init_db():
     """
@@ -59,19 +61,32 @@ def init_db():
     Importing models ensures Base metadata registers all mapped tables before create_all.
     Wrapped in try/except so database connection issues or missing variables fail gracefully.
     """
+    global _db_initialized
     try:
         import src.db.models  # noqa: F401
         logger.info("Initializing database tables...")
         Base.metadata.create_all(bind=engine)
+        _db_initialized = True
         logger.info("Database tables initialized successfully.")
     except Exception as e:
         logger.error(f"Database initialization error (handled gracefully): {e}")
 
 
+def ensure_db_initialized():
+    """
+    Guarantees database tables exist before executing any queries.
+    """
+    global _db_initialized
+    if not _db_initialized:
+        init_db()
+
+
 def get_db():
     """
     FastAPI dependency that provides a transactional database session per request.
+    Ensures tables exist before returning the session.
     """
+    ensure_db_initialized()
     db = SessionLocal()
     try:
         yield db
