@@ -1,0 +1,19 @@
+fastapi
+uvicorn
+sqlalchemy
+apscheduler
+pydantic>=2.0.0
+pydantic-settings
+httpx
+feedparser
+openai
+sentence-transformers
+python-dotenv
+psycopg2-binary
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0
+# PostgreSQL driver — installed as a binary wheel so contributors don't need
+# a local build toolchain / libpq headers to work on Postgres environments.
+# Swap for `psycopg2` (source) or `psycopg` (v3) in production if preferred.
+psycopg2-binary
