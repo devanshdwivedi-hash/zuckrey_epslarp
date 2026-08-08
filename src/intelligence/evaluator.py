@@ -13,6 +13,7 @@ class LLMEvaluator:
     LLM Editor-in-Chief Evaluator & Post Generator.
     Evaluates raw ingested topics against persona criteria to accept or reject,
     and generates structured technical posts for approved topics.
+    Supports OpenAI, Groq, and xAI (Grok) providers automatically.
     """
     def __init__(
         self, 
@@ -22,11 +23,11 @@ class LLMEvaluator:
     ):
         self.api_key = api_key or settings.effective_api_key
         self.model = model or settings.effective_model
-        self.base_url = base_url or settings.LLM_BASE_URL
+        self.base_url = base_url or settings.effective_base_url
         self._is_mock_key = (
             not self.api_key or 
-            any(x in self.api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]) or 
-            self.api_key in ("OPENAI_API_KEY", "LLM_API_KEY")
+            any(x in self.api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key", "grok_api_key"]) or 
+            self.api_key in ("OPENAI_API_KEY", "LLM_API_KEY", "GROQ_API_KEY", "GROK_API_KEY")
         )
         if not self._is_mock_key:
             self.client = openai.AsyncOpenAI(api_key=self.api_key, base_url=self.base_url)
