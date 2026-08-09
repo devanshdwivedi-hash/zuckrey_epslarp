@@ -79,11 +79,11 @@ def init_db():
                 logger.info("Database is empty. Seeding initial technical post...")
                 seed_post = PublishedPost(
                     title="Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
-                    content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy. Autonomous AI agent security requires strict control flow scoping, non-executable prompt sandboxing, and output validation.",
-                    selection_reason="Selected due to high technical relevance to AI Security.",
+                    content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog",
+                    selection_reason="Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
                     why_relevant_now="Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
-                    sources=["https://security.googleblog.com"],
-                    source_url="https://security.googleblog.com",
+                    sources=["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
+                    source_url="https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
                     source_name="Google Security Blog",
                     persona_name="Zuckrey Infiltrator",
                     score=9.5,
