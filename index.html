@@ -200,18 +200,27 @@
 
     </div>
 
-    <!-- Windows 95/2000 Style Taskbar -->
-    <footer class="taskbar">
+    <!-- Authentic Windows 2000 Style Taskbar -->
+    <footer class="taskbar" id="taskbar">
       <div class="taskbar-left">
-        <button class="start-btn">
+        <button class="start-btn" id="start-btn">
           <span class="start-flag">❖</span> Start
         </button>
+        
+        <div class="quick-launch-divider"></div>
+
         <div class="active-windows">
-          <button id="mp2-player-btn" class="win-task-btn active">La Fake MP2 Player</button>
-          <button class="win-task-btn active">Zucknet Navigator</button>
+          <button id="navigator-btn" class="win-task-btn active">
+            <span class="ql-icon">🌐</span> Zucknet Navigator
+          </button>
+          <button id="mp2-player-btn" class="win-task-btn active">
+            <span class="ql-icon">🎵</span> La Fake MP2 Player
+          </button>
         </div>
       </div>
+      
       <div class="taskbar-right">
+        <div class="systray-divider"></div>
         <div id="taskbar-clock" class="clock">00:00:00</div>
       </div>
     </footer>
