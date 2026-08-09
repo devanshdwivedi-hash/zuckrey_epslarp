@@ -55,40 +55,44 @@ function fetchFeed() {
   }
 
   async function getFeedData() {
+    const fallbackData = [
+      {
+        title: "Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
+        content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog",
+        selection_reason: "Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
+        why_relevant_now: "Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
+        sources: ["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
+        source_url: "https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
+        created_at: new Date().toISOString(),
+        timestamp: "08/08/2026, 17:11:38 IST"
+      }
+    ];
+
     try {
       let rawData = null;
       let fetchError = null;
 
       for (const url of BACKEND_URLS) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
         try {
-          const res = await fetch(url);
+          const res = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
           if (res.ok) {
             rawData = await res.json();
-            if (rawData) break;
+            if (rawData && rawData.length > 0) break;
           }
         } catch (err) {
+          clearTimeout(timeoutId);
           fetchError = err;
         }
       }
 
-      const fallbackPosts = [
-        {
-          title: "Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
-          content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog",
-          selection_reason: "Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
-          why_relevant_now: "Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
-          sources: ["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
-          source_url: "https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
-          created_at: new Date().toISOString(),
-          timestamp: "08/08/2026, 17:11:38 IST"
-        }
-      ];
-
       let postsList = rawData ? (Array.isArray(rawData) ? rawData : (rawData.posts || [])) : [];
 
       if (!postsList || postsList.length === 0) {
-        console.warn("Using fallback feed data due to backend error or empty database state.");
-        postsList = fallbackPosts;
+        console.warn("Backend connection failed or timed out. Injecting fallback presentation data.");
+        postsList = fallbackData;
       }
 
       // Sort posts by created_at descending (newest first) & limit feed to 50 posts
