@@ -529,7 +529,7 @@ body::after {
 }
 
 /* Flat Dark Green Panel Containers (#121613 & border: 1px solid #455945) */
-#ie-content-area .sidebar-box, #ie-content-area .box {
+#ie-content-area .sidebar-box, #ie-content-area .box, .panel, .box, .sidebar-box, .banner-ad, .evasive-ad {
   background-color: #121613;
   border: 1px solid #455945;
   padding: 14px;
@@ -538,6 +538,17 @@ body::after {
   line-height: 1.5;
   color: #8ca68c;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.fleeing {
+  transform: translate(150px, -150px) scale(0.8) !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.fleeing-ad, .fleeing-ad-box, .evasive-ad {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out;
 }
 
 /* Dark Green Panel Section Headers */

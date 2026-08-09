@@ -4,29 +4,27 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Evasive Banner Ads Logic ("DOWNLOAD MORE RAM")
-  const evasiveAds = document.querySelectorAll('.evasive-ad');
+  // 1. Evasive Banner Ads & Fleeing Ad Boxes Logic
+  const evasiveBoxes = document.querySelectorAll('.fleeing-ad-box, .evasive-ad, .fleeing-ad');
 
-  evasiveAds.forEach(ad => {
-    // Evade cursor on hover / mousemove
-    ad.addEventListener('mousemove', (e) => {
-      const rect = ad.getBoundingClientRect();
-      const offsetX = (Math.random() - 0.5) * 80;
-      const offsetY = (Math.random() - 0.5) * 40;
-
-      ad.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-      ad.style.transition = 'transform 0.1s ease-out';
+  evasiveBoxes.forEach(box => {
+    // Evade cursor on hover / mouseover
+    box.addEventListener('mouseover', () => {
+      const randomX = (Math.random() - 0.5) * 300;
+      const randomY = (Math.random() - 0.5) * 200;
+      box.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.9)`;
+      box.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out';
     });
 
     // Reset position when cursor leaves
-    ad.addEventListener('mouseleave', () => {
+    box.addEventListener('mouseleave', () => {
       setTimeout(() => {
-        ad.style.transform = 'translate(0px, 0px)';
-      }, 800);
+        box.style.transform = 'translate(0px, 0px) scale(1)';
+      }, 1000);
     });
 
     // Alert if user manages to click the ad
-    ad.addEventListener('click', (e) => {
+    box.addEventListener('click', (e) => {
       e.preventDefault();
       alert("YOUR RAM HAS BEEN SCRAMBLED");
     });
