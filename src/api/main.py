@@ -75,14 +75,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount frontend & assets static directory if present
-frontend_dir = root_dir / "frontend"
-if frontend_dir.exists():
-    app.mount("/frontend", StaticFiles(directory=str(frontend_dir)), name="frontend")
+# Explicitly mount static folders for styles, js, and assets for root-absolute paths (/styles, /js, /assets)
+styles_dir = root_dir / "styles"
+if styles_dir.exists():
+    app.mount("/styles", StaticFiles(directory=str(styles_dir)), name="styles")
+elif (root_dir / "frontend" / "styles").exists():
+    app.mount("/styles", StaticFiles(directory=str(root_dir / "frontend" / "styles")), name="styles")
+
+js_dir = root_dir / "js"
+if js_dir.exists():
+    app.mount("/js", StaticFiles(directory=str(js_dir)), name="js")
+elif (root_dir / "frontend" / "js").exists():
+    app.mount("/js", StaticFiles(directory=str(root_dir / "frontend" / "js")), name="js")
 
 assets_dir = root_dir / "assets"
 if assets_dir.exists():
     app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+elif (root_dir / "frontend" / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=str(root_dir / "frontend" / "assets")), name="assets")
+
+frontend_dir = root_dir / "frontend"
+if frontend_dir.exists():
+    app.mount("/frontend", StaticFiles(directory=str(frontend_dir)), name="frontend")
 
 
 @app.get("/favicon.ico", include_in_schema=False)
