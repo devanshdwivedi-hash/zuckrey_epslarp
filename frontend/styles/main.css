@@ -1,7 +1,8 @@
 /* ==========================================================================
-   ZuckNet Windows 2000 / XP Retro Desktop Aesthetic Engine
-   Classic Teal Desktop (#008080) | Standard Windows Grey (#c0c0c0) Panels
-   Internet Explorer 5.5 / 6 Single Central Application Window Container
+   ZuckNet Windows 2000 Retro Desktop + Dark Hacker Web Portal Engine
+   Outer Shell: Win2k Teal Desktop (#008080) & Taskbar & IE5.5 Chrome
+   Internal Web Content (#ie-content-area): Smoky Dark Radial Gradient
+   Dark Purple Nav (#2a1636), Muted Sage Green (#8ca68c), Deep Red (#2b1111) Cards
    ========================================================================== */
 
 * {
@@ -31,20 +32,17 @@ html, body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #dfdfdf;
-  border: 1px solid #808080;
+  background: #121613;
+  border: 1px solid #455945;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
+  background: #253325;
+  border: 1px solid #455945;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4d4d4;
+  background: #334833;
 }
 
 /* Boot Sequence Overlay (Windows Boot Log) */
@@ -125,7 +123,7 @@ html, body {
   background-color: #008080;
 }
 
-/* Single Giant Central Internet Explorer 5.5 / 6 Window */
+/* Single Giant Central Internet Explorer 5.5 / 6 Window Outer Shell */
 #ie-browser-window, .ie-window {
   width: 98vw;
   max-width: 1580px;
@@ -143,7 +141,7 @@ html, body {
   overflow: hidden;
 }
 
-/* Win2k Classic Blue Title Bar */
+/* Win2k Classic Blue Title Bar (Unchanged Win2k Chrome) */
 .ie-titlebar {
   height: 24px;
   background: linear-gradient(90deg, #000080, #1084d0);
@@ -203,7 +201,7 @@ html, body {
   background: #d4d4d4;
 }
 
-/* IE Menu Bar */
+/* IE Menu Bar (Unchanged Win2k Chrome) */
 .ie-menubar {
   height: 22px;
   background: #c0c0c0;
@@ -254,7 +252,7 @@ html, body {
   100% { transform: rotate(360deg); }
 }
 
-/* IE Standard Buttons Toolbar */
+/* IE Standard Buttons Toolbar (Unchanged Win2k Chrome) */
 .ie-toolbar {
   height: 34px;
   background: #c0c0c0;
@@ -294,7 +292,7 @@ html, body {
   margin: 0 2px;
 }
 
-/* IE Address Bar */
+/* IE Address Bar (Unchanged Win2k Chrome) */
 .ie-addressbar {
   height: 26px;
   background: #c0c0c0;
@@ -359,10 +357,15 @@ html, body {
   font-size: 0.75rem;
 }
 
-/* IE Content Viewport Area */
-.ie-viewport {
+/* ==========================================================================
+   STEP 1 & STEP 2: Isolated IE Content Area (#ie-content-area / .ie-viewport)
+   Smoky Dark Gradient Background & Dark Purple Header (#2a1636)
+   Sage Green Text (#8ca68c)
+   ========================================================================== */
+
+#ie-content-area, .ie-viewport {
   flex: 1;
-  background-color: #008080;
+  background: radial-gradient(circle at center, #1e2420 0%, #0a0c0a 100%); /* Smoky dark gradient */
   border-top: 2px solid #808080;
   border-left: 2px solid #808080;
   border-right: 2px solid #ffffff;
@@ -371,52 +374,81 @@ html, body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  color: #8ca68c; /* Muted sage green text default */
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
 }
 
-/* Persistent Web Page Header & Marquee inside IE Content Area */
-.ie-page-header, .top-nav, #os-topbar {
+/* Dark Purple Header (#2a1636) inside IE Content Viewport */
+#ie-content-area .ie-page-header, #ie-content-area .top-nav {
   height: 38px;
-  background-color: #c0c0c0;
-  border-bottom: 2px solid #808080;
+  background-color: #2a1636; /* Dark purple bar */
+  border-bottom: 1px solid #48265c;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   z-index: 100;
-  color: #000000;
-  box-shadow: inset 0 1px 0 #ffffff;
+  color: #d6b8ee; /* Pale purple text */
+  box-shadow: none;
 }
 
-.ie-page-brand, .nav-brand {
-  font-family: Tahoma, "MS Sans Serif", sans-serif;
+#ie-content-area .ie-page-brand, #ie-content-area .nav-brand {
+  font-family: Tahoma, sans-serif;
   font-size: 0.95rem;
   font-weight: bold;
   letter-spacing: 1px;
-  color: #000080;
+  color: #d6b8ee;
 }
 
-.ie-page-nav-tabs, .nav-tabs {
+#ie-content-area .ie-page-nav-tabs, #ie-content-area .nav-tabs {
   display: flex;
   gap: 0.4rem;
 }
 
-.ie-page-marquee, .marquee-bar {
-  background: #000080;
-  border-bottom: 1px solid #1084d0;
+#ie-content-area .nav-tab {
+  background: #3b1e4c;
+  color: #d6b8ee;
+  border: 1px solid #5a3073;
+  padding: 0.25rem 0.75rem;
+  font-family: Tahoma, sans-serif;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+#ie-content-area .nav-tab:hover {
+  background: #4a275f;
   color: #ffffff;
+}
+
+#ie-content-area .nav-tab.active {
+  background: #502868;
+  color: #ffffff;
+  border: 1px solid #7c40a0;
+  font-weight: bold;
+}
+
+/* Blue Web Page Marquee Banner Component */
+#ie-content-area .ie-page-marquee, #ie-content-area .marquee-bar {
+  background: #0d1222;
+  border-bottom: 1px solid #1a2744;
+  color: #8ca68c;
   font-family: Tahoma, sans-serif;
   font-size: 0.85rem;
   padding: 0.25rem 0;
   letter-spacing: 1px;
-  z-index: 99;
 }
 
-.ie-page-marquee marquee, .marquee-bar marquee {
+#ie-content-area .ie-page-marquee marquee, #ie-content-area .marquee-bar marquee {
   display: block;
 }
 
-/* OS Layout Grid & Classic Windows Dialog Panels (#c0c0c0) */
-.os-layout {
+/* ==========================================================================
+   STEP 3: Asymmetrical Layout & Flat Dark Green Panels (border: 1px solid #455945)
+   ========================================================================== */
+
+#ie-content-area .os-layout {
   flex-grow: 1;
   display: flex;
   gap: 1.25rem;
@@ -424,7 +456,7 @@ html, body {
   overflow: hidden;
 }
 
-.sidebar, #left-sidebar, #right-sidebar, .sidebar-left, .sidebar-right {
+#ie-content-area .sidebar, #ie-content-area .sidebar-left, #ie-content-area .sidebar-right {
   width: 320px;
   flex: 0 0 320px;
   max-width: 25vw;
@@ -433,25 +465,36 @@ html, body {
   gap: 1.1rem;
 }
 
-/* Classic Windows Grey Dialog Panels (#c0c0c0 & Raised 3D Border) */
-.sidebar-box, .box, #left-sidebar, #right-sidebar {
-  background-color: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
+/* Asymmetrical Offsets */
+#ie-content-area .command-initiatives-box {
+  position: relative;
+  top: 10px;
+  left: -5px;
+}
+
+#ie-content-area .infiltrator-box {
+  transform: rotate(0.5deg);
+  margin-top: 5px;
+}
+
+/* Flat Dark Green Panel Containers (#121613 & border: 1px solid #455945) */
+#ie-content-area .sidebar-box, #ie-content-area .box {
+  background-color: #121613;
+  border: 1px solid #455945;
   padding: 14px;
   border-radius: 0px;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #000000;
+  color: #8ca68c;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-/* Classic Blue Title Bar (.window-title-bar) */
-.window-title-bar, .sidebar-header, .feed-header-bar {
-  background: linear-gradient(90deg, #000080, #1084d0);
-  color: #ffffff !important;
-  padding: 3px 8px;
+/* Dark Green Panel Section Headers */
+#ie-content-area .window-title-bar, #ie-content-area .sidebar-header, #ie-content-area .feed-header-bar {
+  background: linear-gradient(90deg, #1b261c, #2c3c2e);
+  color: #8ca68c !important;
+  border-bottom: 1px solid #455945;
+  padding: 4px 8px;
   font-weight: bold;
   font-size: 0.9rem;
   font-family: Tahoma, sans-serif;
@@ -463,31 +506,17 @@ html, body {
   text-transform: uppercase;
 }
 
-.command-initiatives-box {
-  position: relative;
-  left: -5px;
-  top: 5px;
-}
-
-.infiltrator-box {
-  transform: rotate(0.5deg);
-  margin-top: 5px;
-}
-
-.terminal-btn-group {
+#ie-content-area .terminal-btn-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-/* Raised 3D Windows Buttons */
-.terminal-btn {
-  background: #c0c0c0;
-  color: #000000;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
+/* Terminal Buttons inside Dark Web Panels */
+#ie-content-area .terminal-btn {
+  background: #172118;
+  color: #8ca68c;
+  border: 1px solid #455945;
   padding: 0.4rem 0.6rem;
   text-align: left;
   font-family: Tahoma, monospace;
@@ -497,39 +526,36 @@ html, body {
   transition: all 0.1s ease;
 }
 
-.terminal-btn:hover {
-  background: #d4d4d4;
+#ie-content-area .terminal-btn:hover {
+  background: #233325;
+  color: #a8cfa8;
 }
 
-.terminal-btn:active {
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
-  background: #e0e0e0;
+#ie-content-area .terminal-btn:active {
+  background: #0f1710;
 }
 
-.system-stats {
+#ie-content-area .system-stats {
   font-family: Tahoma, monospace;
   font-size: 0.9rem;
   line-height: 1.6;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  color: #000000;
+  color: #8ca68c;
 }
 
-.stat-val {
-  color: #000080;
+#ie-content-area .stat-val {
+  color: #61b361;
   font-weight: bold;
 }
 
-.banner-ad-container {
+#ie-content-area .banner-ad-container {
   overflow: visible;
   padding: 0.5rem;
 }
 
-.banner-ad {
+#ie-content-area .banner-ad {
   display: block;
   text-decoration: none;
   padding: 0.75rem;
@@ -541,19 +567,19 @@ html, body {
   line-height: 1.5;
 }
 
-.ad-neon-magenta {
-  border: 2px solid #800080 !important;
-  background: #ffe6ff;
-  color: #800080;
+#ie-content-area .ad-neon-magenta {
+  border: 1px solid #800080 !important;
+  background: #260c26;
+  color: #e680e6;
 }
 
-.ad-neon-yellow {
-  border: 2px solid #808000 !important;
-  background: #ffffcc;
-  color: #808000;
+#ie-content-area .ad-neon-yellow {
+  border: 1px solid #808000 !important;
+  background: #26260c;
+  color: #e6e680;
 }
 
-.blink-text {
+#ie-content-area .blink-text {
   animation: blinkText 1.2s infinite alternate;
 }
 
@@ -562,124 +588,120 @@ html, body {
   100% { opacity: 1; }
 }
 
-.ad-title {
+#ie-content-area .ad-title {
   font-family: Tahoma, sans-serif;
   font-size: 0.9rem;
   margin-bottom: 0.3rem;
   letter-spacing: 0.5px;
 }
 
-.ad-sub {
+#ie-content-area .ad-sub {
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
-  color: #333333;
+  color: #b3b3b3;
 }
 
-.ad-btn {
-  background: #c0c0c0;
-  color: #000000;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
+#ie-content-area .ad-btn {
+  background: #172118;
+  color: #8ca68c;
+  border: 1px solid #455945;
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;
   display: inline-block;
 }
 
-.web-badges-panel {
+#ie-content-area .web-badges-panel {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
 
-.badge-item {
+#ie-content-area .badge-item {
   border-radius: 0px;
   line-height: 1.6;
 }
 
-.blink-hazard {
-  background: repeating-linear-gradient(45deg, #ffff99, #ffff99 10px, #ffcc00 10px, #ffcc00 20px);
-  color: #000000;
+#ie-content-area .blink-hazard {
+  background: repeating-linear-gradient(45deg, #333300, #333300 10px, #666600 10px, #666600 20px);
+  color: #ffffaa;
   font-weight: bold;
   padding: 0.5rem;
   font-size: 0.85rem;
-  border: 2px solid #808000;
+  border: 1px solid #808000;
   text-align: center;
 }
 
-.netscape-badge {
-  background: #ffffff;
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
-  color: #000080;
+#ie-content-area .netscape-badge {
+  background: #121613;
+  border: 1px solid #455945;
+  color: #8ca68c;
   font-size: 0.8rem;
   padding: 0.5rem;
   text-align: center;
   line-height: 1.4;
 }
 
-.hit-counter-box {
-  background: #ffffff;
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
+#ie-content-area .hit-counter-box {
+  background: #121613;
+  border: 1px solid #455945;
   padding: 0.4rem;
   text-align: center;
 }
 
-.hit-counter-label {
+#ie-content-area .hit-counter-label {
   font-size: 0.8rem;
   font-weight: bold;
-  color: #000000;
+  color: #8ca68c;
   margin-bottom: 0.3rem;
   letter-spacing: 1px;
 }
 
-.hit-counter-odometer {
+#ie-content-area .hit-counter-odometer {
   display: flex;
   justify-content: center;
   gap: 2px;
 }
 
-.hit-counter-odometer span {
+#ie-content-area .hit-counter-odometer span {
   background: #000000;
   color: #00ff00;
-  border: 1px solid #808080;
+  border: 1px solid #455945;
   padding: 0.15rem 0.35rem;
   font-weight: bold;
   font-size: 0.95rem;
   font-family: 'Courier New', monospace;
 }
 
-/* Center Feed Container - Classic Windows Dialog (#c0c0c0 & Raised 3D Border) */
-.center-feed {
+/* ==========================================================================
+   STEP 4: Center Feed & Deep Red Decision Protocol Cards
+   Container background: rgba(10, 10, 10, 0.6)
+   Cards: background-color: #2b1111; border: 1px solid #522525;
+   Text: pinkish-grey (#e6d5d5)
+   Stamps: Faded maroon (#a84444)
+   ========================================================================== */
+
+#ie-content-area .center-feed {
   flex: 1;
   margin: 0 15px;
-  background-color: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-right: 2px solid #808080;
-  border-bottom: 2px solid #808080;
+  background-color: #121613;
+  border: 1px solid #455945;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: #000000;
+  color: #8ca68c;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-.feed-header-bar {
-  background: linear-gradient(90deg, #000080, #1084d0);
+#ie-content-area .feed-header-bar {
+  background: linear-gradient(90deg, #1b261c, #2c3c2e);
   padding: 4px 10px;
   margin: 0;
 }
 
-.feed-header-bar h2 {
+#ie-content-area .feed-header-bar h2 {
   font-family: Tahoma, sans-serif;
   font-size: 0.95rem;
-  color: #ffffff;
+  color: #8ca68c;
   letter-spacing: 1px;
   font-weight: bold;
   text-transform: uppercase;
@@ -692,28 +714,22 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background-color: #dfdfdf;
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
+  background: rgba(10, 10, 10, 0.6); /* Semi-transparent dark background */
+  border: 1px solid #455945;
   margin: 10px;
 }
 
-/* Decision Protocol Post Cards - Classic Windows White Inset Card */
+/* Deep Burgundy Rant Post Cards (#2b1111) */
 .post-card, .retro-feed-card, .card {
-  background-color: #ffffff !important;
-  border-top: 2px solid #808080 !important;
-  border-left: 2px solid #808080 !important;
-  border-right: 2px solid #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
+  background-color: #2b1111 !important;
+  border: 1px solid #522525 !important;
   margin: 12px 0;
   padding: 14px;
   display: flex;
   flex-direction: column;
   position: relative;
-  color: #000000 !important;
-  box-shadow: none !important;
+  color: #e6d5d5 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
 }
 
 .card-rant-body, .rant-text, .post-content {
@@ -722,8 +738,8 @@ html, body {
   height: auto !important;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #000000 !important;
-  text-shadow: none !important;
+  color: #e6d5d5 !important; /* Pinkish-grey text */
+  text-shadow: 0 0 2px rgba(0,0,0,1) !important;
   margin-bottom: 1rem;
   white-space: pre-wrap;
   font-family: Tahoma, sans-serif;
@@ -731,9 +747,9 @@ html, body {
 
 /* Faded Maroon Stamp */
 .stamp-confidential {
-  color: #800000 !important;
-  border: 2px solid #800000 !important;
-  background: #ffe6e6;
+  color: #a84444 !important;
+  border: 2px solid #a84444 !important;
+  background: rgba(40, 10, 10, 0.8);
   position: absolute;
   top: 10px;
   right: 12px;
@@ -746,9 +762,9 @@ html, body {
 }
 
 .stamp-redacted {
-  color: #800000 !important;
-  border: 2px solid #800000 !important;
-  background: #ffe6e6;
+  color: #a84444 !important;
+  border: 2px solid #a84444 !important;
+  background: rgba(40, 10, 10, 0.8);
   position: absolute;
   top: 10px;
   right: 12px;
@@ -760,19 +776,19 @@ html, body {
   transform: rotate(3deg);
 }
 
-/* X Feed Terminal - Classic Inset Box */
-.x-feed-terminal {
+/* X Feed Terminal - Dark Inset Box */
+#ie-content-area .x-feed-terminal {
   height: 130px;
-  background: #ffffff;
-  border-top: 2px solid #808080;
+  background: #080c09;
+  border-top: 1px solid #455945;
   display: flex;
   flex-direction: column;
   margin: 0 10px 10px 10px;
 }
 
-.x-feed-header {
-  background: linear-gradient(90deg, #000080, #1084d0);
-  color: #ffffff;
+#ie-content-area .x-feed-header {
+  background: linear-gradient(90deg, #1b261c, #2c3c2e);
+  color: #8ca68c;
   padding: 0.3rem 0.8rem;
   font-family: Tahoma, sans-serif;
   font-weight: bold;
@@ -781,34 +797,34 @@ html, body {
   text-transform: uppercase;
 }
 
-.x-feed-output {
+#ie-content-area .x-feed-output {
   flex-grow: 1;
   padding: 0.6rem 0.8rem;
   font-size: 0.85rem;
-  color: #000000;
+  color: #8ca68c;
   font-family: 'Courier New', monospace;
   overflow-y: auto;
-  background: #ffffff;
+  background: #080c09;
 }
 
 /* Right Sidebar & Profile */
-.ai-status-card {
+#ie-content-area .ai-status-card {
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #000000;
+  color: #8ca68c;
 }
 
-.status-pulse-container {
+#ie-content-area .status-pulse-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-.status-pulse-dot {
+#ie-content-area .status-pulse-dot {
   width: 10px;
   height: 10px;
-  background-color: #008000;
+  background-color: #33ff00;
   border-radius: 50%;
   animation: pulse-dot 1.5s infinite;
 }
@@ -818,20 +834,20 @@ html, body {
   50% { opacity: 1; }
 }
 
-.status-text {
+#ie-content-area .status-text {
   font-family: Tahoma, sans-serif;
   font-weight: bold;
   font-size: 0.85rem;
-  color: #000080;
+  color: #61b361;
 }
 
-.status-desc {
-  color: #000000;
+#ie-content-area .status-desc {
+  color: #8ca68c;
   font-size: 0.85rem;
   line-height: 1.5;
 }
 
-.profile-card {
+#ie-content-area .profile-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -844,42 +860,42 @@ html, body {
   height: auto;
   display: block;
   margin: 0 auto 10px auto;
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
+  border: 2px solid #455945;
   background-color: #000000;
 }
 
-.profile-info {
+#ie-content-area .profile-info {
   font-size: 0.85rem;
   line-height: 1.5;
-  color: #000000;
+  color: #8ca68c;
 }
 
-.profile-name {
+#ie-content-area .profile-name {
   font-family: Tahoma, sans-serif;
   font-weight: bold;
-  color: #000080;
+  color: #61b361;
   letter-spacing: 0.5px;
   font-size: 1rem;
 }
 
-.profile-role {
-  color: #333333;
+#ie-content-area .profile-role {
+  color: #a8cfa8;
   font-size: 0.8rem;
   margin-top: 0.2rem;
 }
 
-.badge-flashing {
-  color: #008000;
+#ie-content-area .badge-flashing {
+  color: #33ff00;
   font-size: 0.85rem;
   font-weight: bold;
   margin-top: 0.35rem;
   display: inline-block;
 }
 
-/* Authentic Windows 2000 Style Taskbar (#c0c0c0, Quick Launch Dividers, Start Button) */
+/* ==========================================================================
+   UNTOUCHED Windows 2000 Taskbar (#c0c0c0, Raised Start Button, Clock)
+   ========================================================================== */
+
 .taskbar {
   height: 38px;
   background-color: #c0c0c0;
