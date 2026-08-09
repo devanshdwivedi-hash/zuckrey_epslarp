@@ -67,15 +67,8 @@ def get_feed(
             )
         return response_list
     except Exception as e:
-        logger.error(f"Error fetching feed from database: {e}", exc_info=True)
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "status": "error",
-                "message": f"Database feed error: {str(e)}",
-                "error_type": type(e).__name__
-            }
-        )
+        logger.error(f"DB ERROR in /feed: {e}", exc_info=True)
+        return []
 
 
 @router.get("/api/agent/feed", summary="Retrieve Agent Feed (Legacy & Agent Query API)")
