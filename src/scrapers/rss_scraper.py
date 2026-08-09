@@ -19,7 +19,7 @@ class RSSScraper(BaseScraper):
         self.feeds = feeds or [
             "https://huggingface.co/blog/feed.xml",
             "https://openai.com/news/rss.xml",
-            "https://security.googleblog.com/feeds/posts/default"
+            "https://blog.google/technology/safety-security/rss/"
         ]
         self.html_tag_re = re.compile(r"<[^>]+>")
 
@@ -41,7 +41,7 @@ class RSSScraper(BaseScraper):
             return "Hugging Face Blog"
         elif "openai" in domain:
             return "OpenAI Blog"
-        elif "googleblog" in domain:
+        elif "google" in domain:
             return "Google Security Blog"
         return domain
 

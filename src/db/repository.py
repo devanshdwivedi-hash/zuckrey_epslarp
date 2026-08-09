@@ -16,7 +16,8 @@ def create_published_post(
     persona_name: Optional[str] = None,
     score: Optional[int] = None,
     source_name: Optional[str] = None,
-    sources: Optional[List[str]] = None
+    sources: Optional[List[str]] = None,
+    article_published_at: Optional[Any] = None
 ) -> PublishedPost:
     """
     Inserts a newly generated, approved post into the published_posts table.
@@ -28,10 +29,12 @@ def create_published_post(
         selection_reason=selection_reason,
         why_relevant_now=why_relevant_now,
         embedding=embedding,
+        vector_embedding=embedding,
         persona_name=persona_name,
         score=score,
         source_name=source_name,
-        sources=sources or [source_url]
+        sources=sources or [source_url],
+        article_published_at=article_published_at
     )
     db.add(post)
     db.commit()
@@ -67,19 +70,16 @@ def create_rejected_post(
 
 def get_published_posts(
     db: Session,
-    limit: int = 50,
+    limit: Optional[int] = 500,
     offset: int = 0
 ) -> List[PublishedPost]:
     """
     Retrieves published posts ordered by newest first.
     """
-    return (
-        db.query(PublishedPost)
-        .order_by(PublishedPost.timestamp.desc())
-        .offset(offset)
-        .limit(limit)
-        .all()
-    )
+    query = db.query(PublishedPost).order_by(PublishedPost.created_at.desc(), PublishedPost.id.desc()).offset(offset)
+    if limit is not None and limit > 0:
+        query = query.limit(limit)
+    return query.all()
 
 
 def get_rejected_posts(

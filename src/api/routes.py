@@ -24,6 +24,8 @@ class FeedPostResponse(BaseModel):
     selection_reason: str = Field(..., description="Editorial explanation for why this post was selected")
     why_relevant_now: str = Field(..., description="Timely context highlighting security relevance today")
     sources: List[str] = Field(..., default_factory=list, description="List of source URLs for the post")
+    created_at: Optional[str] = Field(None, description="ISO timestamp when AI Agent published the post")
+    article_published_at: Optional[str] = Field(None, description="ISO timestamp when original article was published")
 
 
 class CronExecutionResponse(BaseModel):
@@ -33,33 +35,34 @@ class CronExecutionResponse(BaseModel):
 
 @router.get("/feed", response_model=List[FeedPostResponse], summary="Retrieve Published Post Feed")
 def get_feed(
-    limit: int = Query(50, ge=1, le=200, description="Maximum number of posts to return"),
+    limit: Optional[int] = Query(500, ge=1, le=2000, description="Maximum number of posts to return"),
     offset: int = Query(0, ge=0, description="Offset for pagination"),
     db: Session = Depends(get_db)
 ):
     """
     Fetches published technical posts from published_posts table,
-    sorted by timestamp descending (newest first).
+    sorted by created_at descending (newest first).
     Wrapped in try/except to handle database or query exceptions gracefully without crashing Vercel functions.
     """
     try:
-        posts = (
-            db.query(PublishedPost)
-            .order_by(PublishedPost.timestamp.desc())
-            .offset(offset)
-            .limit(limit)
-            .all()
-        )
+        query = db.query(PublishedPost).order_by(PublishedPost.created_at.desc(), PublishedPost.id.desc()).offset(offset)
+        if limit is not None and limit > 0:
+            query = query.limit(limit)
+        posts = query.all()
         
         response_list = []
         for p in posts:
             sources = p.sources if isinstance(p.sources, list) else ([p.source_url] if p.source_url else [])
+            created_at_str = p.created_at.isoformat() if p.created_at else (p.timestamp.isoformat() if p.timestamp else None)
+            article_pub_str = p.article_published_at.isoformat() if p.article_published_at else None
             response_list.append(
                 FeedPostResponse(
                     content=p.content,
                     selection_reason=p.selection_reason,
                     why_relevant_now=p.why_relevant_now,
-                    sources=sources
+                    sources=sources,
+                    created_at=created_at_str,
+                    article_published_at=article_pub_str
                 )
             )
         return response_list
@@ -94,9 +97,13 @@ def get_agent_feed(
         post_items = []
         for index, p in enumerate(posts):
             sources = p.sources if isinstance(p.sources, list) else ([p.source_url] if p.source_url else [])
+            created_at_str = p.created_at.isoformat() if p.created_at else (p.timestamp.isoformat() if p.timestamp else None)
+            article_pub_str = p.article_published_at.isoformat() if p.article_published_at else None
             post_items.append({
                 "id": p.id or (index + 1),
-                "createdAt": p.timestamp.isoformat() if p.timestamp else None,
+                "createdAt": created_at_str,
+                "created_at": created_at_str,
+                "article_published_at": article_pub_str,
                 "text": p.content,
                 "rationale": p.selection_reason,
                 "sources": sources

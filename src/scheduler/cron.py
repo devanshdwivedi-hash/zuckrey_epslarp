@@ -43,32 +43,22 @@ async def run_autonomous_loop():
         published_vectors = [rec[2] for rec in existing_records if rec[2] is not None]
         logger.info(f"Loaded {len(published_vectors)} existing vector embeddings from database memory.")
 
-        # 2. Ingest raw topics from all active scrapers resiliently
+        # 2. Ingest raw topics from all active scrapers concurrently
         raw_topics = []
+        scraper_results = await asyncio.gather(
+            ArxivScraper(max_results=10).scrape(),
+            HNScraper(limit=20).scrape(),
+            RSSScraper().scrape(),
+            return_exceptions=True
+        )
 
-        # arXiv Scraper
-        try:
-            arxiv_topics = await ArxivScraper(max_results=10).scrape()
-            raw_topics.extend(arxiv_topics)
-            logger.info(f"Ingested {len(arxiv_topics)} topics from arXiv.")
-        except Exception as e:
-            logger.error(f"ArxivScraper failed during loop: {e}", exc_info=True)
-
-        # HackerNews Scraper
-        try:
-            hn_topics = await HNScraper(limit=20).scrape()
-            raw_topics.extend(hn_topics)
-            logger.info(f"Ingested {len(hn_topics)} topics from HackerNews.")
-        except Exception as e:
-            logger.error(f"HNScraper failed during loop: {e}", exc_info=True)
-
-        # RSS Feeds Scraper
-        try:
-            rss_topics = await RSSScraper().scrape()
-            raw_topics.extend(rss_topics)
-            logger.info(f"Ingested {len(rss_topics)} topics from RSS feeds.")
-        except Exception as e:
-            logger.error(f"RSSScraper failed during loop: {e}", exc_info=True)
+        scraper_names = ["arXiv", "HackerNews", "RSS feeds"]
+        for name, res in zip(scraper_names, scraper_results):
+            if isinstance(res, Exception):
+                logger.error(f"{name} scraper failed during loop: {res}")
+            elif isinstance(res, list):
+                raw_topics.extend(res)
+                logger.info(f"Ingested {len(res)} topics from {name}.")
 
         logger.info(f"Total raw candidate topics collected: {len(raw_topics)}")
 
@@ -89,7 +79,7 @@ async def run_autonomous_loop():
                 text_to_embed = f"{topic.title} {topic.summary}"
                 candidate_vec = get_embedding(text_to_embed)
 
-                if is_duplicate(candidate_vec, published_vectors, threshold=0.85):
+                if is_duplicate(candidate_vec, published_vectors, threshold=0.88):
                     duplicate_count += 1
                     logger.info(f"Skipping duplicate topic by vector memory: '{topic.title}'")
                     continue
@@ -102,6 +92,19 @@ async def run_autonomous_loop():
                     # D. Persona Post Generation
                     generated_post = await generate_post(topic)
                     
+                    # Extract article publication datetime if available
+                    article_pub_dt = getattr(topic, "published_at", None) or getattr(topic, "date", None)
+                    if not article_pub_dt and getattr(topic, "url", None):
+                        import re
+                        from datetime import datetime, timezone
+                        url_match = re.search(r"/(\d{4})/(\d{2})/", topic.url)
+                        if url_match:
+                            try:
+                                year, month = int(url_match.group(1)), int(url_match.group(2))
+                                article_pub_dt = datetime(year, month, 1, tzinfo=timezone.utc)
+                            except Exception:
+                                pass
+
                     # E. Database Persistence
                     post_db = create_published_post(
                         db=db,
@@ -114,7 +117,8 @@ async def run_autonomous_loop():
                         persona_name="AI Security & Vulnerability Researcher",
                         score=decision.score,
                         source_name=topic.source_name,
-                        sources=generated_post.sources
+                        sources=generated_post.sources,
+                        article_published_at=article_pub_dt
                     )
                     
                     # Add candidate vector to in-memory list to prevent duplicate in same cycle

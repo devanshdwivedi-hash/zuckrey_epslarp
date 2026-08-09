@@ -1,7 +1,7 @@
 import asyncio
 import httpx
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from src.intelligence.schemas import RawTopic
 from src.scrapers.base import BaseScraper
 

@@ -32,6 +32,9 @@ class PublishedPost(Base):
     # Backward-compat alias: repository.py uses .embedding
     embedding        = Column(JSON, nullable=True)
 
+    # Original article publication date
+    article_published_at = Column(DateTime(timezone=True), nullable=True)
+
     # Optional metadata
     source_url       = Column(String(1024), nullable=True, index=True)
     source_name      = Column(String(256), nullable=True)
@@ -40,20 +43,21 @@ class PublishedPost(Base):
 
     def to_dict(self):
         return {
-            "id":               self.id,
-            "created_at":       self.created_at.isoformat() if self.created_at else None,
-            "timestamp":        self.timestamp.isoformat() if self.timestamp else None,
-            "title":            self.title,
-            "content":          self.content,
-            "selection_reason": self.selection_reason,
-            "why_relevant_now": self.why_relevant_now,
-            "sources":          self.sources or ([self.source_url] if self.source_url else []),
-            "vector_embedding": self.vector_embedding,
-            "embedding":        self.embedding,
-            "source_url":       self.source_url,
-            "source_name":      self.source_name,
-            "persona_name":     self.persona_name,
-            "score":            self.score,
+            "id":                   self.id,
+            "created_at":           self.created_at.isoformat() if self.created_at else None,
+            "timestamp":            self.timestamp.isoformat() if self.timestamp else None,
+            "article_published_at": self.article_published_at.isoformat() if self.article_published_at else None,
+            "title":                self.title,
+            "content":              self.content,
+            "selection_reason":     self.selection_reason,
+            "why_relevant_now":     self.why_relevant_now,
+            "sources":              self.sources or ([self.source_url] if self.source_url else []),
+            "vector_embedding":     self.vector_embedding,
+            "embedding":            self.embedding,
+            "source_url":           self.source_url,
+            "source_name":          self.source_name,
+            "persona_name":         self.persona_name,
+            "score":                self.score,
         }
 
 

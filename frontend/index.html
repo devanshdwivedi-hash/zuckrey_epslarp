@@ -3,99 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Internet Explorer - Zucknet_OS v1.0.4</title>
-  <link rel="stylesheet" href="/frontend/styles/main.css">
+  <title>Internet Explorer - Zucknet_OS v1.0.4 [Windows 2000 Edition]</title>
+  
+  <!-- Retro Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
 
-  <!-- Hidden Audio Element for La Fake MP2 Player -->
-  <audio id="mp2-audio" loop src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8c8a73467.mp3?filename=ambient-synth-pad-10825.mp3" preload="auto" style="display: none;"></audio>
-
-  <!-- Full-Screen Y2K Boot Sequence Overlay -->
-  <div id="boot-screen" class="boot-overlay">
+  <!-- Windows Boot Sequence Terminal Overlay -->
+  <div id="boot-overlay" class="boot-overlay">
     <div class="boot-container">
+      <!-- ASCII Hacker Face Header -->
+      <div class="ascii-face">
+  ______ _    _ _____ _   ___   _ _____ _____ 
+  |___  /| |  | /  __ \ | / / \ | |  ___|_   _|
+     / / | |  | | /  \/ |/ /|  \| | |__   | |  
+    / /  | |  | | |   |    \| . ` |  __|  | |  
+  ./ /___| |__| | \__/\ |\  \ |\  | |___  | |  
+  \_____/ \____/ \____/\_| \_/\_| \_/\____/  \_/  
+      </div>
       
-      <!-- ASCII Art Digitized AI Avatar (Arnim Zola Style) -->
-      <pre id="ascii-avatar" class="ascii-face">
-   .________________________.
-  /  _____/\_   _____/\_   / 
- /   \  ___ |    __)_  /  /  
- \    \_\  \|        \/  /_  
-  \______  /_______  /____ \ 
-         \/        \/     \/ 
-       [ Z U C K N E T ]
-     
-        .-------------.
-       /  .---------.  \
-      /  /           \  \
-     |  |   O     O   |  |
-     |  |      <      |  |
-     |  |  \_______/  |  |
-      \  \           /  /
-       \  '---------'  /
-        '-------------'
-      </pre>
-
-      <!-- Terminal Boot Logs & Progress -->
       <div class="boot-terminal">
-        <div id="loading-percentage" class="flicker-text">[LOADING: 0%]</div>
-        <div id="terminal-logs" class="log-output">
-          <div class="log-line">> BOOTING_KERNEL...</div>
-          <div class="log-line">> VERIFYING_INFILTRATION...</div>
+        <div class="flicker-text">> INITIALIZING ZUCKNET_OS v1.0.4 [WIN2K KERNEL]...</div>
+        <div class="log-output" id="boot-logs">
+          <div class="log-line">> Mounting SQLite Database Connection... OK</div>
+          <div class="log-line">> Connecting LLM Editor-in-Chief Pipeline... OK</div>
+          <div class="log-line">> Directing Traffic to Render Autonomous Cloud Engine... OK</div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Main Desktop OS Shell (Revealed after 3s boot sequence) -->
-  <div id="main-content" class="desktop-shell" style="display: none;">
-    
-    <!-- Giant Central Internet Explorer 5.5/6 Window -->
-    <div id="ie-browser-window" class="ie-window">
+  <!-- Windows 2000 Outer Desktop Shell -->
+  <div class="desktop-shell">
+
+    <!-- Single Giant Central Internet Explorer 5.5 / 6 Window -->
+    <div class="ie-window" id="ie-browser-window">
       
-      <!-- Win2k Blue Title Bar -->
+      <!-- IE Title Bar (Windows 2000 Blue Gradient) -->
       <div class="ie-titlebar">
         <div class="ie-title-left">
           <span class="ie-title-icon">🌐</span>
           <span class="ie-title-text">Internet Explorer - Zucknet_OS v1.0.4</span>
         </div>
         <div class="ie-title-controls">
-          <button class="ie-win-btn" id="btn-min" title="Minimize">_</button>
-          <button class="ie-win-btn" id="btn-max" title="Maximize">□</button>
-          <button class="ie-win-btn ie-close-btn" id="btn-close" title="Close">✕</button>
+          <button class="ie-win-btn ie-min-btn" aria-label="Minimize">_</button>
+          <button class="ie-win-btn ie-max-btn" aria-label="Maximize">□</button>
+          <button class="ie-win-btn ie-close-btn" aria-label="Close">×</button>
         </div>
       </div>
 
       <!-- IE Menu Bar -->
       <div class="ie-menubar">
         <div class="ie-menu-items">
-          <span class="ie-menu-item"><u>F</u>ile</span>
-          <span class="ie-menu-item"><u>E</u>dit</span>
-          <span class="ie-menu-item"><u>V</u>iew</span>
-          <span class="ie-menu-item"><u>F</u>avorites</span>
-          <span class="ie-menu-item"><u>T</u>ools</span>
-          <span class="ie-menu-item"><u>H</u>elp</span>
+          <span class="ie-menu-item">File</span>
+          <span class="ie-menu-item">Edit</span>
+          <span class="ie-menu-item">View</span>
+          <span class="ie-menu-item">Favorites</span>
+          <span class="ie-menu-item">Tools</span>
+          <span class="ie-menu-item">Help</span>
         </div>
-        <div class="ie-globe-throbber" title="Windows Internet Explorer">
+        <!-- IE Spinning Globe Throbber -->
+        <div class="ie-globe-throbber">
           <span class="globe-spin">🌐</span>
         </div>
       </div>
 
-      <!-- IE Standard Buttons Toolbar -->
+      <!-- IE Toolbar (Standard Buttons) -->
       <div class="ie-toolbar">
-        <button class="ie-tool-btn"><span class="tool-icon">⬅️</span> Back</button>
-        <button class="ie-tool-btn"><span class="tool-icon">➡️</span> Forward</button>
-        <button class="ie-tool-btn"><span class="tool-icon">🛑</span> Stop</button>
-        <button class="ie-tool-btn"><span class="tool-icon">🔄</span> Refresh</button>
-        <button class="ie-tool-btn"><span class="tool-icon">🏠</span> Home</button>
+        <button class="ie-tool-btn"><span>◀</span> Back</button>
+        <button class="ie-tool-btn"><span>▶</span> Forward</button>
+        <button class="ie-tool-btn"><span>✖</span> Stop</button>
+        <button class="ie-tool-btn"><span>🔄</span> Refresh</button>
+        <button class="ie-tool-btn"><span>🏠</span> Home</button>
         <div class="tool-divider"></div>
-        <button class="ie-tool-btn"><span class="tool-icon">🔍</span> Search</button>
-        <button class="ie-tool-btn"><span class="tool-icon">⭐</span> Favorites</button>
-        <button class="ie-tool-btn"><span class="tool-icon">🕒</span> History</button>
+        <button class="ie-tool-btn"><span>🔍</span> Search</button>
+        <button class="ie-tool-btn"><span>⭐</span> Favorites</button>
+        <button class="ie-tool-btn"><span>📜</span> History</button>
         <div class="tool-divider"></div>
-        <button class="ie-tool-btn"><span class="tool-icon">✉️</span> Mail</button>
-        <button class="ie-tool-btn"><span class="tool-icon">🖨️</span> Print</button>
+        <button class="ie-tool-btn"><span>✉️</span> Mail</button>
+        <button class="ie-tool-btn"><span>🖨️</span> Print</button>
       </div>
 
       <!-- IE Address Bar -->
@@ -103,19 +94,21 @@
         <span class="address-label">Address</span>
         <div class="address-input-wrapper">
           <span class="ie-url-icon">🌐</span>
-          <input type="text" class="address-input" value="http://zucknet.com" readonly />
+          <input type="text" class="address-input" value="http://zucknet.com" readonly>
         </div>
         <button class="ie-go-btn">Go</button>
         <div class="tool-divider"></div>
         <span class="address-links-label">Links »</span>
       </div>
 
-      <!-- IE Content Area Viewport (Persistent Web Page Container) -->
+      <!-- Central Content Viewport Area (#ie-content-area) -->
       <div id="ie-content-area" class="ie-viewport">
-        
-        <!-- Persistent Web Page Header (Top Menu & Navigation) -->
-        <header class="ie-page-header" id="os-topbar">
-          <div class="ie-page-brand">ZUCKNET_OS v1.0.4 [Windows 2000 Edition]</div>
+
+        <!-- Top Web Navigation Menu Component -->
+        <header class="ie-page-header">
+          <div class="ie-page-brand">
+            ZUCKNET_OS // v1.0.4
+          </div>
           <div class="ie-page-nav-tabs">
             <button class="nav-tab active" id="tab-home">HOME</button>
             <button class="nav-tab" id="tab-upload">UPLOAD</button>
@@ -154,7 +147,7 @@
             <div class="sidebar-box mt-1">
               <div class="sidebar-header window-title-bar">ZUCK-RUNNER v1.0</div>
               <div class="game-canvas-container" style="text-align: center;">
-                <canvas id="sidebar-game-canvas" width="220" height="120" style="border: 2px inset #808080; background: #000000; cursor: pointer; border-radius: 0px;"></canvas>
+                <canvas id="sidebar-game-canvas" width="300" height="150" style="border: 2px inset #808080; background: #000000; cursor: pointer; border-radius: 0px;"></canvas>
               </div>
             </div>
 
@@ -222,17 +215,25 @@
               </div>
             </div>
 
-            <!-- Verified Infiltrator Profile Panel -->
-            <div class="sidebar-box mt-1 infiltrator-box">
-              <div class="sidebar-header window-title-bar">VERIFIED INFILTRATOR</div>
-              <div class="profile-card" style="flex-direction: column; text-align: center;">
-                <img src="assets/img/zuckrey_avatar.png" id="zuckrey-3d-avatar" alt="Zuckrey EpsLarp">
-                <div class="profile-info">
-                  <div class="profile-name">AGENT_EPSLARP</div>
-                  <div class="profile-role">AI Security Researcher</div>
-                  <div class="profile-badge badge-flashing">[VERIFIED]</div>
+            <!-- Verified Infiltrator Retro 90s Security Clearance ID Badge Panel -->
+            <div class="sidebar-box mt-1 infiltrator-box" id="verified-infiltrator">
+              <div class="id-clip-hole"></div>
+              <div class="id-header">SECURITY ACCESS PASS // LEVEL 5</div>
+              
+              <div class="id-body" style="display: flex; gap: 10px; align-items: center; margin-top: 6px; position: relative;">
+                <img src="assets/img/zuckrey_avatar.png" id="infiltrator-photo" alt="Infiltrator Photo" onerror="this.src='assets/img/zuckrey_avatar.png'">
+                
+                <div class="id-metadata-area" style="font-size: 0.78rem; line-height: 1.4; font-family: Tahoma, monospace; color: #8ca68c;">
+                  <div class="id-chip"></div>
+                  <div><strong>HANDLE:</strong> <span style="color: #61b361;">AGENT_EPSLARP</span></div>
+                  <div><strong>ROLE:</strong> AI Security Researcher</div>
+                  <div><strong>CLEARANCE:</strong> <span style="color: #33ff00;">UNRESTRICTED</span></div>
+                  <div><strong>ID NO:</strong> #2025-0100</div>
                 </div>
               </div>
+
+              <div class="id-stamp-verified">VERIFIED</div>
+              <div class="id-barcode">||| |||| | ||||| |||</div>
             </div>
 
             <!-- Retro Web Badges Box -->
@@ -284,18 +285,17 @@
           </button>
         </div>
       </div>
-      
+
       <div class="taskbar-right">
         <div class="systray-divider"></div>
-        <div id="taskbar-clock" class="clock">00:00:00</div>
+        <div class="clock" id="taskbar-clock">12:00 PM</div>
       </div>
     </footer>
 
   </div>
 
-  <script src="/frontend/js/popups.js"></script>
-  <script src="/frontend/js/feed.js"></script>
-  <script src="/frontend/js/game.js"></script>
-  <script src="/frontend/js/app.js"></script>
+  <script src="js/feed.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/easter_eggs.js"></script>
 </body>
 </html>

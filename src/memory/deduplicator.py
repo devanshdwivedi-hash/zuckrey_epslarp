@@ -23,7 +23,7 @@ def cosine_similarity(v1: List[float], v2: List[float]) -> float:
 def is_duplicate(
     candidate_vector: List[float], 
     published_vectors: List[List[float]], 
-    threshold: float = 0.85
+    threshold: float = 0.88
 ) -> bool:
     """
     Determines if candidate_vector is semantically similar to any vector in published_vectors.
