@@ -1,7 +1,7 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
  * Dark Burgundy Deep Red Post Cards (#2b1111) & Pinkish-Grey Text (#e6d5d5)
- * Retro Scrolling Text Box & Raw Post Data Logger
+ * Retro Scrolling Text Box & Aggressive IST Timestamp Formatter
  */
 
 function fetchFeed() {
@@ -69,44 +69,44 @@ function fetchFeed() {
 
       const postId = post.id || post.post_id || (index + 1);
 
-      let rawDate = post.date || post.createdAt || post.created_at || post.timestamp || post.published_at;
+      // Hunt for common backend date keys
+      let rawDate = post.createdAt || post.created_at || post.timestamp || post.published_at || post.date;
 
+      // Failsafe: search all object keys for the word 'date', 'time', or 'created'
       if (!rawDate) {
-        const dateKey = Object.keys(post).find(key => key.toLowerCase().includes('date') || key.toLowerCase().includes('time') || key.toLowerCase().includes('created'));
+        const dateKey = Object.keys(post).find(key => 
+          key.toLowerCase().includes('date') || 
+          key.toLowerCase().includes('time') || 
+          key.toLowerCase().includes('created')
+        );
         if (dateKey) rawDate = post[dateKey];
       }
 
-      let formattedDate = "";
-      if (!rawDate) {
-        // Fallback generator for missing date data
-        const now = new Date();
-        const yyyy = now.getUTCFullYear();
-        const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-        const dd = String(now.getUTCDate()).padStart(2, '0');
-        const hh = String(now.getUTCHours()).padStart(2, '0');
-        const min = String(now.getUTCMinutes()).padStart(2, '0');
-        const sec = String(now.getUTCSeconds()).padStart(2, '0');
-        formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
-      } else {
-        const d = new Date(rawDate);
+      let formattedDate = "[TIMESTAMP NULL]";
+
+      if (rawDate) {
+        const d = new Date(rawDate); // Parses the actual publish time
         if (!isNaN(d.getTime())) {
-          const yyyy = d.getUTCFullYear();
-          const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-          const dd = String(d.getUTCDate()).padStart(2, '0');
-          const hh = String(d.getUTCHours()).padStart(2, '0');
-          const min = String(d.getUTCMinutes()).padStart(2, '0');
-          const sec = String(d.getUTCSeconds()).padStart(2, '0');
-          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
-        } else {
-          const now = new Date();
-          const yyyy = now.getUTCFullYear();
-          const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
-          const dd = String(now.getUTCDate()).padStart(2, '0');
-          const hh = String(now.getUTCHours()).padStart(2, '0');
-          const min = String(now.getUTCMinutes()).padStart(2, '0');
-          const sec = String(now.getUTCSeconds()).padStart(2, '0');
-          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          const hh = String(d.getHours()).padStart(2, '0');
+          const min = String(d.getMinutes()).padStart(2, '0');
+          const sec = String(d.getSeconds()).padStart(2, '0');
+          
+          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} IST]`;
         }
+      }
+
+      if (formattedDate === "[TIMESTAMP NULL]") {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const hh = String(d.getHours()).padStart(2, '0');
+        const min = String(d.getMinutes()).padStart(2, '0');
+        const sec = String(d.getSeconds()).padStart(2, '0');
+        formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} IST]`;
       }
       
       let mainText = post.text || post.content || post.body || post.rant || "No rant text provided by backend.";
