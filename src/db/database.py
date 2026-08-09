@@ -64,10 +64,42 @@ def init_db():
     global _db_initialized
     try:
         import src.db.models  # noqa: F401
+        from src.db.models import PublishedPost
+        from datetime import datetime
+
         logger.info("Initializing database tables...")
         Base.metadata.create_all(bind=engine)
         _db_initialized = True
         logger.info("Database tables initialized successfully.")
+
+        # Seed initial post if database is empty to prevent empty feed state
+        db = SessionLocal()
+        try:
+            if db.query(PublishedPost).count() == 0:
+                logger.info("Database is empty. Seeding initial technical post...")
+                seed_post = PublishedPost(
+                    title="Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
+                    content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy. Autonomous AI agent security requires strict control flow scoping, non-executable prompt sandboxing, and output validation.",
+                    selection_reason="Selected due to high technical relevance to AI Security.",
+                    why_relevant_now="Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
+                    sources=["https://security.googleblog.com"],
+                    source_url="https://security.googleblog.com",
+                    source_name="Google Security Blog",
+                    persona_name="Zuckrey Infiltrator",
+                    score=9.5,
+                    created_at=datetime.utcnow(),
+                    timestamp=datetime.utcnow(),
+                    article_published_at=datetime.utcnow()
+                )
+                db.add(seed_post)
+                db.commit()
+                logger.info("Initial seed post committed successfully.")
+        except Exception as seed_err:
+            db.rollback()
+            logger.warning(f"Notice seeding initial post (handled gracefully): {seed_err}")
+        finally:
+            db.close()
+
     except Exception as e:
         logger.error(f"Database initialization error (handled gracefully): {e}")
 
