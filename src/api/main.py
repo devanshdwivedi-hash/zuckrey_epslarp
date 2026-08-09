@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import threading
 from pathlib import Path
 from contextlib import asynccontextmanager
 
@@ -39,11 +40,23 @@ async def lifespan(app: FastAPI):
     
     if not is_vercel:
         try:
-            from src.scheduler.cron import start_scheduler
-            logger.info("Starting background scheduler for local runtime...")
-            start_scheduler(run_immediately=False)
+            logger.info("Starting background autonomous worker thread on app boot...")
+            def run_autonomous_background_thread():
+                logger.info("⚡ Background Scraper Worker Thread active.")
+                import asyncio
+                import time
+                from src.scheduler.cron import run_autonomous_loop
+                while True:
+                    try:
+                        asyncio.run(run_autonomous_loop())
+                    except Exception as loop_err:
+                        logger.error(f"Background scraper loop error: {loop_err}")
+                    time.sleep(300)
+
+            scraper_thread = threading.Thread(target=run_autonomous_background_thread, daemon=True)
+            scraper_thread.start()
         except Exception as sched_err:
-            logger.warning(f"Could not start local background scheduler: {sched_err}")
+            logger.warning(f"Could not start background scraper worker thread: {sched_err}")
     else:
         logger.info("Vercel Serverless Mode detected. Background thread scheduler disabled (using /api/cron).")
     
