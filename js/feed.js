@@ -1,7 +1,7 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
  * Dark Burgundy Deep Red Post Cards (#2b1111) & Pinkish-Grey Text (#e6d5d5)
- * Retro Scrolling Text Box & RAW JSON Debug Dump
+ * Retro Scrolling Text Box & Clean IST URL Date Extractor / Archived Fallback
  */
 
 function fetchFeed() {
@@ -69,44 +69,45 @@ function fetchFeed() {
 
       const postId = post.id || post.post_id || (index + 1);
 
-      // Hunt for common backend date keys
-      let rawDate = post.createdAt || post.created_at || post.timestamp || post.published_at || post.date;
-
-      // Failsafe: search all object keys for the word 'date', 'time', or 'created'
-      if (!rawDate) {
-        const dateKey = Object.keys(post).find(key => 
-          key.toLowerCase().includes('date') || 
-          key.toLowerCase().includes('time') || 
-          key.toLowerCase().includes('created')
-        );
-        if (dateKey) rawDate = post[dateKey];
-      }
-
-      let formattedDate = "[TIMESTAMP NULL]";
-
-      if (rawDate) {
-        const d = new Date(rawDate); // Parses the actual publish time
-        if (!isNaN(d.getTime())) {
-          const yyyy = d.getFullYear();
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          const dd = String(d.getDate()).padStart(2, '0');
-          const hh = String(d.getHours()).padStart(2, '0');
-          const min = String(d.getMinutes()).padStart(2, '0');
-          const sec = String(d.getSeconds()).padStart(2, '0');
-          
-          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} IST]`;
+      // Check backend timestamp keys first
+      let rawDate = post.created_at || post.timestamp || post.date || post.createdAt || post.published_at;
+      
+      // Fallback: Try extracting year/month from source URL
+      if (!rawDate && post.sources && post.sources.length > 0) {
+        const sourceStr = Array.isArray(post.sources) ? post.sources[0] : post.sources;
+        if (typeof sourceStr === "string") {
+          const urlMatch = sourceStr.match(/\/(\d{4})\/(\d{2})\//);
+          if (urlMatch) {
+            const year = urlMatch[1];
+            const month = urlMatch[2];
+            rawDate = `${year}-${month}-01T00:00:00Z`;
+          }
         }
       }
 
-      if (formattedDate === "[TIMESTAMP NULL]") {
-        const d = new Date();
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
-        const hh = String(d.getHours()).padStart(2, '0');
-        const min = String(d.getMinutes()).padStart(2, '0');
-        const sec = String(d.getSeconds()).padStart(2, '0');
-        formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} IST]`;
+      let formattedDate = "";
+
+      if (rawDate) {
+        const d = new Date(rawDate);
+        if (!isNaN(d.getTime())) {
+          // Format into Indian Standard Time (IST)
+          const options = {
+            timeZone: 'Asia/Kolkata',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          };
+          const istString = d.toLocaleString('en-IN', options);
+          formattedDate = `[${istString} IST]`;
+        } else {
+          formattedDate = `[ARCHIVED // IST]`;
+        }
+      } else {
+        formattedDate = `[ARCHIVED // IST]`;
       }
       
       let mainText = post.text || post.content || post.body || post.rant || "No rant text provided by backend.";
@@ -139,12 +140,7 @@ function fetchFeed() {
         </div>
         
         <!-- PINKISH-GREY RETRO SCROLLABLE TEXT BOX (#e6d5d5) -->
-        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">
-          <div style="color: yellow; background: black; padding: 5px; font-family: monospace; font-size: 10px; margin-bottom: 10px;">
-            DEBUG DATA: ${JSON.stringify(post)}
-          </div>
-          ${mainText}
-        </div>
+        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">${mainText}</div>
         
         <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
           <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
