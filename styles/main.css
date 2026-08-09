@@ -559,6 +559,13 @@ body::after {
   padding-bottom: 10px;
 }
 
+.rant-card .content, .feed-item-text, .rant-body, .post-content, .rant-text-body {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  white-space: pre-wrap !important;
+}
+
 /* Dark Green Panel Section Headers */
 #ie-content-area .window-title-bar, #ie-content-area .sidebar-header, #ie-content-area .feed-header-bar {
   background: linear-gradient(90deg, #1b261c, #2c3c2e);

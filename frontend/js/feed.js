@@ -130,8 +130,8 @@ function fetchFeed() {
             </div>
           </div>
           
-          <!-- PINKISH-GREY RETRO SCROLLABLE TEXT BOX (#e6d5d5) -->
-          <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">${mainText}</div>
+          <!-- PINKISH-GREY RETRO TEXT BOX (#e6d5d5) -->
+          <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); height: auto !important; max-height: none !important; overflow: visible !important; padding: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap !important;">${mainText}</div>
           
           <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
             <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
