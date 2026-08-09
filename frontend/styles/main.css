@@ -363,7 +363,7 @@ html, body {
    Sage Green Text (#8ca68c)
    ========================================================================== */
 
-#ie-content-area, .ie-viewport {
+#ie-content-area, .ie-viewport, .browser-viewport {
   flex: 1;
   background: radial-gradient(circle at center, #1e2420 0%, #0a0c0a 100%); /* Smoky dark gradient */
   border-top: 2px solid #808080;
@@ -376,6 +376,22 @@ html, body {
   flex-direction: column;
   color: #8ca68c; /* Muted sage green text default */
   font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  position: relative;
+}
+
+/* Minimal Non-Intrusive CRT Scanline Overlay */
+#ie-content-area::before, .ie-viewport::before, .browser-viewport::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.10) 50%);
+  background-size: 100% 4px;
+  z-index: 50;
+  pointer-events: none;
 }
 
 /* Dark Purple Header (#2a1636) inside IE Content Viewport */
