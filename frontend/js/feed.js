@@ -1,7 +1,7 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
  * Dark Burgundy Deep Red Post Cards (#2b1111) & Pinkish-Grey Text (#e6d5d5)
- * Retro Scrolling Text Box & Aggressive IST Timestamp Formatter
+ * Retro Scrolling Text Box & RAW JSON Debug Dump
  */
 
 function fetchFeed() {
@@ -139,7 +139,12 @@ function fetchFeed() {
         </div>
         
         <!-- PINKISH-GREY RETRO SCROLLABLE TEXT BOX (#e6d5d5) -->
-        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">${mainText}</div>
+        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">
+          <div style="color: yellow; background: black; padding: 5px; font-family: monospace; font-size: 10px; margin-bottom: 10px;">
+            DEBUG DATA: ${JSON.stringify(post)}
+          </div>
+          ${mainText}
+        </div>
         
         <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
           <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
