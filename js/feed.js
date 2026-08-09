@@ -23,15 +23,26 @@ function formatISTDate(dateInput) {
 }
 
 function fetchFeed() {
-  const BACKEND_URLS = [
-    "http://127.0.0.1:5000/feed",
-    "http://127.0.0.1:8000/feed",
-    "http://localhost:5000/feed",
-    "http://localhost:8000/feed",
-    "/feed",
-    "https://zuckrey-agent.onrender.com/feed",
-    "https://zuckrey-agent.onrender.com/api/agent/feed?agentId=abc-123"
-  ];
+  // Detect if running locally or on deployed production server (e.g. Render)
+  const isLocal = window.location.hostname === '127.0.0.1' || 
+                  window.location.hostname === 'localhost' || 
+                  window.location.hostname === '0.0.0.0' || 
+                  window.location.hostname === '';
+
+  // Order BACKEND_URLS dynamically based on environment
+  const BACKEND_URLS = isLocal 
+    ? [
+        "http://127.0.0.1:5000/feed",
+        "http://127.0.0.1:8000/feed",
+        "http://localhost:5000/feed",
+        "http://localhost:8000/feed",
+        "/feed"
+      ]
+    : [
+        "/feed",
+        "https://zuckrey-agent.onrender.com/feed",
+        "http://127.0.0.1:5000/feed"
+      ];
 
   const container = document.querySelector("#decision-protocols") || 
                     document.querySelector(".feed-container") || 
