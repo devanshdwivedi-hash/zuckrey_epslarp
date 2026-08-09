@@ -25,6 +25,35 @@ html, body {
   position: relative;
 }
 
+/* Full-Screen CRT Scanlines + Paranoia Edge Vignette Overlay */
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  /* Layer 1: Paranoia Edge Vignette | Layer 2: Tight Scanlines */
+  background: 
+    radial-gradient(circle at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.75) 100%),
+    linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+  background-size: 100% 100%, 100% 4px;
+  animation: paranoia-pulse 8s infinite ease-in-out;
+}
+
+@keyframes paranoia-pulse {
+  0%, 100% {
+    opacity: 0.92;
+  }
+  50% {
+    opacity: 1.0;
+    filter: contrast(105%);
+  }
+}
+
 /* Custom Retro Windows Scrollbars */
 ::-webkit-scrollbar {
   width: 16px;
