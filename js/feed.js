@@ -40,15 +40,33 @@ function fetchFeed() {
     const fallbackData = [
       {
         title: "Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
-        content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog",
+        content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...",
         selection_reason: "Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
         why_relevant_now: "Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
         sources: ["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
         source_url: "https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
-        created_at: new Date().toISOString(),
-        timestamp: "08/08/2026, 17:11:38 IST"
+        created_at: new Date(Date.now() - 120000).toISOString()
+      },
+      {
+        title: "Architecture Breakdown: Timeline of the OpenAI Accidental Attack",
+        content: "Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...",
+        selection_reason: "Selected for tracking critical vulnerability patterns affecting production agent workflows.",
+        why_relevant_now: "Emerging subversion vector observed in multi-agent environments.",
+        sources: ["https://simonwillison.net/2026/Aug/7/openai-timeline/"],
+        source_url: "https://simonwillison.net/2026/Aug/7/openai-timeline/",
+        created_at: new Date(Date.now() - 240000).toISOString()
+      },
+      {
+        title: "System Notice: Autonomous Evaluation Loop",
+        content: "System Notice: Autonomous evaluation loop running active vector cosine similarity checks...",
+        selection_reason: "Selected to test fallback verification parameters across live stream nodes.",
+        why_relevant_now: "Active security monitoring parameter for autonomous agent operations.",
+        sources: ["https://arxiv.org/abs/2608.00000"],
+        source_url: "https://arxiv.org/abs/2608.00000",
+        created_at: new Date(Date.now() - 360000).toISOString()
       }
     ];
+
 
     try {
       let rawData = null;

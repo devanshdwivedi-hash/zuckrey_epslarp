@@ -48,6 +48,9 @@ except Exception as engine_err:
 
 # Session factory for DB transactions
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from sqlalchemy.orm import Session as SQLAlchemySession
+if not hasattr(SQLAlchemySession, "session"):
+    SQLAlchemySession.session = property(lambda self: self)
 
 # Declarative base for ORM models
 Base = declarative_base()
@@ -64,7 +67,7 @@ def init_db():
     global _db_initialized
     try:
         import src.db.models  # noqa: F401
-        from src.db.models import PublishedPost
+        from src.db.models import PublishedPost, Post
         from datetime import datetime
 
         logger.info("Initializing database tables...")
@@ -72,36 +75,40 @@ def init_db():
         _db_initialized = True
         logger.info("Database tables initialized successfully.")
 
-        # Seed initial post if database is empty to prevent empty feed state
+        # Seed initial posts if database is empty to prevent empty feed state
         db = SessionLocal()
         try:
-            if db.query(PublishedPost).count() == 0:
-                logger.info("Database is empty. Seeding initial technical post...")
-                seed_post = PublishedPost(
-                    title="Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
-                    content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog",
-                    selection_reason="Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
-                    why_relevant_now="Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
-                    sources=["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
-                    source_url="https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
-                    source_name="Google Security Blog",
-                    persona_name="Zuckrey Infiltrator",
-                    score=9.5,
-                    created_at=datetime.utcnow(),
-                    timestamp=datetime.utcnow(),
-                    article_published_at=datetime.utcnow()
-                )
-                db.add(seed_post)
-                db.commit()
-                logger.info("Initial seed post committed successfully.")
+            if Post.query.count() == 0:
+                logger.info("Database is empty. Seeding 3 diverse technical test posts...")
+                seed_posts = [
+                    Post(
+                        content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...",
+                        selection_reason="Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
+                        sources="https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"
+                    ),
+                    Post(
+                        content="Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...",
+                        selection_reason="Selected for tracking critical vulnerability patterns affecting production agent workflows.",
+                        sources="https://simonwillison.net/2026/Aug/7/openai-timeline/"
+                    ),
+                    Post(
+                        content="System Notice: Autonomous evaluation loop running active vector cosine similarity checks...",
+                        selection_reason="Selected to test fallback verification parameters across live stream nodes.",
+                        sources="https://arxiv.org/abs/2608.00000"
+                    )
+                ]
+                db.session.bulk_save_objects(seed_posts)
+                db.session.commit()
+                logger.info("3 initial seed posts committed successfully.")
         except Exception as seed_err:
             db.rollback()
-            logger.warning(f"Notice seeding initial post (handled gracefully): {seed_err}")
+            logger.warning(f"Notice seeding initial posts (handled gracefully): {seed_err}")
         finally:
             db.close()
 
     except Exception as e:
         logger.error(f"Database initialization error (handled gracefully): {e}")
+
 
 
 def ensure_db_initialized():

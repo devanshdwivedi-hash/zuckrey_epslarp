@@ -1,5 +1,5 @@
 from src.db.database import engine, SessionLocal, Base, init_db, get_db
-from src.db.models import PublishedPost, RejectedPost
+from src.db.models import PublishedPost, RejectedPost, Post
 
 __all__ = [
     "engine",
@@ -9,4 +9,6 @@ __all__ = [
     "get_db",
     "PublishedPost",
     "RejectedPost",
+    "Post",
 ]
+
