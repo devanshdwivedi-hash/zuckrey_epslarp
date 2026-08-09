@@ -552,10 +552,11 @@ body::after {
 }
 
 /* Fix CSS Container Height & Overflow so Full Rants Expand Naturally */
-.post-card, .rant-card, .feed-item-content, .feed-card-body, .card-content {
+.rant-card, .feed-item, .post-card, .feed-item-content, .feed-card-body, .card-content, .box {
   height: auto !important;
+  min-height: 120px !important;
   max-height: none !important;
-  overflow-y: visible !important;
+  overflow: visible !important;
   padding-bottom: 10px;
 }
 
