@@ -1,5 +1,5 @@
 # ALL Initial Prompts links
-https://share.gemini.google/CWfdN9iUeaYj
+https://share.gemini.google/nF3C3AbOEIaG
 https://share.gemini.google/h8Fq7LA5kVZO
 
 # Conversation Ids
