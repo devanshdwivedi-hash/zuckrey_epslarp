@@ -551,20 +551,23 @@ body::after {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out;
 }
 
-/* Fix CSS Container Height & Overflow so Full Rants Expand Naturally */
-.rant-card, .feed-item, .post-card, .feed-item-content, .feed-card-body, .card-content, .box {
+/* Fix CSS Layout & Container Expansion Rules */
+.rant-card, .feed-item, .post-card, .box {
   height: auto !important;
-  min-height: 120px !important;
+  min-height: fit-content !important;
   max-height: none !important;
   overflow: visible !important;
-  padding-bottom: 10px;
+  position: relative !important;
+  padding-bottom: 25px !important; /* Gives breathing room for metadata */
 }
 
-.rant-card .content, .feed-item-text, .rant-body, .post-content, .rant-text-body {
+.rant-card p, .feed-item-content p, .rant-body, .post-content, .rant-text-body {
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
+  word-break: break-word !important;
   white-space: pre-wrap !important;
+  position: relative !important;
 }
 
 /* Dark Green Panel Section Headers */
