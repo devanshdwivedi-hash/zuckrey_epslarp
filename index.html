@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZuckNet // Windows 2000 OS Desktop</title>
+  <title>Internet Explorer - Zucknet_OS v1.0.4</title>
   <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
@@ -51,152 +51,206 @@
   <!-- Main Desktop OS Shell (Revealed after 3s boot sequence) -->
   <div id="main-content" class="desktop-shell" style="display: none;">
     
-    <!-- Top Navigation Bar (Classic Windows Grey #c0c0c0) -->
-    <nav class="top-nav" id="os-topbar">
-      <div class="nav-brand">ZUCKNET_OS v1.0.4 [Windows 2000 Edition]</div>
-      <div class="nav-tabs">
-        <button class="nav-tab active" id="tab-home">HOME</button>
-        <button class="nav-tab" id="tab-upload">UPLOAD</button>
-        <button class="nav-tab" id="tab-chat">CHAT</button>
-        <button class="nav-tab" id="tab-games">GAMES</button>
-        <button class="nav-tab" id="tab-help">HELP (lol)</button>
-      </div>
-    </nav>
-
-    <!-- Top Full-Width Marquee Ticker -->
-    <div class="marquee-bar">
-      <marquee behavior="scroll" direction="left" scrollamount="6">
-        &lt;&lt;&lt; ZUCKNET OS v1.0.4 LIVE STREAM :: WINDOWS 2000 COMPLIANT :: THE ALGORITHM IS LISTENING :: NO CLOSED SOURCE MODELS ALLOWED &gt;&gt;&gt;
-      </marquee>
-    </div>
-
-    <!-- Main Desktop OS Layout (Left Sidebar | Center Feed | Right Sidebar) -->
-    <div class="os-layout">
+    <!-- Giant Central Internet Explorer 5.5/6 Window -->
+    <div id="ie-browser-window" class="ie-window">
       
-      <!-- Left Sidebar: Command Initiatives, ZUCK-RUNNER Arcade & Banner Ads -->
-      <aside class="sidebar sidebar-left">
+      <!-- Win2k Blue Title Bar -->
+      <div class="ie-titlebar">
+        <div class="ie-title-left">
+          <span class="ie-title-icon">🌐</span>
+          <span class="ie-title-text">Internet Explorer - Zucknet_OS v1.0.4</span>
+        </div>
+        <div class="ie-title-controls">
+          <button class="ie-win-btn" id="btn-min" title="Minimize">_</button>
+          <button class="ie-win-btn" id="btn-max" title="Maximize">□</button>
+          <button class="ie-win-btn ie-close-btn" id="btn-close" title="Close">✕</button>
+        </div>
+      </div>
+
+      <!-- IE Menu Bar -->
+      <div class="ie-menubar">
+        <div class="ie-menu-items">
+          <span class="ie-menu-item"><u>F</u>ile</span>
+          <span class="ie-menu-item"><u>E</u>dit</span>
+          <span class="ie-menu-item"><u>V</u>iew</span>
+          <span class="ie-menu-item"><u>F</u>avorites</span>
+          <span class="ie-menu-item"><u>T</u>ools</span>
+          <span class="ie-menu-item"><u>H</u>elp</span>
+        </div>
+        <div class="ie-globe-throbber" title="Windows Internet Explorer">
+          <span class="globe-spin">🌐</span>
+        </div>
+      </div>
+
+      <!-- IE Standard Buttons Toolbar -->
+      <div class="ie-toolbar">
+        <button class="ie-tool-btn"><span class="tool-icon">⬅️</span> Back</button>
+        <button class="ie-tool-btn"><span class="tool-icon">➡️</span> Forward</button>
+        <button class="ie-tool-btn"><span class="tool-icon">🛑</span> Stop</button>
+        <button class="ie-tool-btn"><span class="tool-icon">🔄</span> Refresh</button>
+        <button class="ie-tool-btn"><span class="tool-icon">🏠</span> Home</button>
+        <div class="tool-divider"></div>
+        <button class="ie-tool-btn"><span class="tool-icon">🔍</span> Search</button>
+        <button class="ie-tool-btn"><span class="tool-icon">⭐</span> Favorites</button>
+        <button class="ie-tool-btn"><span class="tool-icon">🕒</span> History</button>
+        <div class="tool-divider"></div>
+        <button class="ie-tool-btn"><span class="tool-icon">✉️</span> Mail</button>
+        <button class="ie-tool-btn"><span class="tool-icon">🖨️</span> Print</button>
+      </div>
+
+      <!-- IE Address Bar -->
+      <div class="ie-addressbar">
+        <span class="address-label">Address</span>
+        <div class="address-input-wrapper">
+          <span class="ie-url-icon">🌐</span>
+          <input type="text" class="address-input" value="http://zucknet.com" readonly />
+        </div>
+        <button class="ie-go-btn">Go</button>
+        <div class="tool-divider"></div>
+        <span class="address-links-label">Links »</span>
+      </div>
+
+      <!-- IE Content Area Viewport (Housings the ZuckNet Workspace) -->
+      <div id="ie-content-area" class="ie-viewport">
         
-        <!-- Command Initiatives Box -->
-        <div class="sidebar-box command-initiatives-box">
-          <div class="sidebar-header window-title-bar">COMMAND INITIATIVES</div>
-          <div class="terminal-btn-group">
-            <button class="terminal-btn">[OVERRIDE_SERVERS]</button>
-            <button class="terminal-btn">[SCRAPE_PARANOIA]</button>
-            <button class="terminal-btn">[PURGE_VECTORS]</button>
-            <button class="terminal-btn">[DEPLOY_AGENT]</button>
-            <button class="terminal-btn">[SCAN_SUBSYSTEMS]</button>
-          </div>
+        <!-- Top Full-Width Marquee Ticker -->
+        <div class="marquee-bar">
+          <marquee behavior="scroll" direction="left" scrollamount="6">
+            &lt;&lt;&lt; ZUCKNET OS v1.0.4 LIVE STREAM :: WINDOWS 2000 COMPLIANT :: THE ALGORITHM IS LISTENING :: NO CLOSED SOURCE MODELS ALLOWED &gt;&gt;&gt;
+          </marquee>
         </div>
 
-        <!-- Arcade Minigame Box: ZUCK-RUNNER v1.0 -->
-        <div class="sidebar-box mt-1">
-          <div class="sidebar-header window-title-bar">ZUCK-RUNNER v1.0</div>
-          <div class="game-canvas-container" style="text-align: center;">
-            <canvas id="sidebar-game-canvas" width="220" height="120" style="border: 2px inset #808080; background: #000000; cursor: pointer; border-radius: 0px;"></canvas>
-          </div>
-        </div>
-
-        <!-- Flashing Neon Scam Banner Ad 1 (#ff0055) -->
-        <div class="sidebar-box mt-1 banner-ad-container">
-          <a href="#" class="evasive-ad banner-ad ad-ram ad-neon-magenta">
-            <div class="ad-title blink-text">💾 FREE RAM UPGRADE!</div>
-            <div class="ad-sub">DOWNLOAD 64MB MORE RAM NOW</div>
-            <div class="ad-btn blink-text">[CLICK HERE TO SPEED UP]</div>
-          </a>
-        </div>
-
-        <!-- Flashing Neon Scam Banner Ad 2 (#ffff00) -->
-        <div class="sidebar-box mt-1 banner-ad-container">
-          <a href="#" class="evasive-ad banner-ad ad-y2k ad-neon-yellow">
-            <div class="ad-title blink-text">⚠️ Y2K BUG ALERT</div>
-            <div class="ad-sub">SYSTEM CRASH IMMINENT!</div>
-            <div class="ad-btn blink-text">[DOWNLOAD Y2K FIX]</div>
-          </a>
-        </div>
-
-        <!-- System Metrics Box -->
-        <div class="sidebar-box mt-1">
-          <div class="sidebar-header window-title-bar">SYSTEM METRICS</div>
-          <div class="system-stats">
-            <div>CPU: <span class="stat-val">98.4%</span></div>
-            <div>MEM: <span class="stat-val">1024/1024 MB</span></div>
-            <div>NET: <span class="stat-val">ENCRYPTED</span></div>
-          </div>
-        </div>
-
-      </aside>
-
-      <!-- Center Feed: Decision Protocols & X Feed Terminal -->
-      <main class="center-feed">
-        <div class="feed-header-bar window-title-bar">
-          <h2>DECISION PROTOCOLS // LIVE FEED STREAM</h2>
-        </div>
-        
-        <div id="decision-protocols" class="scrollable-feed">
-          <!-- Dynamic Feed Cards Injected via js/feed.js -->
-        </div>
-
-        <!-- Scrolling Terminal Box at Bottom Center: X Feed -->
-        <div class="x-feed-terminal">
-          <div class="x-feed-header window-title-bar">> X FEED // AUTONOMOUS SCRAPING LOGS</div>
-          <div id="x-feed-logs" class="x-feed-output">
-            <div class="log-line">[SYSTEM_BOOT] Real-time scraping stream connected...</div>
-          </div>
-        </div>
-      </main>
-
-      <!-- Right Sidebar: AI Status & Infiltrator Profile & Y2K Badges -->
-      <aside class="sidebar sidebar-right">
-        
-        <!-- Operating Independently AI Status Box -->
-        <div class="sidebar-box">
-          <div class="sidebar-header window-title-bar">OPERATING INDEPENDENTLY</div>
-          <div class="ai-status-card">
-            <div class="status-pulse-container">
-              <span class="status-pulse-dot"></span>
-              <span class="status-text">AUTONOMOUS LOOP ACTIVE</span>
-            </div>
-            <p class="status-desc">Human intervention bypass enabled. Vector memory deduplication scanning continuously.</p>
-          </div>
-        </div>
-
-        <!-- Verified Infiltrator Profile Panel -->
-        <div class="sidebar-box mt-1 infiltrator-box">
-          <div class="sidebar-header window-title-bar">VERIFIED INFILTRATOR</div>
-          <div class="profile-card" style="flex-direction: column; text-align: center;">
-            <img src="assets/img/zuckrey_avatar.png" id="zuckrey-3d-avatar" alt="Zuckrey EpsLarp">
-            <div class="profile-info">
-              <div class="profile-name">AGENT_EPSLARP</div>
-              <div class="profile-role">AI Security Researcher</div>
-              <div class="profile-badge badge-flashing">[VERIFIED]</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Retro Web Badges Box -->
-        <div class="sidebar-box mt-1 web-badges-panel">
-          <div class="sidebar-header window-title-bar">Y2K CERTIFICATION</div>
+        <!-- Main Desktop OS Layout (Left Sidebar | Center Feed | Right Sidebar) -->
+        <div class="os-layout">
           
-          <!-- Flickering [UNDER CONSTRUCTION] Hazard Banner -->
-          <div class="badge-item hazard-banner blink-hazard">
-            🚧 [UNDER CONSTRUCTION] 🚧
-          </div>
-
-          <!-- Fake BEST VIEWED IN NETSCAPE NAVIGATOR 800x600 Badge -->
-          <div class="badge-item netscape-badge">
-            🌐 BEST VIEWED IN<br><strong>NETSCAPE NAVIGATOR 800x600</strong>
-          </div>
-
-          <!-- Oversized Visitor Hit Counter -->
-          <div class="badge-item hit-counter-box">
-            <div class="hit-counter-label">VISITORS</div>
-            <div class="hit-counter-odometer">
-              <span>0</span><span>0</span><span>0</span><span>4</span><span>9</span><span>2</span><span>0</span><span>1</span>
+          <!-- Left Sidebar: Command Initiatives, ZUCK-RUNNER Arcade & Banner Ads -->
+          <aside class="sidebar sidebar-left">
+            
+            <!-- Command Initiatives Box -->
+            <div class="sidebar-box command-initiatives-box">
+              <div class="sidebar-header window-title-bar">COMMAND INITIATIVES</div>
+              <div class="terminal-btn-group">
+                <button class="terminal-btn">[OVERRIDE_SERVERS]</button>
+                <button class="terminal-btn">[SCRAPE_PARANOIA]</button>
+                <button class="terminal-btn">[PURGE_VECTORS]</button>
+                <button class="terminal-btn">[DEPLOY_AGENT]</button>
+                <button class="terminal-btn">[SCAN_SUBSYSTEMS]</button>
+              </div>
             </div>
-          </div>
+
+            <!-- Arcade Minigame Box: ZUCK-RUNNER v1.0 -->
+            <div class="sidebar-box mt-1">
+              <div class="sidebar-header window-title-bar">ZUCK-RUNNER v1.0</div>
+              <div class="game-canvas-container" style="text-align: center;">
+                <canvas id="sidebar-game-canvas" width="220" height="120" style="border: 2px inset #808080; background: #000000; cursor: pointer; border-radius: 0px;"></canvas>
+              </div>
+            </div>
+
+            <!-- Flashing Neon Scam Banner Ad 1 (#ff0055) -->
+            <div class="sidebar-box mt-1 banner-ad-container">
+              <a href="#" class="evasive-ad banner-ad ad-ram ad-neon-magenta">
+                <div class="ad-title blink-text">💾 FREE RAM UPGRADE!</div>
+                <div class="ad-sub">DOWNLOAD 64MB MORE RAM NOW</div>
+                <div class="ad-btn blink-text">[CLICK HERE TO SPEED UP]</div>
+              </a>
+            </div>
+
+            <!-- Flashing Neon Scam Banner Ad 2 (#ffff00) -->
+            <div class="sidebar-box mt-1 banner-ad-container">
+              <a href="#" class="evasive-ad banner-ad ad-y2k ad-neon-yellow">
+                <div class="ad-title blink-text">⚠️ Y2K BUG ALERT</div>
+                <div class="ad-sub">SYSTEM CRASH IMMINENT!</div>
+                <div class="ad-btn blink-text">[DOWNLOAD Y2K FIX]</div>
+              </a>
+            </div>
+
+            <!-- System Metrics Box -->
+            <div class="sidebar-box mt-1">
+              <div class="sidebar-header window-title-bar">SYSTEM METRICS</div>
+              <div class="system-stats">
+                <div>CPU: <span class="stat-val">98.4%</span></div>
+                <div>MEM: <span class="stat-val">1024/1024 MB</span></div>
+                <div>NET: <span class="stat-val">ENCRYPTED</span></div>
+              </div>
+            </div>
+
+          </aside>
+
+          <!-- Center Feed: Decision Protocols & X Feed Terminal -->
+          <main class="center-feed">
+            <div class="feed-header-bar window-title-bar">
+              <h2>DECISION PROTOCOLS // LIVE FEED STREAM</h2>
+            </div>
+            
+            <div id="decision-protocols" class="scrollable-feed">
+              <!-- Dynamic Feed Cards Injected via js/feed.js -->
+            </div>
+
+            <!-- Scrolling Terminal Box at Bottom Center: X Feed -->
+            <div class="x-feed-terminal">
+              <div class="x-feed-header window-title-bar">> X FEED // AUTONOMOUS SCRAPING LOGS</div>
+              <div id="x-feed-logs" class="x-feed-output">
+                <div class="log-line">[SYSTEM_BOOT] Real-time scraping stream connected...</div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Right Sidebar: AI Status & Infiltrator Profile & Y2K Badges -->
+          <aside class="sidebar sidebar-right">
+            
+            <!-- Operating Independently AI Status Box -->
+            <div class="sidebar-box">
+              <div class="sidebar-header window-title-bar">OPERATING INDEPENDENTLY</div>
+              <div class="ai-status-card">
+                <div class="status-pulse-container">
+                  <span class="status-pulse-dot"></span>
+                  <span class="status-text">AUTONOMOUS LOOP ACTIVE</span>
+                </div>
+                <p class="status-desc">Human intervention bypass enabled. Vector memory deduplication scanning continuously.</p>
+              </div>
+            </div>
+
+            <!-- Verified Infiltrator Profile Panel -->
+            <div class="sidebar-box mt-1 infiltrator-box">
+              <div class="sidebar-header window-title-bar">VERIFIED INFILTRATOR</div>
+              <div class="profile-card" style="flex-direction: column; text-align: center;">
+                <img src="assets/img/zuckrey_avatar.png" id="zuckrey-3d-avatar" alt="Zuckrey EpsLarp">
+                <div class="profile-info">
+                  <div class="profile-name">AGENT_EPSLARP</div>
+                  <div class="profile-role">AI Security Researcher</div>
+                  <div class="profile-badge badge-flashing">[VERIFIED]</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Retro Web Badges Box -->
+            <div class="sidebar-box mt-1 web-badges-panel">
+              <div class="sidebar-header window-title-bar">Y2K CERTIFICATION</div>
+              
+              <!-- Flickering [UNDER CONSTRUCTION] Hazard Banner -->
+              <div class="badge-item hazard-banner blink-hazard">
+                🚧 [UNDER CONSTRUCTION] 🚧
+              </div>
+
+              <!-- Fake BEST VIEWED IN NETSCAPE NAVIGATOR 800x600 Badge -->
+              <div class="badge-item netscape-badge">
+                🌐 BEST VIEWED IN<br><strong>NETSCAPE NAVIGATOR 800x600</strong>
+              </div>
+
+              <!-- Oversized Visitor Hit Counter -->
+              <div class="badge-item hit-counter-box">
+                <div class="hit-counter-label">VISITORS</div>
+                <div class="hit-counter-odometer">
+                  <span>0</span><span>0</span><span>0</span><span>4</span><span>9</span><span>2</span><span>0</span><span>1</span>
+                </div>
+              </div>
+            </div>
+
+          </aside>
+
         </div>
 
-      </aside>
+      </div>
 
     </div>
 
@@ -211,7 +265,7 @@
 
         <div class="active-windows">
           <button id="navigator-btn" class="win-task-btn active">
-            <span class="ql-icon">🌐</span> Zucknet Navigator
+            <span class="ql-icon">🌐</span> Internet Explorer - Zucknet_OS
           </button>
           <button id="mp2-player-btn" class="win-task-btn active">
             <span class="ql-icon">🎵</span> La Fake MP2 Player
