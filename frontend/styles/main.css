@@ -551,6 +551,14 @@ body::after {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in-out;
 }
 
+/* Fix CSS Container Height & Overflow so Full Rants Expand Naturally */
+.post-card, .rant-card, .feed-item-content, .feed-card-body, .card-content {
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+  padding-bottom: 10px;
+}
+
 /* Dark Green Panel Section Headers */
 #ie-content-area .window-title-bar, #ie-content-area .sidebar-header, #ie-content-area .feed-header-bar {
   background: linear-gradient(90deg, #1b261c, #2c3c2e);
