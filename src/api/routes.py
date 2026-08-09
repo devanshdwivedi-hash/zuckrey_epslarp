@@ -35,7 +35,7 @@ class CronExecutionResponse(BaseModel):
 
 @router.get("/feed", response_model=List[FeedPostResponse], summary="Retrieve Published Post Feed")
 def get_feed(
-    limit: Optional[int] = Query(500, ge=1, le=2000, description="Maximum number of posts to return"),
+    limit: Optional[int] = Query(50, ge=1, le=2000, description="Maximum number of posts to return"),
     offset: int = Query(0, ge=0, description="Offset for pagination"),
     db: Session = Depends(get_db)
 ):

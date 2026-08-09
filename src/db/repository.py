@@ -70,7 +70,7 @@ def create_rejected_post(
 
 def get_published_posts(
     db: Session,
-    limit: Optional[int] = 500,
+    limit: Optional[int] = 50,
     offset: int = 0
 ) -> List[PublishedPost]:
     """

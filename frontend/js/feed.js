@@ -88,12 +88,14 @@ function fetchFeed() {
         return;
       }
 
-      // Sort posts by created_at descending (newest first)
+      // Sort posts by created_at descending (newest first) & limit feed to 50 posts
       postsList.sort((a, b) => {
         const dateA = new Date(a.created_at || a.createdAt || a.timestamp || a.date || 0).getTime();
         const dateB = new Date(b.created_at || b.createdAt || b.timestamp || b.date || 0).getTime();
         return dateB - dateA;
       });
+
+      postsList = postsList.slice(0, 50);
 
       container.innerHTML = "";
 
