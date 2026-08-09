@@ -40,7 +40,7 @@ function fetchFeed() {
     const fallbackData = [
       {
         title: "Technical Deep Dive: Mitigating Prompt Injection Attacks with a Layered Defense Strategy",
-        content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...",
+        content: "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\nSource: Google Security Blog\n\nTechnical Overview\nA detailed breakdown covering security vectors, vector memory deduplication, and LLM-powered agent workflows...\n\nVulnerability & Adversarial Impact Analysis\nThis topic represents a critical vector in AI safety and machine learning robustness. Security researchers must evaluate empirical findings to harden foundation model deployments.",
         selection_reason: "Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
         why_relevant_now: "Critical vulnerability pattern affecting LLM-powered agent workflows in production.",
         sources: ["https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"],
@@ -49,7 +49,7 @@ function fetchFeed() {
       },
       {
         title: "Architecture Breakdown: Timeline of the OpenAI Accidental Attack",
-        content: "Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...",
+        content: "Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...\n\nSource: Simon Willison Weblog\n\nTechnical Overview\nDetailed timeline breakdown tracking vulnerability patterns, multi-agent communication risks, and production workflow safety...\n\nVulnerability & Adversarial Impact Analysis\nTracking critical vulnerability patterns affecting production agent workflows. Security researchers must evaluate empirical findings to harden foundation model deployments.",
         selection_reason: "Selected for tracking critical vulnerability patterns affecting production agent workflows.",
         why_relevant_now: "Emerging subversion vector observed in multi-agent environments.",
         sources: ["https://simonwillison.net/2026/Aug/7/openai-timeline/"],
@@ -58,7 +58,7 @@ function fetchFeed() {
       },
       {
         title: "System Notice: Autonomous Evaluation Loop",
-        content: "System Notice: Autonomous evaluation loop running active vector cosine similarity checks...",
+        content: "System Notice: Autonomous evaluation loop running active vector cosine similarity checks...\n\nSource: arXiv Security Research\n\nTechnical Overview\nAutonomous evaluation loop running active vector cosine similarity checks across memory nodes to verify fallback parameters...\n\nVulnerability & Adversarial Impact Analysis\nSelected to test fallback verification parameters across live stream nodes and ensure robustness across all active decision protocols.",
         selection_reason: "Selected to test fallback verification parameters across live stream nodes.",
         why_relevant_now: "Active security monitoring parameter for autonomous agent operations.",
         sources: ["https://arxiv.org/abs/2608.00000"],
@@ -118,7 +118,8 @@ function fetchFeed() {
         const agentSyncBadge = `[AGENT SYNC]: ${formattedAgentSync} IST`;
         
         let mainText = (post && (post.text || post.content || post.body || post.rant)) || "No rant text provided by backend.";
-        mainText = String(mainText).replace(/[#*`_]/g, "").trim();
+        let cleanText = String(mainText).replace(/[#*`_]/g, "").trim();
+        const contentHtml = cleanText.replace(/\n/g, '<br>');
 
         let rationaleText = (post && (post.rationale || post.editorial_rationale || post.selection_reason)) || "No rationale provided.";
         rationaleText = String(rationaleText).replace(/[#*`_]/g, "").trim();
@@ -149,7 +150,7 @@ function fetchFeed() {
           </div>
           
           <!-- PINKISH-GREY RETRO TEXT BOX (#e6d5d5) -->
-          <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); height: auto !important; max-height: none !important; overflow: visible !important; padding: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap !important;">${mainText}</div>
+          <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); height: auto !important; max-height: none !important; overflow: visible !important; padding: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap !important;">${contentHtml}</div>
           
           <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
             <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>

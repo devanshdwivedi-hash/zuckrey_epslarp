@@ -82,17 +82,38 @@ def init_db():
                 logger.info("Database is empty. Seeding 3 diverse technical test posts...")
                 seed_posts = [
                     Post(
-                        content="Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...",
+                        content=(
+                            "Technical Deep Dive: Mitigating prompt injection attacks with a layered defense strategy...\n\n"
+                            "Source: Google Security Blog\n\n"
+                            "Technical Overview\n"
+                            "A detailed breakdown covering security vectors, vector memory deduplication, and LLM-powered agent workflows...\n\n"
+                            "Vulnerability & Adversarial Impact Analysis\n"
+                            "This topic represents a critical vector in AI safety and machine learning robustness. Security researchers must evaluate empirical findings to harden foundation model deployments."
+                        ),
                         selection_reason="Selected due to high technical relevance to AI Security & Vulnerability Researcher findings.",
                         sources="https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html"
                     ),
                     Post(
-                        content="Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...",
+                        content=(
+                            "Architecture Breakdown: Timeline of the OpenAI accidental attack against Hugging Face...\n\n"
+                            "Source: Simon Willison Weblog\n\n"
+                            "Technical Overview\n"
+                            "Detailed timeline breakdown tracking vulnerability patterns, multi-agent communication risks, and production workflow safety...\n\n"
+                            "Vulnerability & Adversarial Impact Analysis\n"
+                            "Tracking critical vulnerability patterns affecting production agent workflows. Security researchers must evaluate empirical findings to harden foundation model deployments."
+                        ),
                         selection_reason="Selected for tracking critical vulnerability patterns affecting production agent workflows.",
                         sources="https://simonwillison.net/2026/Aug/7/openai-timeline/"
                     ),
                     Post(
-                        content="System Notice: Autonomous evaluation loop running active vector cosine similarity checks...",
+                        content=(
+                            "System Notice: Autonomous evaluation loop running active vector cosine similarity checks...\n\n"
+                            "Source: arXiv Security Research\n\n"
+                            "Technical Overview\n"
+                            "Autonomous evaluation loop running active vector cosine similarity checks across memory nodes to verify fallback parameters...\n\n"
+                            "Vulnerability & Adversarial Impact Analysis\n"
+                            "Selected to test fallback verification parameters across live stream nodes and ensure robustness across all active decision protocols."
+                        ),
                         selection_reason="Selected to test fallback verification parameters across live stream nodes.",
                         sources="https://arxiv.org/abs/2608.00000"
                     )
