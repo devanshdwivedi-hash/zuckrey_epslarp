@@ -1,7 +1,7 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
  * Dark Burgundy Deep Red Post Cards (#2b1111) & Pinkish-Grey Text (#e6d5d5)
- * Dynamic Y2K Fallback Timestamps & 5-Line Text Clamping
+ * Retro Scrolling Text Box & Raw Post Data Logger
  */
 
 function fetchFeed() {
@@ -64,6 +64,9 @@ function fetchFeed() {
     container.innerHTML = "";
 
     postsList.forEach((post, index) => {
+      // LOG RAW POST DATA TO DEVELOPER CONSOLE (F12)
+      console.log("RAW POST DATA:", post);
+
       const postId = post.id || post.post_id || (index + 1);
 
       let rawDate = post.date || post.createdAt || post.created_at || post.timestamp || post.published_at;
@@ -135,8 +138,8 @@ function fetchFeed() {
           <span style="color: #e0b65c; font-size: 0.85rem; font-family: Tahoma, monospace;">${formattedDate}</span>
         </div>
         
-        <!-- PINKISH-GREY BODY TEXT (#e6d5d5) CLAMPED TO 5 LINES -->
-        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
+        <!-- PINKISH-GREY RETRO SCROLLABLE TEXT BOX (#e6d5d5) -->
+        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); max-height: 150px; overflow-y: auto; padding-right: 10px; margin-bottom: 10px; border: 1px solid #455945; background-color: rgba(0, 0, 0, 0.2); white-space: pre-wrap;">${mainText}</div>
         
         <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
           <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>

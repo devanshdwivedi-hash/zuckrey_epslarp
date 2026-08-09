@@ -733,18 +733,39 @@ html, body {
 }
 
 .card-rant-body, .rant-text, .post-content, .rant-text-body {
-  display: -webkit-box !important;
-  -webkit-line-clamp: 5 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  padding-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #455945;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: block !important;
   font-size: 0.95rem;
   line-height: 1.5;
   color: #e6d5d5 !important; /* Pinkish-grey text */
   text-shadow: 0 0 2px rgba(0,0,0,1) !important;
-  margin-bottom: 1rem;
   white-space: pre-wrap;
   font-family: Tahoma, sans-serif;
+}
+
+/* Retro Chunky Dark Red Scrollbar for Rant Text Boxes */
+.card-rant-body::-webkit-scrollbar,
+.post-content::-webkit-scrollbar,
+.rant-text-body::-webkit-scrollbar {
+  width: 12px;
+}
+
+.card-rant-body::-webkit-scrollbar-track,
+.post-content::-webkit-scrollbar-track,
+.rant-text-body::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-left: 1px solid #522525;
+}
+
+.card-rant-body::-webkit-scrollbar-thumb,
+.post-content::-webkit-scrollbar-thumb,
+.rant-text-body::-webkit-scrollbar-thumb {
+  background: #522525;
 }
 
 /* Faded Maroon Stamp */
