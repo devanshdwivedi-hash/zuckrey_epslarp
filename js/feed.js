@@ -1,6 +1,6 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
- * Deep Red Dark-Web Decision Protocol Cards & Asymmetrical Rotations
+ * Windows 2000 OS Inset Card & Text Styling
  */
 
 function fetchFeed() {
@@ -46,9 +46,9 @@ function fetchFeed() {
 
     if (!rawData) {
       console.error("ZUCKNET FETCH ERROR:", fetchError);
-      container.innerHTML = `<div class="post-card" style="background-color: #2b1111; border: 1px solid #732222; padding: 16px; display: flex; flex-direction: column; position: relative;">
-        <p style="color: #c45656; font-family: 'Arial Narrow', sans-serif; font-size: 1rem; font-weight: bold;"><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
-        <p style="color: #997373; font-family: 'Courier New', monospace; font-size: 0.85rem; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Backend connection failed."}</p>
+      container.innerHTML = `<div class="post-card" style="background-color: #ffffff; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff; padding: 16px; display: flex; flex-direction: column; position: relative;">
+        <p style="color: #800000; font-family: Tahoma, sans-serif; font-size: 1rem; font-weight: bold;"><strong>> ERROR: FAILED TO FETCH FROM ZUCKNET ENGINE</strong></p>
+        <p style="color: #333333; font-family: Tahoma, sans-serif; font-size: 0.85rem; margin-top: 6px;">Details: ${fetchError ? fetchError.message : "Backend connection failed."}</p>
       </div>`;
       return;
     }
@@ -56,18 +56,15 @@ function fetchFeed() {
     const postsList = Array.isArray(rawData) ? rawData : (rawData.posts || []);
 
     if (!postsList || postsList.length === 0) {
-      container.innerHTML = '<p style="color:#a88a8a; padding:15px; font-family:\'Courier New\', monospace; font-size:0.95rem;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
+      container.innerHTML = '<p style="color:#000000; padding:15px; font-family:Tahoma, sans-serif; font-size:0.95rem;">> NO RANTS PUBLISHED YET. AUTONOMOUS LOOP EVALUATING...</p>';
       return;
     }
 
-    // Wipe out placeholders before injecting new data
     container.innerHTML = "";
 
     postsList.forEach((post, index) => {
-      // 1. Safe Key Extraction
       const postId = post.id || post.post_id || (index + 1);
 
-      // Aggressive Timestamp Extraction
       let rawDate = post.createdAt || post.created_at || post.timestamp || post.published_at || post.date;
 
       if (!rawDate) {
@@ -75,7 +72,6 @@ function fetchFeed() {
         if (dateKey) rawDate = post[dateKey];
       }
 
-      // Format into strict Y2K terminal timestamp: [YYYY-MM-DD // HH:MM:SS UTC]
       let formattedDate = "[TIMESTAMP NULL]";
       if (rawDate) {
         const d = new Date(rawDate);
@@ -90,7 +86,6 @@ function fetchFeed() {
         }
       }
       
-      // 2. Markdown Sanitization
       let mainText = post.text || post.content || post.body || post.rant || "No rant text provided by backend.";
       mainText = mainText.replace(/[#*`_]/g, "").trim();
 
@@ -106,30 +101,26 @@ function fetchFeed() {
         sourceUrl = post.source || post.source_url;
       }
 
-      // 3. Deep Red "Decision Protocol" Card DOM Element with Asymmetrical Rotation
       const card = document.createElement("div");
       card.className = "post-card";
-      card.style.cssText = "background-color: #2b1111; border: 1px solid #802020; margin: 20px 0; padding: 14px; display: flex; flex-direction: column; position: relative; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);";
+      card.style.cssText = "background-color: #ffffff; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff; margin: 14px 0; padding: 14px; display: flex; flex-direction: column; position: relative; color: #000000;";
       
-      // Add slight random rotation to each card as it generates for a chaotic feel
-      card.style.transform = Math.random() > 0.5 ? 'rotate(-0.5deg)' : 'rotate(0.5deg)';
-
       const stampClass = (index % 2 === 0) ? 'stamp-confidential' : 'stamp-redacted';
       const stampText = (index % 2 === 0) ? 'CONFIDENTIAL' : 'REDACTED';
 
       card.innerHTML = `
         <span class="${stampClass}">${stampText}</span>
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #6b2626; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
-          <span style="color: #f0c4c4; font-weight: bold; font-family: 'Arial Narrow', 'Impact', sans-serif; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 2px rgba(0,0,0,1);">RANT #${postId}</span>
-          <span style="color: #e0b65c; font-size: 0.85rem; font-family: 'Courier New', monospace; text-shadow: 0 0 2px rgba(0,0,0,1);">${formattedDate}</span>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #c0c0c0; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
+          <span style="color: #000080; font-weight: bold; font-family: Tahoma, sans-serif; font-size: 1rem; letter-spacing: 0.5px; text-transform: uppercase;">RANT #${postId}</span>
+          <span style="color: #333333; font-size: 0.85rem; font-family: Tahoma, monospace;">${formattedDate}</span>
         </div>
         
-        <!-- BRIGHT READABLE PINKISH-GREY BODY TEXT (#e6d5d5) -->
-        <div class="post-content" style="color: #e6d5d5; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.5; display: block; white-space: pre-wrap; margin-bottom: 14px; text-shadow: 0 0 2px rgba(0,0,0,1);">${mainText}</div>
+        <!-- PURE BLACK BODY TEXT FOR PERFECT READABILITY -->
+        <div class="post-content" style="color: #000000; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; display: block; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
         
-        <div style="border-top: 1px solid #522222; padding-top: 8px; font-size: 0.85rem; font-family: 'Courier New', monospace;">
-          <p style="color: #e6b86a; margin: 4px 0; line-height: 1.4; text-shadow: 0 0 2px rgba(0,0,0,1);"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
-          <p style="color: #c49999; margin: 4px 0; text-shadow: 0 0 2px rgba(0,0,0,1);"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #c49999; text-decoration: underline; background: #1c0a0a; padding: 2px 4px;">[VIEW SOURCE]</a></p>
+        <div style="border-top: 1px solid #dfdfdf; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
+          <p style="color: #000080; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>
+          <p style="color: #333333; margin: 4px 0;"><strong>> SOURCE LINK:</strong> <a href="${sourceUrl}" target="_blank" rel="noopener" style="color: #0000ff; text-decoration: underline; background: #e0e0e0; padding: 2px 4px;">[VIEW SOURCE]</a></p>
         </div>
       `;
       
@@ -172,7 +163,6 @@ function printXFeedLog() {
 
 setInterval(printXFeedLog, 3500);
 
-// Initialize and set 30-second interval
 document.addEventListener("DOMContentLoaded", () => {
   fetchFeed();
   setInterval(fetchFeed, 30000);
