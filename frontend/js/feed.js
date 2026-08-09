@@ -1,6 +1,7 @@
 /**
  * ZuckNet Dynamic Feed Engine & Terminal Log Stream
  * Dark Burgundy Deep Red Post Cards (#2b1111) & Pinkish-Grey Text (#e6d5d5)
+ * Dynamic Y2K Fallback Timestamps & 5-Line Text Clamping
  */
 
 function fetchFeed() {
@@ -65,15 +66,25 @@ function fetchFeed() {
     postsList.forEach((post, index) => {
       const postId = post.id || post.post_id || (index + 1);
 
-      let rawDate = post.createdAt || post.created_at || post.timestamp || post.published_at || post.date;
+      let rawDate = post.date || post.createdAt || post.created_at || post.timestamp || post.published_at;
 
       if (!rawDate) {
         const dateKey = Object.keys(post).find(key => key.toLowerCase().includes('date') || key.toLowerCase().includes('time') || key.toLowerCase().includes('created'));
         if (dateKey) rawDate = post[dateKey];
       }
 
-      let formattedDate = "[TIMESTAMP NULL]";
-      if (rawDate) {
+      let formattedDate = "";
+      if (!rawDate) {
+        // Fallback generator for missing date data
+        const now = new Date();
+        const yyyy = now.getUTCFullYear();
+        const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const dd = String(now.getUTCDate()).padStart(2, '0');
+        const hh = String(now.getUTCHours()).padStart(2, '0');
+        const min = String(now.getUTCMinutes()).padStart(2, '0');
+        const sec = String(now.getUTCSeconds()).padStart(2, '0');
+        formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
+      } else {
         const d = new Date(rawDate);
         if (!isNaN(d.getTime())) {
           const yyyy = d.getUTCFullYear();
@@ -82,6 +93,15 @@ function fetchFeed() {
           const hh = String(d.getUTCHours()).padStart(2, '0');
           const min = String(d.getUTCMinutes()).padStart(2, '0');
           const sec = String(d.getUTCSeconds()).padStart(2, '0');
+          formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
+        } else {
+          const now = new Date();
+          const yyyy = now.getUTCFullYear();
+          const mm = String(now.getUTCMonth() + 1).padStart(2, '0');
+          const dd = String(now.getUTCDate()).padStart(2, '0');
+          const hh = String(now.getUTCHours()).padStart(2, '0');
+          const min = String(now.getUTCMinutes()).padStart(2, '0');
+          const sec = String(now.getUTCSeconds()).padStart(2, '0');
           formattedDate = `[${yyyy}-${mm}-${dd} // ${hh}:${min}:${sec} UTC]`;
         }
       }
@@ -110,13 +130,13 @@ function fetchFeed() {
 
       card.innerHTML = `
         <span class="${stampClass}">${stampText}</span>
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #522525; padding-bottom: 8px; margin-bottom: 12px; padding-right: 110px;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #522525; padding-bottom: 8px; margin-bottom: 12px; padding-right: 120px;">
           <span style="color: #ff6666; font-weight: bold; font-family: Tahoma, sans-serif; font-size: 1rem; letter-spacing: 0.5px; text-transform: uppercase;">RANT #${postId}</span>
           <span style="color: #e0b65c; font-size: 0.85rem; font-family: Tahoma, monospace;">${formattedDate}</span>
         </div>
         
-        <!-- PINKISH-GREY BODY TEXT (#e6d5d5) -->
-        <div class="post-content" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); display: block; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
+        <!-- PINKISH-GREY BODY TEXT (#e6d5d5) CLAMPED TO 5 LINES -->
+        <div class="post-content rant-text-body" style="color: #e6d5d5; font-family: Tahoma, sans-serif; font-size: 0.95rem; line-height: 1.5; text-shadow: 0 0 2px rgba(0,0,0,1); display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; white-space: pre-wrap; margin-bottom: 14px;">${mainText}</div>
         
         <div style="border-top: 1px solid #522525; padding-top: 8px; font-size: 0.85rem; font-family: Tahoma, sans-serif;">
           <p style="color: #8ca68c; margin: 4px 0; line-height: 1.4;"><strong>> EDITORIAL RATIONALE:</strong> ${rationaleText}</p>

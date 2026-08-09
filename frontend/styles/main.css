@@ -673,10 +673,10 @@ html, body {
 }
 
 /* ==========================================================================
-   STEP 4: Center Feed & Deep Red Decision Protocol Cards
+   STEP 4 & STEP 1: Center Feed & Deep Red Decision Protocol Cards
    Container background: rgba(10, 10, 10, 0.6)
    Cards: background-color: #2b1111; border: 1px solid #522525;
-   Text: pinkish-grey (#e6d5d5)
+   Text: pinkish-grey (#e6d5d5) clamped to 5 lines
    Stamps: Faded maroon (#a84444)
    ========================================================================== */
 
@@ -732,10 +732,12 @@ html, body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
 }
 
-.card-rant-body, .rant-text, .post-content {
-  display: block !important;
-  visibility: visible !important;
-  height: auto !important;
+.card-rant-body, .rant-text, .post-content, .rant-text-body {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   font-size: 0.95rem;
   line-height: 1.5;
   color: #e6d5d5 !important; /* Pinkish-grey text */
