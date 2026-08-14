@@ -23,8 +23,8 @@ function formatISTDate(dateInput) {
 }
 
 function fetchFeed() {
-  // Pure root-relative fetch endpoint URL
-  const BACKEND_URLS = ["/feed"];
+  // Primary endpoint /feed matching src/api/routes.py, with secondary fallback
+  const BACKEND_URLS = ["/feed", "/api/agent/feed"];
 
   const container = document.querySelector("#decision-protocols") || 
                     document.querySelector(".feed-container") || 
@@ -69,27 +69,35 @@ function fetchFeed() {
 
     try {
       let rawData = null;
-      let fetchError = null;
+      let isBackendSuccess = false;
 
       for (const url of BACKEND_URLS) {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
         try {
           const res = await fetch(url, { signal: controller.signal });
           clearTimeout(timeoutId);
           if (res.ok) {
             rawData = await res.json();
-            if (rawData && rawData.length > 0) break;
+            isBackendSuccess = true;
+            console.debug(`Backend endpoint ${url} responded successfully (status ${res.status}).`);
+            break;
+          } else {
+            console.debug(`Backend endpoint ${url} returned non-200 status code: ${res.status}`);
           }
         } catch (err) {
           clearTimeout(timeoutId);
-          fetchError = err;
+          console.debug(`Fetch attempt for ${url} failed: ${err.message}`);
         }
       }
 
       let postsList = rawData ? (Array.isArray(rawData) ? rawData : (rawData.posts || [])) : [];
 
-      if (!postsList || postsList.length === 0) {
+      if (isBackendSuccess) {
+        if (postsList.length === 0) {
+          console.debug("Backend responded with status 200 OK but returned an empty post array [].");
+        }
+      } else {
         console.warn("Backend connection failed or timed out. Injecting fallback presentation data.");
         postsList = fallbackData;
       }
@@ -107,7 +115,6 @@ function fetchFeed() {
 
       postsList.forEach((post, index) => {
         if (!post) return;
-        console.log("RAW POST DATA:", post);
 
         const postId = post.id || post.post_id || (index + 1);
 
@@ -168,7 +175,20 @@ function fetchFeed() {
   getFeedData();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Global aliases
+window.fetchFeed = fetchFeed;
+window.loadFeed = fetchFeed;
+
+let feedInitialized = false;
+function initFeed() {
+  if (feedInitialized) return;
+  feedInitialized = true;
   fetchFeed();
   setInterval(fetchFeed, 30000);
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initFeed, { once: true });
+} else {
+  initFeed();
+}
