@@ -232,6 +232,10 @@ async def run_autonomous_loop():
         db.close()
 
 
+# Alias expected by external triggers & endpoints
+run_single_autonomous_cycle = run_autonomous_loop
+
+
 def start_scheduler(run_immediately: bool = False):
     """
     Initializes and starts the APScheduler background scheduler.

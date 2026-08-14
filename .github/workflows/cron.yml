@@ -9,27 +9,36 @@ jobs:
   trigger-pipeline-cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
+      - name: Trigger Render Agent Cycle
         run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          RAW_URL="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="${{ secrets.VERCEL_APP_URL }}"
+          fi
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="${{ secrets.APP_URL }}"
+          fi
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="zuckrey-agent.onrender.com"
+          fi
 
-      - name: Run Scraper & LLM Pipeline
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          PYTHONPATH: .
-        run: |
-          python -m src.scheduler.cron
+          CLEAN_URL=$(echo "$RAW_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/*$||')
+          ENDPOINT="https://${CLEAN_URL}/api/run-cron"
+
+          echo "Triggering Render Background Agent Cycle: ${ENDPOINT}"
+
+          RESPONSE_CODE=$(curl -sSL -X POST -o response.json -w "%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET || 'zuckrey-secret-2026' }}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET || 'zuckrey-secret-2026' }}" \
+            "${ENDPOINT}")
+
+          echo "HTTP Response Code: $RESPONSE_CODE"
+          echo "Response Body:"
+          cat response.json
+          echo ""
+
+          if [ "$RESPONSE_CODE" -ne 200 ]; then
+            echo "Triggering endpoint failed with HTTP $RESPONSE_CODE"
+            exit 1
+          fi
 

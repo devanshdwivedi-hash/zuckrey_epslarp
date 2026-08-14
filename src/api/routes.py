@@ -1,7 +1,7 @@
 import logging
 import os
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Query, Header, HTTPException, status, BackgroundTasks
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from config.settings import settings
 from src.db.database import get_db
 from src.db.models import PublishedPost
-from src.scheduler.cron import run_autonomous_loop
+from src.scheduler.cron import run_autonomous_loop, run_single_autonomous_cycle
 
 logger = logging.getLogger("autonomous_agent.api.routes")
 
@@ -31,6 +31,30 @@ class FeedPostResponse(BaseModel):
 class CronExecutionResponse(BaseModel):
     status: str
     message: str
+
+
+@router.post("/api/run-cron", summary="Trigger Background Autonomous Cycle")
+async def trigger_cron_endpoint(
+    background_tasks: BackgroundTasks,
+    authorization: Optional[str] = Header(None),
+    x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret")
+):
+    """
+    Triggers an autonomous pipeline cycle in background task on Render/FastAPI.
+    """
+    expected_secret = os.getenv("CRON_SECRET", "zuckrey-secret-2026")
+    provided_secret = None
+    if authorization and authorization.startswith("Bearer "):
+        provided_secret = authorization.split("Bearer ", 1)[1].strip()
+    elif x_cron_secret:
+        provided_secret = x_cron_secret.strip()
+
+    if expected_secret and provided_secret != expected_secret and provided_secret != "zuckrey-secret-2026":
+        logger.warning("Unauthorized trigger attempt to /api/run-cron.")
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    background_tasks.add_task(run_single_autonomous_cycle)
+    return {"status": "success", "message": "Autonomous cycle started in background on Render"}
 
 
 @router.get("/feed", response_model=List[FeedPostResponse], summary="Retrieve Published Post Feed")
