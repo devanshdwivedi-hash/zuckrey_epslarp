@@ -39,26 +39,9 @@ async def lifespan(app: FastAPI):
         logger.error(f"Handled database initialization notice on app startup: {db_err}")
     
     if not is_vercel:
-        try:
-            logger.info("Starting background autonomous worker thread on app boot...")
-            def run_autonomous_background_thread():
-                logger.info("⚡ Background Scraper Worker Thread active.")
-                import asyncio
-                import time
-                from src.scheduler.cron import run_autonomous_loop
-                while True:
-                    try:
-                        asyncio.run(run_autonomous_loop())
-                    except Exception as loop_err:
-                        logger.error(f"Background scraper loop error: {loop_err}")
-                    time.sleep(300)
-
-            scraper_thread = threading.Thread(target=run_autonomous_background_thread, daemon=True)
-            scraper_thread.start()
-        except Exception as sched_err:
-            logger.warning(f"Could not start background scraper worker thread: {sched_err}")
+        logger.info("Render/Production Server Mode active. Background agent cycles managed via /api/run-cron.")
     else:
-        logger.info("Vercel Serverless Mode detected. Background thread scheduler disabled (using /api/cron).")
+        logger.info("Vercel Serverless Mode active. Background thread scheduler disabled (using /api/cron).")
     
     yield
     
