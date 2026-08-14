@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
 
     LLM_BASE_URL: str = "https://api.groq.com/openai/v1"
-    LLM_MODEL: str = "llama-3.1-8b-instant"
+    LLM_MODEL: str = "llama-3.3-70b-versatile"
     OPENAI_MODEL: str = "gpt-4o-mini"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
 
@@ -67,7 +67,7 @@ class Settings(BaseSettings):
         if key.startswith("xai-") or self.GROK_API_KEY:
             return "grok-beta"
         if key.startswith("gsk-") or self.GROQ_API_KEY:
-            return "llama-3.1-8b-instant"
+            return "llama-3.3-70b-versatile"
         if key.startswith("sk-") and not key.startswith("gsk-"):
             return "gpt-4o-mini"
         return self.LLM_MODEL

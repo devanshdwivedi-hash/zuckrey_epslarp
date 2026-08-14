@@ -30,26 +30,18 @@ def _get_sentence_transformer():
 def get_embedding(text: str) -> List[float]:
     """
     Generates a vector embedding for the given text input.
-    Uses lightweight OpenAI API (text-embedding-3-small) ONLY when a valid OpenAI key (starting with 'sk-') is provided.
-    Prevents sending Groq ('gsk_...') or xAI ('xai-') keys to OpenAI API.
-    Lazy-loads SentenceTransformers locally, and falls back to deterministic vector for offline environments.
+    Uses lightweight OpenAI API (text-embedding-3-small) first when key is available,
+    lazy-loads SentenceTransformers locally, and falls back to normalized random vector for offline environments.
     """
     if not text or not text.strip():
         return [0.0] * 384  # Standard vector dimension
 
-    # 1. Prefer lightweight OpenAI API embedding ONLY if a valid OpenAI key (sk-...) is configured
-    openai_key = settings.OPENAI_API_KEY
-    if not openai_key or not (openai_key.startswith("sk-") and not openai_key.startswith("gsk-")):
-        eff_key = settings.effective_api_key
-        if eff_key and eff_key.startswith("sk-") and not eff_key.startswith("gsk-"):
-            openai_key = eff_key
-        else:
-            openai_key = None
-
-    if openai_key and not any(x in openai_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]):
+    # 1. Prefer lightweight OpenAI API embedding if key is configured
+    api_key = settings.effective_api_key or settings.OPENAI_API_KEY
+    if api_key and not any(x in api_key.lower() for x in ["your_", "placeholder", "groq_api_key", "openai_api_key"]):
         try:
             import openai
-            client = openai.OpenAI(api_key=openai_key)
+            client = openai.OpenAI(api_key=api_key)
             response = client.embeddings.create(
                 model="text-embedding-3-small",
                 input=text

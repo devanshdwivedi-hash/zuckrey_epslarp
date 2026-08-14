@@ -1,4 +1,3 @@
-import asyncio
 import json
 import logging
 from typing import Optional
@@ -68,7 +67,6 @@ class PostGenerator:
     async def generate(self, topic: RawTopic) -> GeneratedPost:
         """
         Generates a persona-consistent post for the given RawTopic.
-        Enforces a 0.5s rate-limit pause between Groq / LLM API calls.
         """
         if self._is_mock_key:
             return self._fallback_generate(topic)
@@ -104,7 +102,6 @@ Provide your response as a valid JSON object matching this exact schema:
 }}
 """
         try:
-            await asyncio.sleep(0.5)
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[

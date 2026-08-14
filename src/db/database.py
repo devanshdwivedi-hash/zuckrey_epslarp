@@ -23,9 +23,8 @@ engine_kwargs = {
 }
 
 if database_url.startswith("sqlite"):
-    # SQLite: disable same-thread restriction and configure 30s lock timeout for concurrency
+    # SQLite: disable same-thread restriction for async compatibility
     connect_args["check_same_thread"] = False
-    connect_args["timeout"] = 30
 else:
     # PostgreSQL / Supabase / Neon: use connection pool settings suitable for cloud & serverless
     if is_vercel:

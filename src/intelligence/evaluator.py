@@ -1,4 +1,3 @@
-import asyncio
 import json
 import logging
 from typing import Optional
@@ -86,7 +85,6 @@ class LLMEvaluator:
         """
         Evaluates a RawTopic using the LLM Editor-in-Chief persona.
         Returns EditorialDecision (PUBLISH / REJECT).
-        Enforces a 0.5s rate-limit pause between Groq / LLM API calls.
         """
         if self._is_mock_key:
             return self._fallback_evaluate_topic(topic)
@@ -111,7 +109,6 @@ Provide your decision as a valid JSON object matching this exact schema:
 }}
 """
         try:
-            await asyncio.sleep(0.5)
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -131,7 +128,6 @@ Provide your decision as a valid JSON object matching this exact schema:
     async def generate_post(self, topic: RawTopic, decision: EditorialDecision) -> GeneratedPost:
         """
         Generates a publication-ready post in the active persona tone for an approved topic.
-        Enforces a 0.5s rate-limit pause between Groq / LLM API calls.
         """
         if self._is_mock_key:
             return self._fallback_generate_post(topic, decision)
@@ -159,7 +155,6 @@ Provide your post output as a valid JSON object matching this exact schema:
 }}
 """
         try:
-            await asyncio.sleep(0.5)
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -175,4 +170,3 @@ Provide your post output as a valid JSON object matching this exact schema:
         except Exception as e:
             logger.error(f"LLM post generation error: {e}. Utilizing fallback post generation.")
             return self._fallback_generate_post(topic, decision)
-

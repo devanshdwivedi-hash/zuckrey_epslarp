@@ -2,47 +2,47 @@ name: 30-Minute Autonomous Pipeline Cron
 
 on:
   schedule:
+    # Triggers every 30 minutes to run autonomous agent pipeline
     - cron: '*/30 * * * *'
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
 jobs:
   trigger-pipeline-cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Render Agent Cycle
+      - name: Trigger Autonomous Content Agent Cron Endpoint
         run: |
-          # Target Render deployment directly (avoiding Vercel 10s serverless execution limits)
+          echo "Determining target deployment URL..."
           RAW_URL="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="${{ secrets.VERCEL_APP_URL }}"
+          fi
           if [ -z "$RAW_URL" ]; then
             RAW_URL="${{ secrets.APP_URL }}"
           fi
+
           if [ -z "$RAW_URL" ]; then
-            RAW_URL="zuckrey-agent.onrender.com"
+            echo "Error: No deployment URL secret set (configured via RENDER_APP_URL, VERCEL_APP_URL, or APP_URL)."
+            exit 1
           fi
 
+          # Strip leading protocol and trailing slashes to build a valid clean URL
           CLEAN_URL=$(echo "$RAW_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/*$||')
-          ENDPOINT="https://${CLEAN_URL}/api/run-cron"
+          ENDPOINT="https://${CLEAN_URL}/api/cron"
 
-          SECRET_KEY="${{ secrets.CRON_SECRET }}"
-          if [ -z "$SECRET_KEY" ]; then
-            SECRET_KEY="zuckrey-secret-2026"
-          fi
-
-          echo "Triggering Render Background Agent Cycle: ${ENDPOINT}"
-
-          # Allow up to 60s for curl to handle Render free-tier cold starts
-          RESPONSE_CODE=$(curl -sSL -m 60 -X POST -o response.json -w "%{http_code}" \
-            -H "x-cron-secret: ${SECRET_KEY}" \
-            -H "Authorization: Bearer ${SECRET_KEY}" \
+          echo "Triggering endpoint: ${ENDPOINT}"
+          
+          RESPONSE_CODE=$(curl -sSL -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
             "${ENDPOINT}")
-
+          
           echo "HTTP Response Code: $RESPONSE_CODE"
           echo "Response Body:"
           cat response.json
           echo ""
 
           if [ "$RESPONSE_CODE" -ne 200 ]; then
-            echo "Triggering endpoint failed with HTTP $RESPONSE_CODE"
+            echo "Cron invocation failed with status code $RESPONSE_CODE"
             exit 1
           fi
-

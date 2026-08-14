@@ -62,51 +62,34 @@ async def run_autonomous_loop():
 
         logger.info(f"Total raw candidate topics collected: {len(raw_topics)}")
 
-        # 3. Filter raw topics for URL & Vector Semantic Deduplication to form fresh candidate pool
-        fresh_candidates = []
+        # 3. Process candidate topics
+        published_count = 0
+        rejected_count = 0
         duplicate_count = 0
 
         for topic in raw_topics:
-            # A. URL Deduplication Check
-            if is_url_processed(db, topic.url):
-                duplicate_count += 1
-                logger.debug(f"Skipping processed URL: {topic.url}")
-                continue
-
-            # B. Vector Semantic Deduplication Check
-            text_to_embed = f"{topic.title} {topic.summary}"
-            candidate_vec = get_embedding(text_to_embed)
-
-            if is_duplicate(candidate_vec, published_vectors, threshold=0.88):
-                duplicate_count += 1
-                logger.info(f"Skipping duplicate topic by vector memory: '{topic.title}'")
-                continue
-
-            fresh_candidates.append((topic, candidate_vec))
-
-        logger.info(f"Filtered {len(fresh_candidates)} fresh unique candidate topics (Skipped {duplicate_count} duplicates).")
-
-        # Slice candidate pool to first 10 fresh candidates per cycle
-        candidates_to_evaluate = fresh_candidates[:10]
-        logger.info(f"Evaluating top {len(candidates_to_evaluate)} candidate topics in current cycle.")
-
-        published_count = 0
-        rejected_count = 0
-        evaluated_candidates = []
-
-        for topic, candidate_vec in candidates_to_evaluate:
             try:
-                # Rate limit protection: 1.5s delay before each LLM call to prevent 429 errors
-                await asyncio.sleep(1.5)
+                # A. URL Deduplication Check
+                if is_url_processed(db, topic.url):
+                    duplicate_count += 1
+                    logger.debug(f"Skipping processed URL: {topic.url}")
+                    continue
+
+                # B. Vector Semantic Deduplication Check
+                text_to_embed = f"{topic.title} {topic.summary}"
+                candidate_vec = get_embedding(text_to_embed)
+
+                if is_duplicate(candidate_vec, published_vectors, threshold=0.88):
+                    duplicate_count += 1
+                    logger.info(f"Skipping duplicate topic by vector memory: '{topic.title}'")
+                    continue
 
                 # C. LLM Editor-in-Chief Evaluation
                 decision = await evaluator.evaluate_topic(topic)
                 logger.info(f"Evaluated '{topic.title}' -> Decision: {decision.decision} (Score: {decision.score}/10)")
-                evaluated_candidates.append((decision.score, topic, candidate_vec, decision))
 
                 if decision.decision == "PUBLISH":
-                    await asyncio.sleep(1.5)
-                    # D. Persona Post Generation (Zuckrey cynical tech critic persona)
+                    # D. Persona Post Generation
                     generated_post = await generate_post(topic)
                     
                     # Extract article publication datetime if available
@@ -141,9 +124,7 @@ async def run_autonomous_loop():
                     # Add candidate vector to in-memory list to prevent duplicate in same cycle
                     published_vectors.append(candidate_vec)
                     published_count += 1
-                    logger.info(f"Successfully published post ID {post_db.id}: '{post_db.title}'. Exiting evaluation loop immediately.")
-                    # Exit loop immediately once 1 post is successfully published
-                    break
+                    logger.info(f"Successfully published post ID {post_db.id}: '{post_db.title}'")
                 else:
                     # Record rejected post for audit
                     create_rejected_post(
@@ -160,67 +141,6 @@ async def run_autonomous_loop():
                 logger.error(f"Error processing topic '{getattr(topic, 'title', 'unknown')}': {item_error}", exc_info=True)
                 continue
 
-        # 4. Lower Threshold / Force Selection: If all 10 candidates are REJECT or low scores, force-select single highest-scoring topic
-        if published_count == 0:
-            logger.warning("No candidate met publishing threshold in evaluation loop. Force-selecting highest-scoring candidate...")
-            if evaluated_candidates:
-                best_score, best_topic, best_vec, best_decision = max(evaluated_candidates, key=lambda x: x[0])
-                logger.info(f"Force-selecting highest-scoring candidate from batch: '{best_topic.title}' (Score: {best_score}/10)")
-                
-                await asyncio.sleep(1.5)
-                generated_post = await generate_post(best_topic)
-                article_pub_dt = getattr(best_topic, "published_at", None) or getattr(best_topic, "date", None)
-                
-                post_db = create_published_post(
-                    db=db,
-                    title=generated_post.title,
-                    content=generated_post.content,
-                    source_url=best_topic.url,
-                    selection_reason=generated_post.selection_reason,
-                    why_relevant_now=generated_post.why_relevant_now,
-                    embedding=best_vec,
-                    persona_name="AI Security & Vulnerability Researcher",
-                    score=max(best_score, 6),
-                    source_name=best_topic.source_name,
-                    sources=generated_post.sources,
-                    article_published_at=article_pub_dt
-                )
-                published_count += 1
-                logger.info(f"Force-selected post successfully published ID {post_db.id}: '{post_db.title}'")
-            else:
-                logger.info("Generating fallback security analysis post in Zuckrey cynical tech critic persona...")
-                from src.intelligence.schemas import RawTopic, EditorialDecision
-                fallback_topic = RawTopic(
-                    title="Technical Analysis: Layered Defense Strategies for Autonomous AI Agent Systems",
-                    summary="Evaluating security boundaries, vector memory deduplication, and adversarial subversion vectors in production autonomous agent workflows.",
-                    url="https://security.googleblog.com/2025/06/mitigating-prompt-injection-attacks.html",
-                    source_name="Google Security Blog"
-                )
-                fallback_vec = get_embedding(f"{fallback_topic.title} {fallback_topic.summary}")
-                fallback_decision = EditorialDecision(
-                    decision="PUBLISH",
-                    score=8,
-                    reason="Guaranteed fallback security analysis post."
-                )
-                await asyncio.sleep(1.5)
-                generated_post = await evaluator.generate_post(fallback_topic, fallback_decision)
-                
-                post_db = create_published_post(
-                    db=db,
-                    title=generated_post.title,
-                    content=generated_post.content,
-                    source_url=fallback_topic.url,
-                    selection_reason=generated_post.selection_reason,
-                    why_relevant_now=generated_post.why_relevant_now,
-                    embedding=fallback_vec,
-                    persona_name="AI Security & Vulnerability Researcher",
-                    score=8,
-                    source_name=fallback_topic.source_name,
-                    sources=generated_post.sources
-                )
-                published_count += 1
-                logger.info(f"Guaranteed fallback security post successfully published ID {post_db.id}: '{post_db.title}'")
-
         logger.info(
             f"=== COMPLETED AUTONOMOUS CYCLE ===\n"
             f"Published: {published_count} | Rejected: {rejected_count} | Duplicates Skipped: {duplicate_count}"
@@ -230,10 +150,6 @@ async def run_autonomous_loop():
         logger.error(f"Critical error in autonomous pipeline loop: {cycle_error}", exc_info=True)
     finally:
         db.close()
-
-
-# Alias expected by external triggers & endpoints
-run_single_autonomous_cycle = run_autonomous_loop
 
 
 def start_scheduler(run_immediately: bool = False):
@@ -266,11 +182,3 @@ def stop_scheduler():
         logger.info("Stopping APScheduler background task...")
         scheduler.shutdown(wait=False)
         logger.info("APScheduler stopped.")
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-    logger.info("Executing autonomous pipeline directly via CLI...")
-    init_db()
-    asyncio.run(run_autonomous_loop())
-
