@@ -23,12 +23,17 @@ jobs:
           CLEAN_URL=$(echo "$RAW_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/*$||')
           ENDPOINT="https://${CLEAN_URL}/api/run-cron"
 
+          SECRET_KEY="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SECRET_KEY" ]; then
+            SECRET_KEY="zuckrey-secret-2026"
+          fi
+
           echo "Triggering Render Background Agent Cycle: ${ENDPOINT}"
 
           # Allow up to 60s for curl to handle Render free-tier cold starts
           RESPONSE_CODE=$(curl -sSL -m 60 -X POST -o response.json -w "%{http_code}" \
-            -H "x-cron-secret: ${{ secrets.CRON_SECRET || 'zuckrey-secret-2026' }}" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET || 'zuckrey-secret-2026' }}" \
+            -H "x-cron-secret: ${SECRET_KEY}" \
+            -H "Authorization: Bearer ${SECRET_KEY}" \
             "${ENDPOINT}")
 
           echo "HTTP Response Code: $RESPONSE_CODE"

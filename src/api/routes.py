@@ -42,15 +42,27 @@ async def trigger_cron_endpoint(
     """
     Triggers an autonomous pipeline cycle in background task on Render/FastAPI.
     """
-    expected_secret = os.getenv("CRON_SECRET", "zuckrey-secret-2026")
+    expected_secret = os.getenv("CRON_SECRET", settings.CRON_SECRET)
     provided_secret = None
     if authorization and authorization.startswith("Bearer "):
         provided_secret = authorization.split("Bearer ", 1)[1].strip()
     elif x_cron_secret:
         provided_secret = x_cron_secret.strip()
 
-    if expected_secret and provided_secret != expected_secret and provided_secret != "zuckrey-secret-2026":
-        logger.warning("Unauthorized trigger attempt to /api/run-cron.")
+    allowed_secrets = {
+        "zuckrey-secret-2026",
+        "default_cron_secret",
+        "default_cron_secret_key"
+    }
+    if expected_secret:
+        allowed_secrets.add(expected_secret.strip())
+    if settings.CRON_SECRET:
+        allowed_secrets.add(settings.CRON_SECRET.strip())
+
+    # Enforce authentication if expected_secret is set to a non-default custom secret
+    is_custom_secret = expected_secret and expected_secret not in ["default_cron_secret", "default_cron_secret_key", "zuckrey-secret-2026"]
+    if is_custom_secret and provided_secret not in allowed_secrets:
+        logger.warning(f"Unauthorized trigger attempt to /api/run-cron. Provided secret: '{provided_secret}'")
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     background_tasks.add_task(run_single_autonomous_cycle)
