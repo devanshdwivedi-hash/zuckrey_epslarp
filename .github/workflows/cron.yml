@@ -2,47 +2,34 @@ name: 30-Minute Autonomous Pipeline Cron
 
 on:
   schedule:
-    # Triggers every 30 minutes to run autonomous agent pipeline
     - cron: '*/30 * * * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   trigger-pipeline-cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Autonomous Content Agent Cron Endpoint
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
         run: |
-          echo "Determining target deployment URL..."
-          RAW_URL="${{ secrets.RENDER_APP_URL }}"
-          if [ -z "$RAW_URL" ]; then
-            RAW_URL="${{ secrets.VERCEL_APP_URL }}"
-          fi
-          if [ -z "$RAW_URL" ]; then
-            RAW_URL="${{ secrets.APP_URL }}"
-          fi
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-          if [ -z "$RAW_URL" ]; then
-            echo "Error: No deployment URL secret set (configured via RENDER_APP_URL, VERCEL_APP_URL, or APP_URL)."
-            exit 1
-          fi
+      - name: Run Scraper & LLM Pipeline
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PYTHONPATH: .
+        run: |
+          python -m src.scheduler.cron
 
-          # Strip leading protocol and trailing slashes to build a valid clean URL
-          CLEAN_URL=$(echo "$RAW_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/*$||')
-          ENDPOINT="https://${CLEAN_URL}/api/cron"
-
-          echo "Triggering endpoint: ${ENDPOINT}"
-          
-          RESPONSE_CODE=$(curl -sSL -o response.json -w "%{http_code}" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
-            "${ENDPOINT}")
-          
-          echo "HTTP Response Code: $RESPONSE_CODE"
-          echo "Response Body:"
-          cat response.json
-          echo ""
-
-          if [ "$RESPONSE_CODE" -ne 200 ]; then
-            echo "Cron invocation failed with status code $RESPONSE_CODE"
-            exit 1
-          fi

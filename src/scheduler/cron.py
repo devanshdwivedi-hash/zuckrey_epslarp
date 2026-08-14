@@ -182,3 +182,11 @@ def stop_scheduler():
         logger.info("Stopping APScheduler background task...")
         scheduler.shutdown(wait=False)
         logger.info("APScheduler stopped.")
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    logger.info("Executing autonomous pipeline directly via CLI...")
+    init_db()
+    asyncio.run(run_autonomous_loop())
+
