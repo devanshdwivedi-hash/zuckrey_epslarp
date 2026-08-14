@@ -119,6 +119,7 @@ def get_feed(
         return response_list
     except Exception as e:
         logger.error(f"DB ERROR in /feed: {e}", exc_info=True)
+        fallback_posts = []
         return fallback_posts
 
 

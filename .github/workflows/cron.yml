@@ -2,7 +2,7 @@ name: 30-Minute Autonomous Pipeline Cron
 
 on:
   schedule:
-    # Triggers every 30 minutes to bypass Vercel Hobby daily cron limits
+    # Triggers every 30 minutes to run autonomous agent pipeline
     - cron: '*/30 * * * *'
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
@@ -10,17 +10,38 @@ jobs:
   trigger-pipeline-cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Vercel /api/cron Endpoint
+      - name: Trigger Autonomous Content Agent Cron Endpoint
         run: |
-          echo "Triggering Vercel serverless autonomous content agent pipeline..."
-          RESPONSE_CODE=$(curl -s -o response.json -w "%{http_code}" \
+          echo "Determining target deployment URL..."
+          RAW_URL="${{ secrets.RENDER_APP_URL }}"
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="${{ secrets.VERCEL_APP_URL }}"
+          fi
+          if [ -z "$RAW_URL" ]; then
+            RAW_URL="${{ secrets.APP_URL }}"
+          fi
+
+          if [ -z "$RAW_URL" ]; then
+            echo "Error: No deployment URL secret set (configured via RENDER_APP_URL, VERCEL_APP_URL, or APP_URL)."
+            exit 1
+          fi
+
+          # Strip leading protocol and trailing slashes to build a valid clean URL
+          CLEAN_URL=$(echo "$RAW_URL" | sed -e 's|^https://||' -e 's|^http://||' -e 's|/*$||')
+          ENDPOINT="https://${CLEAN_URL}/api/cron"
+
+          echo "Triggering endpoint: ${ENDPOINT}"
+          
+          RESPONSE_CODE=$(curl -sSL -o response.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://${{ secrets.VERCEL_APP_URL }}/api/cron")
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "${ENDPOINT}")
           
           echo "HTTP Response Code: $RESPONSE_CODE"
           echo "Response Body:"
           cat response.json
-          
+          echo ""
+
           if [ "$RESPONSE_CODE" -ne 200 ]; then
             echo "Cron invocation failed with status code $RESPONSE_CODE"
             exit 1
