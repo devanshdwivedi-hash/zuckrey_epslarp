@@ -1,7 +1,7 @@
 import logging
 import os
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, Header, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, Query, Header, HTTPException, status, BackgroundTasks, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -36,18 +36,25 @@ class CronExecutionResponse(BaseModel):
 @router.post("/api/run-cron", summary="Trigger Background Autonomous Cycle")
 async def trigger_cron_endpoint(
     background_tasks: BackgroundTasks,
+    request: Request,
     authorization: Optional[str] = Header(None),
-    x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret")
+    x_cron_secret: Optional[str] = Header(None, alias="x-cron-secret"),
+    secret: Optional[str] = Query(None)
 ):
     """
-    Triggers an autonomous pipeline cycle in background task on Render/FastAPI.
+    Triggers an autonomous pipeline cycle as a background task on Render/FastAPI.
+    Accepts x-cron-secret header, Bearer Authorization header, or ?secret query param.
     """
     expected_secret = os.getenv("CRON_SECRET", settings.CRON_SECRET)
-    provided_secret = None
-    if authorization and authorization.startswith("Bearer "):
+    
+    # Extract provided secret from all potential sources
+    provided_secret = secret
+    if not provided_secret and authorization and authorization.startswith("Bearer "):
         provided_secret = authorization.split("Bearer ", 1)[1].strip()
-    elif x_cron_secret:
-        provided_secret = x_cron_secret.strip()
+    if not provided_secret:
+        hdr = request.headers.get("x-cron-secret") or request.headers.get("X-Cron-Secret") or x_cron_secret
+        if hdr:
+            provided_secret = hdr.strip()
 
     allowed_secrets = {
         "zuckrey-secret-2026",
@@ -59,11 +66,19 @@ async def trigger_cron_endpoint(
     if settings.CRON_SECRET:
         allowed_secrets.add(settings.CRON_SECRET.strip())
 
-    # Enforce authentication if expected_secret is set to a non-default custom secret
-    is_custom_secret = expected_secret and expected_secret not in ["default_cron_secret", "default_cron_secret_key", "zuckrey-secret-2026"]
-    if is_custom_secret and provided_secret not in allowed_secrets:
-        logger.warning(f"Unauthorized trigger attempt to /api/run-cron. Provided secret: '{provided_secret}'")
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    # Enforce authentication only if a strict custom secret is set AND provided secret is not recognized
+    if provided_secret and provided_secret in allowed_secrets:
+        logger.info(f"Cron trigger authenticated via secret token.")
+    elif provided_secret is None and not (expected_secret and expected_secret not in ["default_cron_secret", "default_cron_secret_key", "zuckrey-secret-2026"]):
+        logger.info("Cron trigger allowed without secret under default settings.")
+    elif provided_secret in allowed_secrets or provided_secret == "zuckrey-secret-2026":
+        logger.info("Cron trigger authenticated via fallback secret.")
+    else:
+        # If strict custom secret on server, check if matches
+        if expected_secret and expected_secret not in ["default_cron_secret", "default_cron_secret_key", "zuckrey-secret-2026"]:
+            if provided_secret != expected_secret:
+                logger.warning(f"Unauthorized trigger attempt to /api/run-cron. Provided: '{provided_secret}'")
+                raise HTTPException(status_code=401, detail="Unauthorized")
 
     background_tasks.add_task(run_single_autonomous_cycle)
     return {"status": "success", "message": "Autonomous cycle started in background on Render"}
